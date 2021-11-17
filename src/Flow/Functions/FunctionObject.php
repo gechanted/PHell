@@ -22,6 +22,9 @@ class FunctionObject
     public function getFunction(){}
     public function setFunction(){}
 
+    public function getVariableFromOutside(string $index) { return $this->getPublicVariable($index); }
+    public function getVariableFromInside(string $index) { return $this->getPrivateVariable($index); }
+
     public function getPublicVariable(string $index)
     {
         $var = $this->publicVars[$index];
