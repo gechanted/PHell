@@ -74,26 +74,75 @@ class FunctionObject
             return $var;
         }
 
-        $var = $this->stack->getPrivateVariable($index);
-        if ($var !== null) {
-            return $var;
-        }
-
         return null;
     }
 
-    public function setPublicVariable(string $index, $value)
+//    public function getStackVariable(string $index)
+//    {
+//        if ($this->stack !== null) {
+//            return $this->stack->getParentStackVariable($index);
+//        }
+//        return null;
+//    }
+//
+//    public function getParentStackVariable(string $index)
+//    {
+//        if ($this->stack !== null) {
+//            $var = $this->stack->getParentStackVariable($index);
+//            if ($var !== null) {
+//                return $var;
+//            }
+//        }
+//        $var = $this->stack->getPrivateVariable($index);
+//        if ($var !== null) {
+//            return $var;
+//        }
+//
+//        return null;
+//    }
+//
+//    /**
+//     * @throws VariableNotFoundException
+//     */
+//    public function setStackVariable(string $index)
+//    {
+//        if ($this->stack !== null) {
+//            if ($this->stack->setParentStackVariable($index)) {
+//                return;
+//            }
+//        }
+//        throw new VariableNotFoundException($this);
+//    }
+//
+//    public function setParentStackVariable(string $index): bool
+//    {
+//        if ($this->stack !== null) {
+//            $var = $this->stack->setParentStackVariable($index);
+//            if ($var) {
+//                return true;
+//            }
+//        }
+//        $var = $this->stack->setPrivateVariable($index);
+//        if ($var !== null) {
+//            return true;
+//        }
+//
+//        return false;
+//    }
+
+    public function setPublicVariable(string $index, $value): bool
     {
         foreach ($this->parents as $parent) {
             if ($parent->setPublicParentVariable($index, $value)) {
                 //parent has variable
-                return;
+                return true;
             }
         }
         $this->publicVars[$index] = $value;
         if ($value === null) {
             unset($this->publicVars[$index]);
         }
+        return true;
     }
 
     /**
@@ -115,6 +164,7 @@ class FunctionObject
                 return true;
             }
         }
+
         return false;
     }
 
@@ -123,8 +173,86 @@ class FunctionObject
         if (array_key_exists($index, $this->protectedVars)) {
             $this->protectedVars[$index] = $value;
             if ($value === null) {
-                unset($this->publicVars[$index]);
+                unset($this->protectedVars[$index]);
+            }
+            return true;
+        }
+        foreach ($this->parents as $parent) {
+            if ($parent->setProtectedParentVariable($index, $value)) {
+                //parent has variable
+                return true;
             }
         }
+        if ($this->setPublicParentVariable($index, $value)) {
+            return true;
+        }
+
+        $this->protectedVars[$index] = $value;
+        if ($value === null) {
+            unset($this->protectedVars[$index]);
+        }
+        return true;
+    }
+
+    public function setProtectedParentVariable(string $index, $value): bool
+    {
+        if (array_key_exists($index, $this->protectedVars)) {
+            $this->protectedVars[$index] = $value;
+            if ($value === null) {
+                unset($this->protectedVars[$index]);
+            }
+            return true;
+        }
+        foreach ($this->parents as $parent) {
+            if ($parent->setProtectedParentVariable($index, $value)) {
+                //parent has variable
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function setPrivateVariable(string $index, $value): bool
+    {
+        if (array_key_exists($index, $this->privateVars)) {
+            $this->privateVars[$index] = $value;
+            if ($value === null) {
+                unset($this->privateVars[$index]);
+            }
+            return true;
+        }
+        foreach ($this->parents as $parent) {
+            if ($parent->setPrivateParentVariable($index, $value)) {
+                //parent has variable
+                return true;
+            }
+        }
+        if ($this->setProtectedParentVariable($index, $value)) {
+            return true;
+        }
+
+        $this->privateVars[$index] = $value;
+        if ($value === null) {
+            unset($this->privateVars[$index]);
+        }
+        return true;
+    }
+
+    public function setPrivateParentVariable(string $index, $value): bool
+    {
+        if (array_key_exists($index, $this->privateVars)) {
+            $this->privateVars[$index] = $value;
+            if ($value === null) {
+                unset($this->privateVars[$index]);
+            }
+            return true;
+        }
+        foreach ($this->parents as $parent) {
+            if ($parent->setPrivateParentVariable($index, $value)) {
+                //parent has variable
+                return true;
+            }
+        }
+        return false;
     }
 }
