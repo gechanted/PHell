@@ -9,7 +9,19 @@ class FunctionObject
      */
     private array $parents = [];
 
-    private ?FunctionObject $stack;
+    /**
+     * @var FunctionObject|null
+     * that cool js bullshit I'm trying to copy
+     * gives access to functions and variables
+     * usage of strict limits this
+     */
+    private ?FunctionObject $originator; //superior, senior
+
+    /**
+     * @var FunctionObject|null
+     * provides global FUNCTIONS which should simulate "classes"
+     */
+    private ?FunctionObject $stack; //runningFunction
 
 
     private array $publicVars = [];
