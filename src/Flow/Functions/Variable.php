@@ -31,10 +31,10 @@ class Variable implements Statement
                 $this->relation->getObject()->getObjectInnerVar($this->name);
             }
             if ($this->relation->getRelation() === Relation::RELATION_OBJECT_OUTER_ACCESS) {
-                $this->relation->getObject()->getObjectOuterVar($this->name);
+                $this->relation->getObject()->getObjectPubliclyAvailableVar($this->name);
             }
         }
-        Runtime::get()->current()->getOriginatorVar($this->name);
+        Runtime::get()->current()->getOriginVar($this->name);
     }
 
     public function setValue($value)

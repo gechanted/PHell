@@ -15,26 +15,31 @@ class FunctionObject
      * gives access to functions and variables
      * usage of strict limits this
      */
-    private ?FunctionObject $originator; //superior, senior
+    private ?FunctionObject $origin; //superior, senior
 
     /**
      * @var FunctionObject|null
      * provides global FUNCTIONS which should simulate "classes"
      */
     private ?FunctionObject $stack; //runningFunction
+    private ?FunctionParenthesisVars $parenthesisVars;
 
-    public function __construct(?FunctionObject $stack, ?FunctionObject $originator)
+    public function __construct(?FunctionObject $stack, ?FunctionObject $origin, ?FunctionParenthesisVars $parenthesisVars)
     {
         $this->stack = $stack;
-        $this->originator = $originator;
+        $this->origin = $origin;
+        $this->parenthesisVars = $parenthesisVars;
     }
 
     private array $publicVars = [];
     private array $privateVars = [];
     private array $protectedVars = [];
 
+    /** @var LambdaFunction[] */
     private array $publicFunctions = [];
+    /** @var LambdaFunction[] */
     private array $privateFunctions = [];
+    /** @var LambdaFunction[] */
     private array $protectedFunctions = [];
 
     /**
@@ -54,9 +59,9 @@ class FunctionObject
     }
 
     //normal access
-    public function setPublicFunction(FunctionObject $function, string $name): void { $this->publicFunctions[$name] = $function; }
-    public function setProtectedFunction(FunctionObject $function, string $name): void { $this->protectedFunctions[$name] = $function; }
-    public function setPrivateFunction(FunctionObject $function, string $name): void { $this->privateFunctions[$name] = $function; }
+    public function setPublicFunction(FunctionObject $function): void { $this->publicFunctions[] = $function; }
+    public function setProtectedFunction(FunctionObject $function): void { $this->protectedFunctions[] = $function; }
+    public function setPrivateFunction(FunctionObject $function): void { $this->privateFunctions[] = $function; }
 
 
     public function setOriginatorVar(string $index, $value): bool
@@ -78,15 +83,15 @@ class FunctionObject
             $this->checkAndSet($this->privateVars, $index, $value);
 
         if ($isSet === false) {
-            if ($this->originator !== null) {
-                return $this->originator->checkAndSetOriginatorVar($index, $value);
+            if ($this->origin !== null) {
+                return $this->origin->checkAndSetOriginatorVar($index, $value);
             }
         }
 
         return false;
     }
 
-    public function getOriginatorVar(string $index)
+    public function getOriginVar(string $index)
     {
         //TODO if $this return this FunctionObject
         if (array_key_exists($index, $this->privateVars)) {
@@ -99,56 +104,45 @@ class FunctionObject
             return $this->publicVars[$index];
         }
 
-        if ($this->originator !== null) {
-            return $this->originator->getOriginatorVar($index);
+        if ($this->origin !== null) {
+            return $this->origin->getOriginVar($index);
         }
         return null;
     }
 
-    public function getOriginatorOrStackFunction(string $index)
+    public function getOriginOrStackFunction(string $index)
     {
-        $function = $this->getOriginatorFunction($index);
-        if ($function !== null) {
-            return $function;
-        }
-
-        $function = $this->getStackFunction($index);
-        if ($function !== null) {
-            return $function;
-        }
-
-        return null;
+        return array_merge($this->getOriginFunction($index), $this->getStackFunction($index));
     }
 
-    public function getOriginatorFunction(string $index)
+    public function getOriginFunction(string $index)
     {
-        if (array_key_exists($index, $this->privateFunctions)) {
-            return $this->privateFunctions[$index];
-        }
-        if (array_key_exists($index, $this->protectedFunctions)) {
-            return $this->protectedFunctions[$index];
-        }
-        if (array_key_exists($index, $this->publicFunctions)) {
-            return $this->publicFunctions[$index];
-        }
+        $functions = array_merge(
+            $this->getPrivateFunctions($index),
+            $this->getProtectedFunctions($index),
+            $this->getPublicFunctions($index));
 
-        if ($this->originator !== null) {
-            return $this->originator->getOriginatorFunction($index);
+        if ($this->origin !== null) {
+            $functions = array_merge($functions, $this->origin->getOriginFunction($index));
         }
-        return null;
+        return $functions;
     }
 
+    //public function priorly declared in running function
     public function getStackFunction(string $index)
     {
-        if (array_key_exists($index, $this->publicFunctions)) {
-            return $this->publicFunctions[$index];
-        }
+        $functions = $this->getPublicFunctions($index);
+
         //allow private (and protected function access?)
         //first impression: no   , why allow private & protected?
         //private classes, only available for the following stack ... idk
 
         if ($this->stack !== null) {
             return $this->stack->getStackFunction($index);
+        } else {
+            if (function_exists($index)) {
+                return $index;
+            }
         }
         return null;
     }
@@ -156,14 +150,14 @@ class FunctionObject
     // call to object
 
     //call from outside to this object
-    public function getObjectOuterVar(string $index)
+    public function getObjectPubliclyAvailableVar(string $index)
     {
         if (array_key_exists($index, $this->publicFunctions)) {
             return $this->publicFunctions[$index];
         }
 
         foreach ($this->parents as $parent) {
-            $var = $parent->getObjectOuterVar($index);
+            $var = $parent->getObjectPubliclyAvailableVar($index);
             if ($var !== null) {
                 return $var;
             }
@@ -316,4 +310,38 @@ class FunctionObject
 //        }
 //        return true;
 //    }
+
+
+    public function getPrivateFunctions($index)
+    {
+        $result = [];
+        foreach ($this->privateFunctions as $function) {
+            if ($function->getName() === $index) {
+                $result[] = $function;
+            }
+        }
+        return $result;
+    }
+
+    public function getProtectedFunctions($index)
+    {
+        $result = [];
+        foreach ($this->protectedFunctions as $function) {
+            if ($function->getName() === $index) {
+                $result[] = $function;
+            }
+        }
+        return $result;
+    }
+
+    public function getPublicFunctions($index)
+    {
+        $result = [];
+        foreach ($this->publicFunctions as $function) {
+            if ($function->getName() === $index) {
+                $result[] = $function;
+            }
+        }
+        return $result;
+    }
 }
