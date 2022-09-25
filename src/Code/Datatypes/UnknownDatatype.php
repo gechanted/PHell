@@ -2,10 +2,10 @@
 
 namespace PHell\Code\Datatypes;
 
-class DatatypeConstruct implements DatatypeInterface
+class UnknownDatatype implements DatatypeInterface
 {
 
-    public function validate(DatatypeInterface $datatype): DatatypeValidation
+    public function validate(DatatypeInterface $datatype)
     {
         // TODO: Implement validate() method.
     }

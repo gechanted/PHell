@@ -2,7 +2,9 @@
 
 namespace PHell\Flow\Functions;
 
-class FunctionObject
+use PHell\Code\Datatypes\DatatypeInterface;
+
+class FunctionObject implements DatatypeInterface
 {
     /**
      * @var FunctionObject[]
@@ -19,16 +21,34 @@ class FunctionObject
 
     /**
      * @var FunctionObject|null
-     * provides global FUNCTIONS which should simulate "classes"
+     * provides global FUNCTIONS
      */
     private ?FunctionObject $stack; //runningFunction
     private ?FunctionParenthesisVars $parenthesisVars;
 
-    public function __construct(?FunctionObject $stack, ?FunctionObject $origin, ?FunctionParenthesisVars $parenthesisVars)
+    private string $name;
+
+    public function __construct(string $name, ?FunctionObject $stack, ?FunctionObject $origin, ?FunctionParenthesisVars $parenthesisVars)
     {
         $this->stack = $stack;
         $this->origin = $origin;
         $this->parenthesisVars = $parenthesisVars;
+        $this->name = $name;
+    }
+
+    public function validate(DatatypeInterface $datatype)
+    {
+        // TODO: Implement validate() method.
+    }
+
+    public function getNames(): array
+    {
+        $resultArray = [$this->name];
+        foreach ($this->parents as $parent) {
+            $resultArray = array_merge($resultArray, $parent->getNames());
+        }
+
+        return $resultArray;
     }
 
     private array $publicVars = [];
@@ -41,6 +61,91 @@ class FunctionObject
     private array $privateFunctions = [];
     /** @var LambdaFunction[] */
     private array $protectedFunctions = [];
+
+    //normal access
+    public function setPublicFunction(FunctionObject $function): void { $this->publicFunctions[] = $function; }
+    public function setProtectedFunction(FunctionObject $function): void { $this->protectedFunctions[] = $function; }
+    public function setPrivateFunction(FunctionObject $function): void { $this->privateFunctions[] = $function; }
+
+
+    /** @return LambdaFunction[] */
+    public function getPrivateFunctions($index)
+    {
+        $result = [];
+        foreach ($this->privateFunctions as $function) {
+            if ($function->getName() === $index) {
+                $result[] = $function;
+            }
+        }
+        return $result;
+    }
+
+    /** @return LambdaFunction[] */
+    public function getProtectedFunctions($index)
+    {
+        $result = [];
+        foreach ($this->protectedFunctions as $function) {
+            if ($function->getName() === $index) {
+                $result[] = $function;
+            }
+        }
+        return $result;
+    }
+
+    /** @return LambdaFunction[] */
+    public function getPublicFunctions(string $index): array
+    {
+        $result = [];
+        foreach ($this->publicFunctions as $function) {
+            if ($function->getName() === $index) {
+                $result[] = $function;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * callable with $this->
+     * @return LambdaFunction[]
+     */
+    public function getOriginFunction(string $index): array
+    {
+        $functions = array_merge(
+            $this->getPrivateFunctions($index),
+            $this->getProtectedFunctions($index),
+            $this->getPublicFunctions($index));
+
+        if ($this->origin !== null) {
+            $functions = array_merge($functions, $this->origin->getOriginFunction($index));
+        }
+        return $functions;
+    }
+
+    /**
+     * public function priorly declared in running function
+     * @return LambdaFunction[]
+     */
+    public function getStackFunction(string $index): array
+    {
+        $functions = $this->getPublicFunctions($index);
+
+        //allow private (and protected function access?)
+        //first impression: no   , why allow private & protected?
+        //private classes, only available for the following stack ... idk
+
+        if ($this->stack !== null) {
+            array_merge($functions, $this->stack->getStackFunction($index));
+        } else {//search for php functions if the stack is up
+            if (function_exists($index)) {
+                $functions[] = new PHPFunction($index);
+            }
+        }
+        return $functions;
+    }
+
+
+    //VARIABLES --------------------------------------------------------
+
 
     /**
      * returns true if it FINDS AND SETS the value
@@ -58,19 +163,13 @@ class FunctionObject
         return false;
     }
 
-    //normal access
-    public function setPublicFunction(FunctionObject $function): void { $this->publicFunctions[] = $function; }
-    public function setProtectedFunction(FunctionObject $function): void { $this->protectedFunctions[] = $function; }
-    public function setPrivateFunction(FunctionObject $function): void { $this->privateFunctions[] = $function; }
-
-
     public function setOriginatorVar(string $index, $value): bool
     {
         if ($this->checkAndSetOriginatorVar($index, $value) === false) {
             $array[$index] = $value;
             if ($value === null) { //if this true, sth weird happened
                 unset($array[$index]);
-                trigger_error('In File ' . __FILE__ . ' and line ' . __LINE__ . ' sth weird happened', E_USER_NOTICE);
+                trigger_error('In File ' . __FILE__ . ' and line ' . __LINE__ . ' sth weird happened');
             }
         }
         return true;
@@ -110,42 +209,7 @@ class FunctionObject
         return null;
     }
 
-    public function getOriginOrStackFunction(string $index)
-    {
-        return array_merge($this->getOriginFunction($index), $this->getStackFunction($index));
-    }
 
-    public function getOriginFunction(string $index)
-    {
-        $functions = array_merge(
-            $this->getPrivateFunctions($index),
-            $this->getProtectedFunctions($index),
-            $this->getPublicFunctions($index));
-
-        if ($this->origin !== null) {
-            $functions = array_merge($functions, $this->origin->getOriginFunction($index));
-        }
-        return $functions;
-    }
-
-    //public function priorly declared in running function
-    public function getStackFunction(string $index)
-    {
-        $functions = $this->getPublicFunctions($index);
-
-        //allow private (and protected function access?)
-        //first impression: no   , why allow private & protected?
-        //private classes, only available for the following stack ... idk
-
-        if ($this->stack !== null) {
-            return $this->stack->getStackFunction($index);
-        } else {
-            if (function_exists($index)) {
-                return $index;
-            }
-        }
-        return null;
-    }
 
     // call to object
 
@@ -312,36 +376,5 @@ class FunctionObject
 //    }
 
 
-    public function getPrivateFunctions($index)
-    {
-        $result = [];
-        foreach ($this->privateFunctions as $function) {
-            if ($function->getName() === $index) {
-                $result[] = $function;
-            }
-        }
-        return $result;
-    }
 
-    public function getProtectedFunctions($index)
-    {
-        $result = [];
-        foreach ($this->protectedFunctions as $function) {
-            if ($function->getName() === $index) {
-                $result[] = $function;
-            }
-        }
-        return $result;
-    }
-
-    public function getPublicFunctions($index)
-    {
-        $result = [];
-        foreach ($this->publicFunctions as $function) {
-            if ($function->getName() === $index) {
-                $result[] = $function;
-            }
-        }
-        return $result;
-    }
 }

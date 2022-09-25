@@ -15,10 +15,25 @@ class FunctionParenthesis
      * //final could be implemented
      * //abstract ?
      * //static is implementable with the addition of the LambdaFunction
-     * @param DatatypeInterface[] $vars
+     * @param FunctionParenthesisParameter[] $parameters
      * @param DatatypeInterface $returnType
      */
-    public function __construct(array $vars, DatatypeInterface $returnType)
+    public function __construct(
+        private readonly array $parameters,
+        private readonly DatatypeInterface $returnType
+    ) {}
+
+    /**
+     * @return FunctionParenthesisParameter[]
+     */
+    public function getParameters(): array
     {
+        return $this->parameters;
     }
+
+    public function getReturnType(): DatatypeInterface
+    {
+        return $this->returnType;
+    }
+
 }
