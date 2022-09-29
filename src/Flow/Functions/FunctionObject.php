@@ -2,9 +2,9 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Code\Datatypes\DatatypeInterface;
+use PHell\Code\DatatypeValidators\DatatypeValidatorInterface;
 
-class FunctionObject implements DatatypeInterface
+class FunctionObject implements DatatypeValidatorInterface
 {
     /**
      * @var FunctionObject[]
@@ -36,7 +36,7 @@ class FunctionObject implements DatatypeInterface
         $this->name = $name;
     }
 
-    public function validate(DatatypeInterface $datatype)
+    public function validate(DatatypeValidatorInterface $datatype)
     {
         // TODO: Implement validate() method.
     }

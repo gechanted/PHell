@@ -1,9 +1,10 @@
 <?php
-namespace PHell\Code\Datatypes;
+namespace PHell\Flow\Data;
 
 use PHell\Code\Statement;
+use PHell\Flow\Datatypes\FloatType;
 
-class FloatType implements FloatInterface, Statement
+class Floa extends FloatType implements Statement
 {
     private float $v;
 
@@ -17,7 +18,7 @@ class FloatType implements FloatInterface, Statement
         return new self($v);
     }
 
-    public function getValue(): FloatType
+    public function getValue(): Floa
     {
         return $this;
     }

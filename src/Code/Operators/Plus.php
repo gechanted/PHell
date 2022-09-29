@@ -1,14 +1,14 @@
 <?php
 namespace PHell\Code\Operators;
 
-use PHell\Code\Datatypes\FloatInterface;
-use PHell\Code\Datatypes\FloatType;
-use PHell\Code\Datatypes\IntegerInterface;
-use PHell\Code\Datatypes\IntegerType;
-use PHell\Code\Datatypes\StringInterface;
-use PHell\Code\Datatypes\StringType;
+use PHell\Code\DatatypeValidators\FloatInterface;
+use PHell\Code\DatatypeValidators\IntegerInterface;
+use PHell\Code\DatatypeValidators\StringInterface;
 use PHell\Code\Statement;
 use PHell\Exceptions\DatatypeMismatchException;
+use PHell\Flow\Data\Floa;
+use PHell\Flow\Data\Intege;
+use PHell\Flow\Data\Strin;
 
 class Plus implements Statement
 {
@@ -44,18 +44,19 @@ class Plus implements Statement
     {
         $v1 = $this->s1->getValue();
         $v2 = $this->s2->getValue();
+        //TODO redo
 
-        if ($v1 instanceof IntegerInterface && $v2 instanceof IntegerInterface) {
-            return new IntegerType($v1->getInt() + $v2->getInt());
+//        if ($v1 instanceof IntegerInterface && $v2 instanceof IntegerInterface) {
+            return new Intege($v1->getInt() + $v2->getInt());
 
-        } elseif ($v1 instanceof FloatInterface && $v2 instanceof FloatInterface) {
-            return new FloatType($v1->getFloat() + $v2->getFloat());
+//        } elseif ($v1 instanceof FloatInterface && $v2 instanceof FloatInterface) {
+            return new Floa($v1->getFloat() + $v2->getFloat());
 
-        } elseif ($v1 instanceof StringInterface && $v2 instanceof StringInterface) {
-            return new StringType($v1->getString() . $v2->getString());
+//        } elseif ($v1 instanceof StringInterface && $v2 instanceof StringInterface) {
+            return new Strin($v1->getString() . $v2->getString());
 
-        } else {
+//        }else {
             throw new DatatypeMismatchException($this);
-        }
+//        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Code\Datatypes\UnknownDatatype;
+use PHell\Code\DatatypeValidators\UnknownDatatypeValidator;
 use PHell\Flow\Exception\Exception;
 
 class FunctionResolver
@@ -28,14 +28,14 @@ class FunctionResolver
         foreach ($possibleOptions as $option) {
             $depth = 0;
 
-            if ($given->getReturnType() instanceof UnknownDatatype === false) {
+            if ($given->getReturnType() instanceof UnknownDatatypeValidator === false) {
                 if ($given->getReturnType()-> validate( $option->getParenthesis()->getReturnType())->isSuccess() === false) {
                     continue;
                 }
             }
             foreach ($option->getParenthesis()->getParameters() as $optionParameter) {
                 foreach ($given->getParameters() as $targetParameter) {
-                    $validation = $targetParameter->getDatatype()-> validate($optionParameter->getDatatype());
+                    $validation = $optionParameter->getDatatype()-> validate($targetParameter->getDatatype());
                     if ($validation->isSuccess() === false) {
                         continue 3; //continue with next option, because this doesn't fit
                     }

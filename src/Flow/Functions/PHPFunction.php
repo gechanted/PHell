@@ -3,11 +3,11 @@
 namespace PHell\Flow\Functions;
 
 use PHell\Code\Code;
-use PHell\Code\Datatypes\BooleanType;
-use PHell\Code\Datatypes\FloatType;
-use PHell\Code\Datatypes\IntegerType;
-use PHell\Code\Datatypes\StringType;
-use PHell\Code\Datatypes\UnknownDatatype;
+use PHell\Code\DatatypeValidators\BooleanTypeValidator;
+use PHell\Code\DatatypeValidators\FloatTypeValidator;
+use PHell\Code\DatatypeValidators\IntegerTypeValidator;
+use PHell\Code\DatatypeValidators\StringTypeValidator;
+use PHell\Code\DatatypeValidators\UnknownDatatypeValidator;
 use ReflectionFunction;
 
 class PHPFunction extends LambdaFunction
@@ -19,21 +19,21 @@ class PHPFunction extends LambdaFunction
         $params = [];
         foreach ($function->getParameters() as $parameter) {
             if ($parameter->getType() === null) {
-                $datatype = new UnknownDatatype();
+                $datatype = new UnknownDatatypeValidator();
             } else if($parameter->getType()->getName() === 'string') {
-                $datatype = new StringType('');
+                $datatype = new StringTypeValidator();
             } else if($parameter->getType()->getName() === 'int') {
-                $datatype = new IntegerType(0);
+                $datatype = new IntegerTypeValidator();
             } else if($parameter->getType()->getName() === 'float') {
-                $datatype = new FloatType(0);
+                $datatype = new FloatTypeValidator();
             } else if($parameter->getType()->getName() === 'bool') {
-                $datatype = new BooleanType(false);
+                $datatype = new BooleanTypeValidator();
             } else {
-                $datatype = new UnknownDatatype();
+                $datatype = new UnknownDatatypeValidator();
             }
             $params[] = new FunctionParenthesisParameter($parameter->getName(), $datatype);
         }
-        $parenthesis = new FunctionParenthesis($params, new UnknownDatatype());
+        $parenthesis = new FunctionParenthesis($params, new UnknownDatatypeValidator());
 
         parent::__construct($name, null, $parenthesis, new Code());//TODO CODE is not valid
     }

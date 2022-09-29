@@ -1,8 +1,8 @@
 <?php
 
-use PHell\Code\Datatypes\IntegerType;
+use PHell\Flow\Data\Intege;
 
 require_once __DIR__ . '/../phell.php';
 
-$int = new IntegerType(4);
+$int = new Intege(4);
 var_dump($int->getInt(), $int->getFloat(), $int->getString());

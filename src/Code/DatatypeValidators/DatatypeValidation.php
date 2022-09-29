@@ -1,6 +1,6 @@
 <?php
 
-namespace PHell\Code\Datatypes;
+namespace PHell\Code\DatatypeValidators;
 
 class DatatypeValidation
 {

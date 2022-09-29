@@ -1,12 +1,12 @@
 <?php
 
-use PHell\Code\Datatypes\FloatType;
-use PHell\Code\Datatypes\IntegerType;
 use PHell\Code\Operators\Plus;
+use PHell\Flow\Data\Floa;
+use PHell\Flow\Data\Intege;
 
 require_once __DIR__ . '/../phell.php';
 
-$f = new FloatType(7.4);
-$i = new IntegerType(7);
+$f = new Floa(7.4);
+$i = new Intege(7);
 var_dump(Plus::n($f,$i)->getValue());
 

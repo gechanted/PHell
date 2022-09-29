@@ -2,7 +2,9 @@
 
 namespace PHell\Flow\Functions;
 
-class FunctionParenthesis
+use PHell\Code\DatatypeValidators\DatatypeValidatorInterface;
+
+class ValidatorFunctionParenthesis
 {
 
     /**
@@ -13,23 +15,23 @@ class FunctionParenthesis
      * //final could be implemented
      * //abstract ?
      * //static is implementable with the addition of the LambdaFunction
-     * @param FunctionParenthesisParameter[] $parameters
-     * @param $returnType
+     * @param ValidatorFunctionParenthesisParameter[] $parameters
+     * @param DatatypeValidatorInterface $returnType
      */
     public function __construct(
         private readonly array $parameters,
-        private $returnType
+        private readonly DatatypeValidatorInterface $returnType
     ) {}
 
     /**
-     * @return FunctionParenthesisParameter[]
+     * @return ValidatorFunctionParenthesisParameter[]
      */
     public function getParameters(): array
     {
         return $this->parameters;
     }
 
-    public function getReturnType()
+    public function getReturnType(): DatatypeValidatorInterface
     {
         return $this->returnType;
     }

@@ -13,7 +13,7 @@ class LambdaFunction
     public function __construct(
         private readonly string              $name,
         private readonly ?FunctionObject     $origin,
-        private readonly FunctionParenthesis $parenthesis,
+        private readonly ValidatorFunctionParenthesis $parenthesis,
         private readonly Code                $code
     )
     {
@@ -24,7 +24,7 @@ class LambdaFunction
         return $this->name;
     }
 
-    public function getParenthesis(): FunctionParenthesis
+    public function getParenthesis(): ValidatorFunctionParenthesis
     {
         return $this->parenthesis;
     }

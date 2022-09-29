@@ -1,9 +1,10 @@
 <?php
-namespace PHell\Code\Datatypes;
+namespace PHell\Flow\Data;
 
 use PHell\Code\Statement;
+use PHell\Flow\Datatypes\BooleanType;
 
-class BooleanType implements Statement
+class Boolea extends BooleanType implements Statement
 {
     private bool $v;
 
@@ -17,7 +18,7 @@ class BooleanType implements Statement
         return new self($v);
     }
 
-    public function getValue(): BooleanType
+    public function getValue(): Boolea
     {
         return $this;
     }

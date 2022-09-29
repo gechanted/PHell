@@ -1,9 +1,10 @@
 <?php
-namespace PHell\Code\Datatypes;
+namespace PHell\Flow\Data;
 
 use PHell\Code\Statement;
+use PHell\Flow\Datatypes\IntegerType;
 
-class IntegerType implements IntegerInterface, Statement
+class Intege extends IntegerType implements Statement
 {
     private int $v;
 
@@ -17,7 +18,7 @@ class IntegerType implements IntegerInterface, Statement
         return new self($v);
     }
 
-    public function getValue(): IntegerType
+    public function getValue(): Intege
     {
         return $this;
     }

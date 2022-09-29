@@ -1,9 +1,10 @@
 <?php
-namespace PHell\Code\Datatypes;
+namespace PHell\Flow\Data;
 
 use PHell\Code\Statement;
+use PHell\Flow\Datatypes\StringType;
 
-class StringType implements Statement
+class Strin extends StringType implements Statement
 {
     private string $v;
 
@@ -17,7 +18,7 @@ class StringType implements Statement
         return new self($v);
     }
 
-    public function getValue(): StringType
+    public function getValue(): Strin
     {
         return $this;
     }

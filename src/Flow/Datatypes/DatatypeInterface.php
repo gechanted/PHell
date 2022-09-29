@@ -1,11 +1,11 @@
 <?php
 
-namespace PHell\Code\Datatypes;
+namespace PHell\Flow\Datatypes;
 
-interface DatatypeInterface
+use PHell\Code\DatatypeValidators\DatatypeValidatorInterface;
+
+interface DatatypeInterface extends DatatypeValidatorInterface
 {
-    public function validate(DatatypeInterface $datatype): DatatypeValidation;
-
     public function getNames(): array; //function/UserNamedFunction
                                         //string
                                         //bool..
