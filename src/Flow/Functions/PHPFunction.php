@@ -13,7 +13,7 @@ use ReflectionFunction;
 class PHPFunction extends LambdaFunction
 {
 
-    public function __construct(string $name)
+    public function __construct(private readonly string $name)
     {
         $function = new ReflectionFunction($name);
         $params = [];
@@ -26,15 +26,38 @@ class PHPFunction extends LambdaFunction
                 $datatype = new IntegerTypeValidator();
             } else if($parameter->getType()->getName() === 'float') {
                 $datatype = new FloatTypeValidator();
+            } else if($parameter->getType()->getName() === 'array') {
+                //TODO do
             } else if($parameter->getType()->getName() === 'bool') {
                 $datatype = new BooleanTypeValidator();
             } else {
                 $datatype = new UnknownDatatypeValidator();
             }
-            $params[] = new FunctionParenthesisParameter($parameter->getName(), $datatype);
+            $params[] = new ValidatorFunctionParenthesisParameter($parameter->getName(), $datatype);
         }
-        $parenthesis = new FunctionParenthesis($params, new UnknownDatatypeValidator());
+        $parenthesis = new ValidatorFunctionParenthesis($params, new UnknownDatatypeValidator());
 
         parent::__construct($name, null, $parenthesis, new Code());//TODO CODE is not valid
+    }
+
+    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack)
+    {
+        $parameters = [];
+        foreach ($parenthesis->getParameters() as $parameter) {
+            $parameters[] = $parameter;
+        }
+        $result = call_user_func_array($this->name, $parameters);
+
+        if (is_array($result)) {
+        } if (is_bool($result)) {
+        } if (is_int($result)) {
+        } if (is_string($result)) {
+        } if (is_float($result)) {
+        } if (is_object($result)) {
+        } if (is_null($result)) {
+        } if (is_resource($result)) {
+        } else {
+            //a closed resource?? ???
+        }
     }
 }

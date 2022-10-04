@@ -28,4 +28,10 @@ class LambdaFunction
     {
         return $this->parenthesis;
     }
+
+    //TODO do
+    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack)
+    {
+       $object = new FunctionObject($this->name, $stack, $this->origin, $parenthesis);
+    }
 }

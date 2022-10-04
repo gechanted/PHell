@@ -3,8 +3,9 @@
 namespace PHell\Flow\Functions;
 
 use PHell\Code\DatatypeValidators\DatatypeValidatorInterface;
+use PHell\Code\DatatypeValidators\PHellObjectDatatypeValidator;
 
-class FunctionObject implements DatatypeValidatorInterface
+class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeValidatorInterface
 {
     /**
      * @var FunctionObject[]
@@ -24,21 +25,18 @@ class FunctionObject implements DatatypeValidatorInterface
      * provides global FUNCTIONS
      */
     private ?FunctionObject $stack; //runningFunction
-    private ?FunctionParenthesisVars $parenthesisVars;
+    private ?FunctionParenthesis $parenthesis;
 
     private string $name;
 
-    public function __construct(string $name, ?FunctionObject $stack, ?FunctionObject $origin, ?FunctionParenthesisVars $parenthesisVars)
+    public function __construct(string $name, ?FunctionObject $stack, ?FunctionObject $origin, ?FunctionParenthesis $parenthesis)
     {
+        parent::__construct($name);
+
         $this->stack = $stack;
         $this->origin = $origin;
-        $this->parenthesisVars = $parenthesisVars;
+        $this->parenthesis = $parenthesis;
         $this->name = $name;
-    }
-
-    public function validate(DatatypeValidatorInterface $datatype)
-    {
-        // TODO: Implement validate() method.
     }
 
     public function getNames(): array

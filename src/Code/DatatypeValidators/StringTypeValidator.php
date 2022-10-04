@@ -2,12 +2,14 @@
 
 namespace PHell\Code\DatatypeValidators;
 
+use PHell\Flow\Datatypes\DatatypeInterface;
+
 class StringTypeValidator implements DatatypeValidatorInterface
 {
 
     const TYPE_STRING = 'string';
 
-    public function validate(DatatypeValidatorInterface $datatype): DatatypeValidation
+    public function validate(DatatypeInterface $datatype): DatatypeValidation
     {
         if (in_array(self::TYPE_STRING, $datatype->getNames(), true)) {
             return new DatatypeValidation(true, 0);
