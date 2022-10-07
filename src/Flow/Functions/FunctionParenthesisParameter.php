@@ -2,7 +2,7 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Flow\Datatypes\DatatypeInterface;
+use PHell\Flow\Data\Datatypes\DatatypeInterface;
 
 class FunctionParenthesisParameter
 {

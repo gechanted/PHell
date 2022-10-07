@@ -2,7 +2,7 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Code\DatatypeValidators\DatatypeValidatorInterface;
+use PHell\Flow\Data\DatatypeValidators\DatatypeValidatorInterface;
 
 class ValidatorFunctionParenthesis
 {

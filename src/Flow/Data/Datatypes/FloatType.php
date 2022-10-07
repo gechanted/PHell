@@ -1,8 +1,8 @@
 <?php
 
-namespace PHell\Flow\Datatypes;
+namespace PHell\Flow\Data\Datatypes;
 
-use PHell\Code\DatatypeValidators\FloatTypeValidator;
+use PHell\Flow\Data\DatatypeValidators\FloatTypeValidator;
 
 class FloatType extends FloatTypeValidator implements DatatypeInterface
 {

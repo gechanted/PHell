@@ -1,8 +1,8 @@
 <?php
-namespace PHell\Flow\Data;
+namespace PHell\Flow\Data\Data;
 
 use PHell\Code\Statement;
-use PHell\Flow\Datatypes\BooleanType;
+use PHell\Flow\Data\Datatypes\BooleanType;
 
 class Boolea extends BooleanType implements Statement
 {

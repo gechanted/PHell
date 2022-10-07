@@ -6,9 +6,9 @@ use PHell\Code\DatatypeValidators\IntegerInterface;
 use PHell\Code\DatatypeValidators\StringInterface;
 use PHell\Code\Statement;
 use PHell\Exceptions\DatatypeMismatchException;
-use PHell\Flow\Data\Floa;
-use PHell\Flow\Data\Intege;
-use PHell\Flow\Data\Strin;
+use PHell\Flow\Data\Data\Floa;
+use PHell\Flow\Data\Data\Intege;
+use PHell\Flow\Data\Data\Strin;
 
 class Plus implements Statement
 {

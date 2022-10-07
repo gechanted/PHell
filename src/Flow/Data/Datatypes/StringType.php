@@ -1,8 +1,8 @@
 <?php
 
-namespace PHell\Flow\Datatypes;
+namespace PHell\Flow\Data\Datatypes;
 
-use PHell\Code\DatatypeValidators\StringTypeValidator;
+use PHell\Flow\Data\DatatypeValidators\StringTypeValidator;
 
 class StringType extends StringTypeValidator implements DatatypeInterface
 {

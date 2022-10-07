@@ -1,8 +1,8 @@
 <?php
 
-namespace PHell\Code\DatatypeValidators;
+namespace PHell\Flow\Data\DatatypeValidators;
 
-use PHell\Flow\Datatypes\DatatypeInterface;
+use PHell\Flow\Data\Datatypes\DatatypeInterface;
 
 interface DatatypeValidatorInterface
 {

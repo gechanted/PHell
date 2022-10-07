@@ -1,8 +1,8 @@
 <?php
 
-namespace PHell\Flow\Datatypes;
+namespace PHell\Flow\Data\Datatypes;
 
-use PHell\Code\DatatypeValidators\PHPObjectDatatypeValidator;
+use PHell\Flow\Data\DatatypeValidators\PHPObjectDatatypeValidator;
 
 class PHPObjectDatatype extends PHPObjectDatatypeValidator implements DatatypeInterface
 {

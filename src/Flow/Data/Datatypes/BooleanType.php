@@ -1,8 +1,8 @@
 <?php
 
-namespace PHell\Flow\Datatypes;
+namespace PHell\Flow\Data\Datatypes;
 
-use PHell\Code\DatatypeValidators\BooleanTypeValidator;
+use PHell\Flow\Data\DatatypeValidators\BooleanTypeValidator;
 
 class BooleanType extends BooleanTypeValidator implements DatatypeInterface
 {

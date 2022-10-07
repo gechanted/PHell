@@ -2,8 +2,8 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Code\DatatypeValidators\DatatypeValidatorInterface;
-use PHell\Code\DatatypeValidators\PHellObjectDatatypeValidator;
+use PHell\Flow\Data\DatatypeValidators\DatatypeValidatorInterface;
+use PHell\Flow\Data\DatatypeValidators\PHellObjectDatatypeValidator;
 
 class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeValidatorInterface
 {

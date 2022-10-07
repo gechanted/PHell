@@ -2,7 +2,7 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Code\DatatypeValidators\UnknownDatatypeValidator;
+use PHell\Flow\Data\DatatypeValidators\UnknownDatatypeValidator;
 use PHell\Flow\Exception\Exception;
 
 class FunctionResolver
