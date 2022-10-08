@@ -3,6 +3,7 @@
 namespace PHell\Flow\Functions;
 
 use PHell\Code\Code;
+use PHell\Flow\Data\DatatypeValidators\ArrayTypeValidator;
 use PHell\Flow\Data\DatatypeValidators\BooleanTypeValidator;
 use PHell\Flow\Data\DatatypeValidators\FloatTypeValidator;
 use PHell\Flow\Data\DatatypeValidators\IntegerTypeValidator;
@@ -27,7 +28,7 @@ class PHPFunction extends LambdaFunction
             } else if($parameter->getType()->getName() === 'float') {
                 $datatype = new FloatTypeValidator();
             } else if($parameter->getType()->getName() === 'array') {
-                //TODO do
+                $datatype = new ArrayTypeValidator();
             } else if($parameter->getType()->getName() === 'bool') {
                 $datatype = new BooleanTypeValidator();
             } else {
@@ -46,7 +47,12 @@ class PHPFunction extends LambdaFunction
         foreach ($parenthesis->getParameters() as $parameter) {
             $parameters[] = $parameter;
         }
-        $result = call_user_func_array($this->name, $parameters);
+        try {
+            $result = call_user_func_array($this->name, $parameters);
+        } catch (\Throwable $throwable) {
+
+        }
+
 
         if (is_array($result)) {
         } if (is_bool($result)) {

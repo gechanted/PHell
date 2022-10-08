@@ -29,9 +29,8 @@ class LambdaFunction
         return $this->parenthesis;
     }
 
-    //TODO do
-    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack)
+    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack): RunningFunction
     {
-       $object = new FunctionObject($this->name, $stack, $this->origin, $parenthesis);
+       return new RunningFunction(new FunctionObject($this->name, $stack, $this->origin, $parenthesis), $this->code);
     }
 }

@@ -2,10 +2,10 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Flow\Data\DatatypeValidators\DatatypeValidatorInterface;
+use PHell\Flow\Data\Datatypes\DatatypeInterface;
 use PHell\Flow\Data\DatatypeValidators\PHellObjectDatatypeValidator;
 
-class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeValidatorInterface
+class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInterface
 {
     /**
      * @var FunctionObject[]
@@ -67,7 +67,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeVal
 
 
     /** @return LambdaFunction[] */
-    public function getPrivateFunctions($index)
+    public function getPrivateFunctions(string $index): array
     {
         $result = [];
         foreach ($this->privateFunctions as $function) {
@@ -79,7 +79,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeVal
     }
 
     /** @return LambdaFunction[] */
-    public function getProtectedFunctions($index)
+    public function getProtectedFunctions(string $index): array
     {
         $result = [];
         foreach ($this->protectedFunctions as $function) {

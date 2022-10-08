@@ -4,6 +4,7 @@ namespace PHell\Flow\Data\Data;
 use PHell\Code\Statement;
 use PHell\Flow\Data\Datatypes\BooleanType;
 
+//TODO thats not right
 class Boolea extends BooleanType implements Statement
 {
     private bool $v;
