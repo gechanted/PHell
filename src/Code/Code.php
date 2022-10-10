@@ -26,9 +26,4 @@ class Code
     {
         $this->statements[] = $statement;
     }
-
-    public function exec(FunctionObject $currentEnvironment)
-    {
-
-    }
 }

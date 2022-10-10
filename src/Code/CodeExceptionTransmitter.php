@@ -2,7 +2,7 @@
 
 namespace PHell\Code;
 
-use PHell\Flow\Exception\Exception;
+use PHell\Flow\Exceptions\Exception;
 
 interface CodeExceptionTransmitter
 {

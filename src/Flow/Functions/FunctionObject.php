@@ -25,7 +25,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
      * provides global FUNCTIONS
      */
     private ?FunctionObject $stack; //runningFunction
-    private ?FunctionParenthesis $parenthesis;
+    private ?FunctionParenthesis $parenthesis; //TODO apparently not implemented!!!
 
     private string $name;
 

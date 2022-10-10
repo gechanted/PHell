@@ -3,7 +3,7 @@
 namespace PHell\Code;
 
 use PHell\Exceptions\ShouldntHappenException;
-use PHell\Flow\Exception\Exception;
+use PHell\Flow\Exceptions\Exception;
 use PHell\Flow\Functions\FunctionObject;
 
  abstract class EasyStatement implements Command, CodeExceptionTransmitter, Statement
@@ -19,9 +19,10 @@ use PHell\Flow\Functions\FunctionObject;
         return $this->upper->transmit($exception);
     }
     
-    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper)
+    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
     {
         $this->getValue($currentEnvironment, $upper);
+        return new ExecutionResult(false, null);
     }
 
     abstract public function value(FunctionObject $currentEnvironment): ReturnLoad;

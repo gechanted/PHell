@@ -1,6 +1,6 @@
 <?php
 
-namespace PHell\Flow\Exception;
+namespace PHell\Flow\Exceptions;
 
 class Exception
 {
