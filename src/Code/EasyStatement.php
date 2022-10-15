@@ -22,7 +22,7 @@ use PHell\Flow\Functions\FunctionObject;
     public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
     {
         $this->getValue($currentEnvironment, $upper);
-        return new ExecutionResult(false, null);
+        return new ExecutionResult();
     }
 
     abstract public function value(FunctionObject $currentEnvironment): ReturnLoad;

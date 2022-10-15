@@ -31,6 +31,6 @@ class LambdaFunction
 
     public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack): RunningFunction
     {
-       return new RunningFunction(new FunctionObject($this->name, $stack, $this->origin, $parenthesis), $this->code);
+       return new RunningFunction(new FunctionObject($this->name, $stack, $this->origin, $parenthesis), $this->code, $parenthesis->getReturnType());
     }
 }
