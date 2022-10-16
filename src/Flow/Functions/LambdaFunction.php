@@ -2,7 +2,7 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Code\Code;
+use PHell\Flow\Main\Code;
 
 /**
  * the simple, not executed function

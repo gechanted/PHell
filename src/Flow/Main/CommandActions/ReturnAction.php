@@ -1,8 +1,8 @@
 <?php
 
-namespace PHell\Flow\Functions;
+namespace PHell\Flow\Main\CommandActions;
 
-class ReturnExecutionResult
+class ReturnAction implements CommandAction
 {
 
     //TODO add parameter for catapult returning

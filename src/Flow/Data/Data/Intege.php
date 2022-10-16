@@ -1,8 +1,8 @@
 <?php
 namespace PHell\Flow\Data\Data;
 
-use PHell\Code\Statement;
 use PHell\Flow\Data\Datatypes\IntegerType;
+use PHell\Flow\Main\Statement;
 
 class Intege extends IntegerType implements Statement
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace PHell\Code;
+namespace PHell\Flow\Main;
 
 use PHell\Flow\Functions\FunctionObject;
 

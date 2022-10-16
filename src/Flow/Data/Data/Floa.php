@@ -1,8 +1,8 @@
 <?php
 namespace PHell\Flow\Data\Data;
 
-use PHell\Code\Statement;
 use PHell\Flow\Data\Datatypes\FloatType;
+use PHell\Flow\Main\Statement;
 
 class Floa extends FloatType implements Statement
 {

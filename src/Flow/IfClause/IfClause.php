@@ -1,11 +1,11 @@
 <?php
 namespace PHell\Flow\IfClause;
 
-use PHell\Code\Code;
-use PHell\Code\EasyCommand;
-use PHell\Code\ExecutionResult;
-use PHell\Code\Statement;
 use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Main\Code;
+use PHell\Flow\Main\EasyCommand;
+use PHell\Flow\Main\ExecutionResult;
+use PHell\Flow\Main\Statement;
 
 class IfClause extends EasyCommand
 {

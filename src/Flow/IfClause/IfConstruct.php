@@ -2,12 +2,12 @@
 
 namespace PHell\Flow\IfClause;
 
-use PHell\Code\Code;
-use PHell\Code\EasyCommand;
-use PHell\Code\ExecutionResult;
 use PHell\Flow\Data\Data\Boolea;
 use PHell\Flow\Data\DatatypeValidators\BooleanTypeValidator;
 use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Main\Code;
+use PHell\Flow\Main\EasyCommand;
+use PHell\Flow\Main\ExecutionResult;
 
 class IfConstruct extends EasyCommand
 {

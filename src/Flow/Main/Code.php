@@ -1,8 +1,6 @@
 <?php
 
-namespace PHell\Code;
-
-use PHell\Flow\Functions\FunctionObject;
+namespace PHell\Flow\Main;
 
 /**
  * Statement[]

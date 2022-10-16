@@ -2,13 +2,13 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Code\Code;
 use PHell\Flow\Data\DatatypeValidators\ArrayTypeValidator;
 use PHell\Flow\Data\DatatypeValidators\BooleanTypeValidator;
 use PHell\Flow\Data\DatatypeValidators\FloatTypeValidator;
 use PHell\Flow\Data\DatatypeValidators\IntegerTypeValidator;
 use PHell\Flow\Data\DatatypeValidators\StringTypeValidator;
 use PHell\Flow\Data\DatatypeValidators\UnknownDatatypeValidator;
+use PHell\Flow\Main\Code;
 use ReflectionFunction;
 
 class PHPFunction extends LambdaFunction

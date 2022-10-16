@@ -1,7 +1,8 @@
 <?php
 
-namespace PHell\Code;
+namespace PHell\Flow\Main;
 
+use PHell\Code\ExceptionHandlingResult;
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Exceptions\Exception;
 use PHell\Flow\Functions\FunctionObject;

@@ -2,11 +2,17 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Code\Code;
-use PHell\Code\EasyStatement;
-use PHell\Code\ReturnLoad;
+use PHell\Exceptions\ShouldntHappenException;
+use PHell\Flow\Data\Data\Voi;
 use PHell\Flow\Data\DatatypeValidators\DatatypeValidatorInterface;
 use PHell\Flow\Exceptions\Exception;
+use PHell\Flow\Main\Code;
+use PHell\Flow\Main\CommandActions\ContinueAction;
+use PHell\Flow\Main\CommandActions\ReturnAction;
+use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
+use PHell\Flow\Main\EasyStatement;
+use PHell\Flow\Main\ExceptionReturnLoad;
+use PHell\Flow\Main\ReturnLoad;
 
 class RunningFunction extends EasyStatement
 {
@@ -26,14 +32,22 @@ class RunningFunction extends EasyStatement
             if ($result->isActionRequired()) {
 
                 $action = $result->getAction();
-                if ($action instanceof ReturnExecutionResult) {
+                if ($action instanceof ReturnAction) {
                     return $this->return($action->getValue());
+                } elseif ($action instanceof ContinueAction) {
+                    // TODO throw error/exception here
+                } elseif ($action instanceof ReturningExceptionAction) {
+                    return new ExceptionReturnLoad();
+
+                    //TODO on redo command -> throw exception since it belong to loops
+
+                } else {
+                    throw new ShouldntHappenException();
                 }
-                //TODO if continue or redo throw error
             }
         }
 
-        return $this->return(Void);
+        return $this->return(new Voi());
     }
 
     private function return($value): ReturnLoad

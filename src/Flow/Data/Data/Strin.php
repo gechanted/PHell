@@ -1,8 +1,8 @@
 <?php
 namespace PHell\Flow\Data\Data;
 
-use PHell\Code\Statement;
 use PHell\Flow\Data\Datatypes\StringType;
+use PHell\Flow\Main\Statement;
 
 class Strin extends StringType implements Statement
 {

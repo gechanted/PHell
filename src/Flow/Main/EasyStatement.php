@@ -1,12 +1,13 @@
 <?php
 
-namespace PHell\Code;
+namespace PHell\Flow\Main;
 
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Exceptions\Exception;
 use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
 
- abstract class EasyStatement implements Command, CodeExceptionTransmitter, Statement
+abstract class EasyStatement implements Command, CodeExceptionTransmitter, Statement
 {
 
     protected CodeExceptionTransmitter $upper;
@@ -21,8 +22,8 @@ use PHell\Flow\Functions\FunctionObject;
     
     public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
     {
-        $this->getValue($currentEnvironment, $upper);
-        return new ExecutionResult();
+        $return = $this->getValue($currentEnvironment, $upper);
+        return new ExecutionResult($return->isExceptionReturn() ? new ReturningExceptionAction() : null);
     }
 
     abstract public function value(FunctionObject $currentEnvironment): ReturnLoad;

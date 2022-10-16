@@ -1,7 +1,7 @@
 <?php
 namespace PHell\Flow\Loop;
 
-use PHell\Code\Code;
+use PHell\Flow\Main\Code;
 
 class AdvDoWhileLoop
 {
