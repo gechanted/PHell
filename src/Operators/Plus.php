@@ -1,9 +1,6 @@
 <?php
-namespace PHell\Code\Operators;
+namespace PHell\Operators;
 
-use PHell\Code\DatatypeValidators\FloatInterface;
-use PHell\Code\DatatypeValidators\IntegerInterface;
-use PHell\Code\DatatypeValidators\StringInterface;
 use PHell\Exceptions\DatatypeMismatchException;
 use PHell\Flow\Data\Data\Floa;
 use PHell\Flow\Data\Data\Intege;

@@ -1,8 +1,8 @@
 <?php
 
-use PHell\Code\Operators\Plus;
 use PHell\Flow\Data\Data\Floa;
 use PHell\Flow\Data\Data\Intege;
+use PHell\Operators\Plus;
 
 require_once __DIR__ . '/../phell.php';
 
