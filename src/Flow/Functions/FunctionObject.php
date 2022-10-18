@@ -4,6 +4,7 @@ namespace PHell\Flow\Functions;
 
 use PHell\Flow\Data\Datatypes\DatatypeInterface;
 use PHell\Flow\Data\DatatypeValidators\PHellObjectDatatypeValidator;
+use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
 
 class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInterface
 {

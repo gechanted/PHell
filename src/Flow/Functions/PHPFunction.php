@@ -8,7 +8,11 @@ use PHell\Flow\Data\DatatypeValidators\FloatTypeValidator;
 use PHell\Flow\Data\DatatypeValidators\IntegerTypeValidator;
 use PHell\Flow\Data\DatatypeValidators\StringTypeValidator;
 use PHell\Flow\Data\DatatypeValidators\UnknownDatatypeValidator;
+use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
+use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesisParameter;
 use PHell\Flow\Main\Code;
+use PHell\Flow\Main\Statement;
 use ReflectionFunction;
 
 class PHPFunction extends LambdaFunction
@@ -38,32 +42,11 @@ class PHPFunction extends LambdaFunction
         }
         $parenthesis = new ValidatorFunctionParenthesis($params, new UnknownDatatypeValidator());
 
-        parent::__construct($name, null, $parenthesis, new Code());//TODO CODE is not valid
+        parent::__construct($name, null, $parenthesis, new Code([]));
     }
 
-    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack)
+    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack): Statement
     {
-        $parameters = [];
-        foreach ($parenthesis->getParameters() as $parameter) {
-            $parameters[] = $parameter;
-        }
-        try {
-            $result = call_user_func_array($this->name, $parameters);
-        } catch (\Throwable $throwable) {
-
-        }
-
-
-        if (is_array($result)) {
-        } if (is_bool($result)) {
-        } if (is_int($result)) {
-        } if (is_string($result)) {
-        } if (is_float($result)) {
-        } if (is_object($result)) {
-        } if (is_null($result)) {
-        } if (is_resource($result)) {
-        } else {
-            //a closed resource?? ???
-        }
+        return new RunningPHPFunction($this->name, $parenthesis);
     }
 }

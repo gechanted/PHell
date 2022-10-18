@@ -10,7 +10,7 @@ class Code
     /**
      * @param Command[] $statements
      */
-    public function __construct(private array $statements)
+    public function __construct(private array $statements = [])
     {
     }
 

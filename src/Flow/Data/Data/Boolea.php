@@ -2,16 +2,20 @@
 namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\BooleanType;
-use PHell\Flow\Main\Statement;
+use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Main\ExecutionResult;
+use PHell\Flow\Main\ReturnLoad;
 
-//TODO thats not right
-class Boolea extends BooleanType implements Statement
+class Boolea extends BooleanType implements DataInterface
 {
-    private bool $v;
-
-    public function __construct(bool $v)
+    public function __construct(private readonly bool $value)
     {
-        $this->v = $v;
+    }
+
+    public function getBool(): bool
+    {
+        return $this->value;
     }
 
     public static function n(bool $v): self
@@ -19,13 +23,18 @@ class Boolea extends BooleanType implements Statement
         return new self($v);
     }
 
-    public function getValue(): Boolea
+    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
     {
-        return $this;
+        return new ExecutionResult();
     }
 
-    public function getBool(): bool
+    public function v()
     {
-        return $this->v;
+        return $this->value;
+    }
+
+    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
+    {
+        return new ReturnLoad($this);
     }
 }

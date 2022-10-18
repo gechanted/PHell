@@ -3,7 +3,8 @@
 namespace PHell\Flow\Functions;
 
 use PHell\Flow\Data\DatatypeValidators\UnknownDatatypeValidator;
-use PHell\Flow\Exception\Exception;
+use PHell\Flow\Exceptions\Exception;
+use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
 
 class FunctionResolver
 {
@@ -35,7 +36,7 @@ class FunctionResolver
             }
             foreach ($option->getParenthesis()->getParameters() as $optionParameter) {
                 foreach ($given->getParameters() as $targetParameter) {
-                    $validation = $optionParameter->getDatatype()-> validate($targetParameter->getDatatype());
+                    $validation = $optionParameter->getDatatype()-> validate($targetParameter->getData());
                     if ($validation->isSuccess() === false) {
                         continue 3; //continue with next option, because this doesn't fit
                     }

@@ -2,12 +2,15 @@
 
 namespace PHell\Flow\Functions;
 
+use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
 use PHell\Flow\Main\Code;
+use PHell\Flow\Main\Statement;
 
 /**
  * the simple, not executed function
  */
-class LambdaFunction
+class LambdaFunction //implements LambdaFunctionInterface
 {
 
     public function __construct(
@@ -29,7 +32,7 @@ class LambdaFunction
         return $this->parenthesis;
     }
 
-    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack): RunningFunction
+    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack): Statement //TODO check if its ok
     {
        return new RunningFunction(new FunctionObject($this->name, $stack, $this->origin, $parenthesis), $this->code, $parenthesis->getReturnType());
     }

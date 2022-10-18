@@ -1,6 +1,6 @@
 <?php
 
-namespace PHell\Flow\Functions;
+namespace PHell\Flow\Functions\Parenthesis;
 
 use PHell\Flow\Data\DatatypeValidators\DatatypeValidatorInterface;
 
