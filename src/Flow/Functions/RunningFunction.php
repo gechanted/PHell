@@ -3,6 +3,7 @@
 namespace PHell\Flow\Functions;
 
 use PHell\Exceptions\ShouldntHappenException;
+use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Data\Voi;
 use PHell\Flow\Data\DatatypeValidators\DatatypeValidatorInterface;
 use PHell\Flow\Exceptions\Exception;
@@ -50,7 +51,7 @@ class RunningFunction extends EasyStatement
         return $this->return(new Voi());
     }
 
-    private function return($value): ReturnLoad
+    private function return(DataInterface $value): ReturnLoad
     {
         if ($this->returnType->validate($value)) {
             return new ReturnLoad($value);

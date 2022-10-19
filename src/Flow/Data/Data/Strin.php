@@ -2,29 +2,35 @@
 namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\StringType;
+use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Main\ExecutionResult;
+use PHell\Flow\Main\ReturnLoad;
 use PHell\Flow\Main\Statement;
 
-class Strin extends StringType implements Statement
+class Strin extends StringType implements DataInterface
 {
-    private string $v;
-
-    public function __construct(string $v)
+    public function __construct(private readonly string $value)
     {
-        $this->v = $v;
-    }
-
-    public static function n(string $v): self
-    {
-        return new self($v);
-    }
-
-    public function getValue(): Strin
-    {
-        return $this;
     }
 
     public function getString(): string
     {
-        return $this->v;
+        return $this->value;
+    }
+
+    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
+    {
+        return new ExecutionResult();
+    }
+
+    public function v()
+    {
+        return $this->value;
+    }
+
+    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
+    {
+        return new ReturnLoad($this);
     }
 }

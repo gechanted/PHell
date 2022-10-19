@@ -6,6 +6,8 @@ use PHell\Flow\Data\DatatypeValidators\DatatypeValidatorInterface;
 
 interface DatatypeInterface extends DatatypeValidatorInterface
 {
+
+    /** @return string[] */
     public function getNames(): array; //function/UserNamedFunction
                                         //string
                                         //bool..

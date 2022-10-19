@@ -2,39 +2,35 @@
 namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\IntegerType;
+use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Main\ExecutionResult;
+use PHell\Flow\Main\ReturnLoad;
 use PHell\Flow\Main\Statement;
 
-class Intege extends IntegerType implements Statement
+class Intege extends IntegerType implements DataInterface
 {
-    private int $v;
-
-    public function __construct(int $v)
+    public function __construct(private readonly int $value)
     {
-        $this->v = $v;
-    }
-
-    public static function n(int $v): self
-    {
-        return new self($v);
-    }
-
-    public function getValue(): Intege
-    {
-        return $this;
     }
 
     public function getInt(): int
     {
-        return $this->v;
+        return $this->value;
     }
 
-    public function getFloat(): float
+    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
     {
-        return $this->v + 0.0;
+        return new ExecutionResult();
     }
 
-    public function getString(): string
+    public function v()
     {
-        return $this->v . '';
+        return $this->value;
+    }
+
+    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
+    {
+        return new ReturnLoad($this);
     }
 }

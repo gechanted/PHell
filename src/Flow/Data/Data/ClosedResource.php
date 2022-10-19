@@ -9,10 +9,13 @@ use PHell\Flow\Main\CodeExceptionTransmitter;
 use PHell\Flow\Main\ExecutionResult;
 use PHell\Flow\Main\ReturnLoad;
 
-class Undefined implements DataInterface
+class ClosedResource implements DataInterface
 {
+    public const TYPE_CLOSED_RESOURCE = 'closed resource';
 
-    public const TYPE_UNDEFINED = 'undefined';
+    public function __construct(private $resource)
+    {
+    }
 
     public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
     {
@@ -21,18 +24,17 @@ class Undefined implements DataInterface
 
     public function v()
     {
-        return null;
+        return $this->resource;
     }
 
-    /** @return string[] */
     public function getNames(): array
     {
-        return [self::TYPE_UNDEFINED, Nil::TYPE_NULL];
+        return [self::TYPE_CLOSED_RESOURCE];
     }
 
     public function validate(DatatypeInterface $datatype): DatatypeValidation
     {
-        return new DatatypeValidation(in_array(self::TYPE_UNDEFINED, $datatype->getNames(), true), 0);
+        return new DatatypeValidation(in_array(self::TYPE_CLOSED_RESOURCE, $datatype->getNames(), true), 0);
     }
 
     public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad

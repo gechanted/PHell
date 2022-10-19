@@ -2,34 +2,36 @@
 namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\FloatType;
+use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Main\ExecutionResult;
+use PHell\Flow\Main\ReturnLoad;
 use PHell\Flow\Main\Statement;
 
-class Floa extends FloatType implements Statement
+class Floa extends FloatType implements DataInterface
 {
-    private float $v;
 
-    public function __construct(float $v)
+    public function __construct(private readonly float $value)
     {
-        $this->v = $v;
-    }
-
-    public static function n(float $v): self
-    {
-        return new self($v);
-    }
-
-    public function getValue(): Floa
-    {
-        return $this;
     }
 
     public function getFloat(): float
     {
-        return $this->v;
+        return $this->value;
     }
 
-    public function getString(): string
+    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
     {
-        return $this->v . '';
+        return new ExecutionResult();
+    }
+
+    public function v()
+    {
+        return $this->value;
+    }
+
+    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
+    {
+        return new ReturnLoad($this);
     }
 }

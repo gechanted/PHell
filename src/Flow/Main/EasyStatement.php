@@ -7,7 +7,7 @@ use PHell\Flow\Exceptions\Exception;
 use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
 
-abstract class EasyStatement implements Command, Statement
+abstract class EasyStatement implements Command, Statement, CodeExceptionTransmitter
 {
 
     protected CodeExceptionTransmitter $upper;
