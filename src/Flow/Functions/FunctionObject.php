@@ -2,11 +2,14 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Flow\Data\Datatypes\DatatypeInterface;
+use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\DatatypeValidators\PHellObjectDatatypeValidator;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use PHell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Main\ExecutionResult;
+use PHell\Flow\Main\ReturnLoad;
 
-class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInterface
+class FunctionObject extends PHellObjectDatatypeValidator implements DataInterface
 {
     /**
      * @var FunctionObject[]
@@ -50,8 +53,19 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
         return $resultArray;
     }
 
+
+    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult { return new ExecutionResult(); }
+
+    public function v() { return $this; }
+
+    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad { return new ReturnLoad($this); }
+
+
+    /** @var DataInterface[] */
     private array $publicVars = [];
+    /** @var DataInterface[] */
     private array $privateVars = [];
+    /** @var DataInterface[] */
     private array $protectedVars = [];
 
     /** @var LambdaFunction[] */
@@ -150,7 +164,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
      * returns true if it FINDS AND SETS the value
      * otherwise returns false
      */
-    private function checkAndSet(array &$array, string $index, $value): bool
+    private function checkAndSet(array &$array, string $index, ?DataInterface $value): bool
     {
         if (array_key_exists($index, $array)) {
             $array[$index] = $value;
@@ -162,18 +176,36 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
         return false;
     }
 
-    public function setOriginatorVar(string $index, $value): bool
+    public const VISIBILITY_PRIVATE = 'private';
+    public const VISIBILITY_PROTECTED = 'protected';
+    public const VISIBILITY_PUBLIC = 'public';
+
+    /** check the origin of that object */
+    public function setNormalVar(string $index, ?DataInterface $value, string $visibility = self::VISIBILITY_PRIVATE): bool
     {
         if ($this->checkAndSetOriginatorVar($index, $value) === false) {
-            $array[$index] = $value;
-            if ($value === null) { //if this true, sth weird happened
-                unset($array[$index]);
-                trigger_error('In File ' . __FILE__ . ' and line ' . __LINE__ . ' sth weird happened');
+            if ($value === null) {
+                //TODO throw exception: cant unset a value thats not set
+                return true;
+            }
+            switch ($visibility) {
+                case self::VISIBILITY_PRIVATE :
+                    $this->privateVars[$index] = $value;
+                    break;
+                case self::VISIBILITY_PROTECTED:
+                    $this->protectedVars[$index] = $value;
+                    break;
+                case self::VISIBILITY_PUBLIC:
+                    $this->publicVars[$index] = $value;
+                    break;
+                default:
+                    //TODO ShouldNotHappenException
             }
         }
         return true;
     }
 
+    /** normal var call */
     public function checkAndSetOriginatorVar(string $index, $value): bool
     {
         $isSet = $this->checkAndSet($this->publicVars, $index, $value) ||
@@ -189,9 +221,12 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
         return false;
     }
 
-    public function getOriginVar(string $index)
+    /** normal var call */
+    public function getOriginVar(string $index): ?DataInterface
     {
-        //TODO if $this return this FunctionObject
+        if ($index === 'this') {
+            return $this; //TODO maybe give out a proxy? which can access $this objects inner vars ,on outer calls
+        }
         if (array_key_exists($index, $this->privateVars)) {
             return $this->privateVars[$index];
         }
@@ -202,10 +237,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
             return $this->publicVars[$index];
         }
 
-        if ($this->origin !== null) {
-            return $this->origin->getOriginVar($index);
-        }
-        return null;
+        return $this->origin?->getOriginVar($index);
     }
 
 
@@ -213,10 +245,10 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
     // call to object
 
     //call from outside to this object
-    public function getObjectPubliclyAvailableVar(string $index)
+    public function getObjectPubliclyAvailableVar(string $index): ?DataInterface
     {
         if (array_key_exists($index, $this->publicFunctions)) {
-            return $this->publicFunctions[$index];
+            return $this->publicVars[$index];
         }
 
         foreach ($this->parents as $parent) {
@@ -242,8 +274,9 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
         return false;
     }
 
+
     //call to protected : only in parent available
-    public function getProtectedVariable(string $index)
+    public function getPublicAndProtectedVariable(string $index): ?DataInterface
     {
         $var = $this->protectedVars[$index];
         if ($var !== null) {
@@ -256,7 +289,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
         }
 
         foreach ($this->parents as $parent) {
-            $var = $parent->getProtectedVariable($index);
+            $var = $parent->getPublicAndProtectedVariable($index);
             if ($var !== null) {
                 return $var;
             }
@@ -264,43 +297,15 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
         return null;
     }
 
-//    public function setProtectedVariable(string $index, $value)
-//    {
-//        if (array_key_exists($index, $this->protectedVars)) {
-//            $this->protectedVars[$index] = $value;
-//            if ($value === null) {
-//                unset($this->protectedVars[$index]);
-//            }
-//            return true;
-//        }
-//        foreach ($this->parents as $parent) {
-//            if ($parent->setProtectedParentVariable($index, $value)) {
-//                //parent has variable
-//                return true;
-//            }
-//        }
-//        if ($this->setObjectOuterVar($index, $value)) {
-//            return true;
-//        }
-//
-//        $this->protectedVars[$index] = $value;
-//        if ($value === null) {
-//            unset($this->protectedVars[$index]);
-//        }
-//        return true;
-//    }
-
-    public function setProtectedParentVariable(string $index, $value): bool
+    public function setPublicAndProtectedVariable(string $index, ?DataInterface $value): bool
     {
-        if (array_key_exists($index, $this->protectedVars)) {
-            $this->protectedVars[$index] = $value;
-            if ($value === null) {
-                unset($this->protectedVars[$index]);
-            }
+        if ($this->checkAndSet($this->protectedVars, $index, $value) ||
+            $this->checkAndSet($this->publicVars, $index, $value)) {
             return true;
         }
+
         foreach ($this->parents as $parent) {
-            if ($parent->setProtectedParentVariable($index, $value)) {
+            if ($parent->setPublicAndProtectedVariable($index, $value)) {
                 //parent has variable
                 return true;
             }
@@ -310,6 +315,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
 
     //call from inside to this object
     //call to $this->etc
+    //TODO keep? $this->getPublicAndProtectedVariable does that without looking for privates? good or not?
     public function getObjectInnerVar(string $index)
     {
         $var = $this->privateVars[$index];
@@ -317,7 +323,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
             return $var;
         }
 
-        $var = $this->getProtectedVariable($index);
+        $var = $this->getPublicAndProtectedVariable($index);
         if ($var !== null) {
             return $var;
         }
@@ -330,7 +336,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
         if ($this->checkAndSet($this->privateVars, $index, $value)) {
             return true;
         }
-        if ($this->setProtectedParentVariable($index, $value)) {
+        if ($this->setPublicAndProtectedVariable($index, $value)) {
             return true;
         }
 
@@ -341,39 +347,5 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DatatypeInt
         }
         return true;
     }
-
-//    public function setPrivateParentVariable(string $index, $value): bool
-//    {
-//        if (array_key_exists($index, $this->privateVars)) {
-//            $this->privateVars[$index] = $value;
-//            if ($value === null) {
-//                unset($this->privateVars[$index]);
-//            }
-//            return true;
-//        }
-//        foreach ($this->parents as $parent) {
-//            if ($parent->setPrivateParentVariable($index, $value)) {
-//                //parent has variable
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
-//    public function setPublicVar(string $index, $value): bool
-//    {
-//        foreach ($this->parents as $parent) {
-//            if ($parent->setObjectOuterVar($index, $value)) {
-//                return true; //parent has variable
-//            }
-//        }
-//        $this->publicVars[$index] = $value;
-//        if ($value === null) {
-//            unset($this->publicVars[$index]);
-//        }
-//        return true;
-//    }
-
-
 
 }
