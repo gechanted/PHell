@@ -29,7 +29,6 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
      * provides global FUNCTIONS
      */
     private ?FunctionObject $stack; //runningFunction
-    private ?FunctionParenthesis $parenthesis; //TODO apparently not implemented!!!
 
     private string $name;
 
@@ -39,8 +38,13 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
 
         $this->stack = $stack;
         $this->origin = $origin;
-        $this->parenthesis = $parenthesis;
         $this->name = $name;
+
+        if ($parenthesis !== null) {
+            foreach ($parenthesis->getParameters() as $parameter) {
+                $this->privateVars[$parameter->getName()] = $parameter->getData();
+            }
+        }
     }
 
     public function getNames(): array
@@ -74,6 +78,74 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
     private array $privateFunctions = [];
     /** @var LambdaFunction[] */
     private array $protectedFunctions = [];
+
+
+    // extend --------------------------------------------
+    public bool $SAFETY_CHECK_ON_EXTEND = true; // TODO config
+
+    public function extend(FunctionObject $newParent, CodeExceptionTransmitter $exceptionTransmitter): void
+    {
+        if ($this->checkExtensionRecursionParents($this) === false) {
+            //TODO throw Exception
+            return;
+        }
+        if ($this->SAFETY_CHECK_ON_EXTEND) {
+            $thisVars = $this->getAccessibleVars();
+            $parentVars = $this->getAccessibleVarsParents();
+            $newParentVars = array_merge($newParent->getAccessibleVars(), $newParent->getAccessibleVarsParents());
+
+            $diamondProblems = array_intersect($newParentVars, $parentVars);
+            $notSolvedDiamondProblems = array_diff($diamondProblems, $thisVars);
+
+            if (count($notSolvedDiamondProblems) !== 0) {
+                // TODO throw Exception
+                return;
+            }
+        }
+        $this->parents[] = $newParent;
+    }
+
+    /** pls use it rarely, in thought out contexts */
+    public function extendWithoutPrecaution(FunctionObject $newParent)
+    {
+        $this->parents[] = $newParent;
+    }
+
+    /** returns false if recursion happens */
+    public function checkExtensionRecursion(FunctionObject $object): bool
+    {
+        return ($object !== $this) || $this->checkExtensionRecursionParents($object);
+    }
+
+    /** returns false if recursion happens */
+    public function checkExtensionRecursionParents(FunctionObject $object): bool
+    {
+        foreach ($this->parents as $parent) {
+            if ($parent->checkExtensionRecursion($object) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** @return string[] */
+    public function getAccessibleVars(): array
+    {
+        return array_merge(array_keys($this->protectedVars), array_keys($this->publicVars));
+    }
+
+    /** @return string[] */
+    public function getAccessibleVarsParents(): array
+    {
+        $arr = [];
+        foreach ($this->parents as $parent) {
+            $arr = array_merge($arr, $parent->getAccessibleVars(), $parent->getAccessibleVarsParents());
+        }
+        return $arr;
+    }
+
+
+    // functions --------------------------------------------
 
     //normal access
     public function setPublicFunction(FunctionObject $function): void { $this->publicFunctions[] = $function; }
@@ -185,7 +257,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
     {
         if ($this->checkAndSetOriginatorVar($index, $value) === false) {
             if ($value === null) {
-                //TODO throw exception: cant unset a value thats not set
+                //TODO throw exception: cant unset a value that's not set
                 return true;
             }
             switch ($visibility) {
@@ -206,23 +278,23 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
     }
 
     /** normal var call */
-    public function checkAndSetOriginatorVar(string $index, $value): bool
+    public function checkAndSetOriginatorVar(string $index, ?DataInterface $value): bool
     {
         $isSet = $this->checkAndSet($this->publicVars, $index, $value) ||
             $this->checkAndSet($this->protectedVars, $index, $value) ||
             $this->checkAndSet($this->privateVars, $index, $value);
 
-        if ($isSet === false) {
-            if ($this->origin !== null) {
-                return $this->origin->checkAndSetOriginatorVar($index, $value);
-            }
+        if ($isSet !== false) {
+            return true;
         }
-
-        return false;
+        if ($this->origin === null) {
+            return false;
+        }
+        return $this->origin->checkAndSetOriginatorVar($index, $value);
     }
 
     /** normal var call */
-    public function getOriginVar(string $index): ?DataInterface
+    public function getNormalVar(string $index): ?DataInterface
     {
         if ($index === 'this') {
             return $this; //TODO maybe give out a proxy? which can access $this objects inner vars ,on outer calls
@@ -237,7 +309,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
             return $this->publicVars[$index];
         }
 
-        return $this->origin?->getOriginVar($index);
+        return $this->origin?->getNormalVar($index);
     }
 
 

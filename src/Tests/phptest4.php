@@ -1,5 +1,10 @@
 <?php
 
+foreach (null as $what) {
+
+}
+
+
 class XD {
     public function __toString(): string
     {

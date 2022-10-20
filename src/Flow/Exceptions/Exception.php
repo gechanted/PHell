@@ -10,9 +10,13 @@ class Exception extends FunctionObject
 
     public function __construct(string $name, string $msg, array $parentNames = [])
     {
-        $parentNames[] = 'Exception';
         parent::__construct($name, null, null, null);
+
         $this->setNormalVar('msg', new Strin($msg));
-        // TODO add parents for simplicity
+
+        $parentNames[] = 'Exception';
+        foreach ($parentNames as $parent) {
+            $this->extendWithoutPrecaution(new FunctionObject($parent, null, null, null));
+        }
     }
 }
