@@ -3,10 +3,9 @@ namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\FloatType;
 use PHell\Flow\Functions\FunctionObject;
-use PHell\Flow\Main\CodeExceptionTransmitter;
-use PHell\Flow\Main\ExecutionResult;
-use PHell\Flow\Main\ReturnLoad;
-use PHell\Flow\Main\Statement;
+use Phell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Main\Returns\ExecutionResult;
+use PHell\Flow\Main\Returns\ReturnLoad;
 
 class Floa extends FloatType implements DataInterface
 {

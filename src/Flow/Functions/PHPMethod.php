@@ -3,17 +3,14 @@
 namespace PHell\Flow\Functions;
 
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
-use ReflectionFunction;
+use ReflectionMethod;
 
-class PHPFunction extends PHPFunctionContainer
+class PHPMethod extends PHPFunctionContainer
 {
 
-    /**
-     * @param ReflectionFunction $function
-     */
-    public function __construct(private readonly ReflectionFunction $function)
+    public function __construct(private readonly ReflectionMethod $function, private readonly object $object)
     {
-        parent::__construct($function);
+        parent::__construct($this->function);
     }
 
     public function invoke(FunctionParenthesis $parenthesis): mixed
@@ -23,6 +20,6 @@ class PHPFunction extends PHPFunctionContainer
             $parameters[] = $parameter->getData()->v();
         }
 
-        return $this->function->invokeArgs($parameters);
+        return $this->function->invokeArgs($this->object, $parameters);
     }
 }

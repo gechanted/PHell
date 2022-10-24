@@ -5,9 +5,10 @@ namespace PHell\Flow\Functions;
 use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\DatatypeValidators\PHellObjectDatatypeValidator;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
-use PHell\Flow\Main\CodeExceptionTransmitter;
-use PHell\Flow\Main\ExecutionResult;
-use PHell\Flow\Main\ReturnLoad;
+use Phell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Main\Returns\ExecutionResult;
+use PHell\Flow\Main\Returns\ReturnLoad;
+use ReflectionFunction;
 
 class FunctionObject extends PHellObjectDatatypeValidator implements DataInterface
 {
@@ -26,7 +27,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
 
     /**
      * @var FunctionObject|null
-     * provides global FUNCTIONS
+     * provides global functions
      */
     private ?FunctionObject $stack; //runningFunction
 
@@ -65,6 +66,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
     public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad { return new ReturnLoad($this); }
 
 
+    //TODO this currently doesn't allow Typechecks on Variables
     /** @var DataInterface[] */
     private array $publicVars = [];
     /** @var DataInterface[] */
@@ -148,9 +150,9 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
     // functions --------------------------------------------
 
     //normal access
-    public function setPublicFunction(FunctionObject $function): void { $this->publicFunctions[] = $function; }
-    public function setProtectedFunction(FunctionObject $function): void { $this->protectedFunctions[] = $function; }
-    public function setPrivateFunction(FunctionObject $function): void { $this->privateFunctions[] = $function; }
+    public function addPublicFunction(LambdaFunction $function): void { $this->publicFunctions[] = $function; }
+    public function addProtectedFunction(LambdaFunction $function): void { $this->protectedFunctions[] = $function; }
+    public function addPrivateFunction(LambdaFunction $function): void { $this->privateFunctions[] = $function; }
 
 
     /** @return LambdaFunction[] */
@@ -222,7 +224,8 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
             array_merge($functions, $this->stack->getStackFunction($index));
         } else {//search for php functions if the stack is up
             if (function_exists($index)) {
-                $functions[] = new PHPFunction($index);
+                $reflection = new ReflectionFunction($index);
+                $functions[] = new PHPLambdaFunction(new PHPFunction($reflection));
             }
         }
         return $functions;

@@ -1,11 +1,11 @@
 <?php
-namespace PHell\Flow\IfClause;
+namespace PHell\Commands\IfClause;
 
 use PHell\Flow\Functions\FunctionObject;
-use PHell\Flow\Main\Code;
-use PHell\Flow\Main\EasyCommand;
-use PHell\Flow\Main\ExecutionResult;
-use PHell\Flow\Main\Statement;
+use Phell\Flow\Main\Code;
+use Phell\Flow\Main\EasyCommand;
+use PHell\Flow\Main\Returns\ExecutionResult;
+use Phell\Flow\Main\Statement;
 
 class IfClause extends EasyCommand
 {
@@ -14,10 +14,10 @@ class IfClause extends EasyCommand
     {
     }
 
-    public function exec(FunctionObject $currentEnvironment): ExecutionResult
+    protected function exec(FunctionObject $currentEnvironment): ExecutionResult
     {
         foreach ($this->code->getStatements() as $statement) {
-            $result = $statement->execute($currentEnvironment, $this);
+            $result = $statement->execute($currentEnvironment, $this->upper);
             if ($result->isActionRequired()) {
                 return $result;
             }

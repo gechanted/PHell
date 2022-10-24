@@ -1,7 +1,7 @@
 <?php
-namespace PHell\Flow\Loop;
+namespace PHell\Commands\Loop;
 
-use PHell\Flow\Main\Code;
+use Phell\Flow\Main\Code;
 
 class ForeachLoop
 {

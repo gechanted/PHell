@@ -6,9 +6,9 @@ use PHell\Flow\Data\Data\Floa;
 use PHell\Flow\Data\Data\Intege;
 use PHell\Flow\Data\Data\Strin;
 use PHell\Flow\Functions\FunctionObject;
-use PHell\Flow\Main\EasyStatement;
-use PHell\Flow\Main\ReturnLoad;
-use PHell\Flow\Main\Statement;
+use Phell\Flow\Main\EasyStatement;
+use PHell\Flow\Main\Returns\ReturnLoad;
+use Phell\Flow\Main\Statement;
 
 class Plus extends EasyStatement
 {
@@ -52,7 +52,7 @@ class Plus extends EasyStatement
 //        }
     }
 
-    public function value(FunctionObject $currentEnvironment): ReturnLoad
+    protected function value(FunctionObject $currentEnvironment): ReturnLoad
     {
         // TODO: Implement value() method.
     }

@@ -2,11 +2,15 @@
 
 namespace PHell\Operators;
 
+use PHell\Exceptions\ShouldntHappenException;
+use PHell\Flow\Exceptions\CanOnlyThrowObjectsException;
 use PHell\Flow\Functions\FunctionObject;
-use PHell\Flow\Main\EasyStatement;
-use PHell\Flow\Main\ExceptionReturnLoad;
-use PHell\Flow\Main\ReturnLoad;
-use PHell\Flow\Main\Statement;
+use Phell\Flow\Main\EasyStatement;
+use PHell\Flow\Main\Returns\ExceptionHandlingResultNoShove;
+use PHell\Flow\Main\Returns\ExceptionHandlingResultShove;
+use Phell\Flow\Main\Returns\ExceptionReturnLoad;
+use PHell\Flow\Main\Returns\ReturnLoad;
+use Phell\Flow\Main\Statement;
 
 class ThrowOperator extends EasyStatement
 {
@@ -15,18 +19,22 @@ class ThrowOperator extends EasyStatement
     {
     }
 
-    public function value(FunctionObject $currentEnvironment): ReturnLoad
+    protected function value(FunctionObject $currentEnvironment): ReturnLoad
     {
         $exception = $this->statement->getValue($currentEnvironment, $this->upper);
-        if ($exception instanceof FunctionObject === false) //TODO convert to isObject() ?
+        if ($exception instanceof FunctionObject === false) //TODO maybe convert to isObject() ?
         {
-            //TODO throw an exception here
+            $this->upper->transmit(new CanOnlyThrowObjectsException());
+            return new ExceptionReturnLoad();
         }
         $result = $this->upper->transmit($exception);
-        if ($result->shallContinue()) {
+        if ($result instanceof ExceptionHandlingResultShove) {
             return new ReturnLoad($result->getShoveBackValue());
         }
-        return new ExceptionReturnLoad();
+        if ($result instanceof ExceptionHandlingResultNoShove) {
+            return new ExceptionReturnLoad($result->getExecutionResult());
+        }
+        throw new ShouldntHappenException();
     }
 
 }

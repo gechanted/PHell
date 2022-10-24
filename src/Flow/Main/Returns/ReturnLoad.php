@@ -1,6 +1,6 @@
 <?php
 
-namespace PHell\Flow\Main;
+namespace PHell\Flow\Main\Returns;
 
 use PHell\Flow\Data\Data\DataInterface;
 

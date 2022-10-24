@@ -30,12 +30,12 @@ class FunctionResolver
             $depth = 0;
 
             if ($given->getReturnType() instanceof UnknownDatatypeValidator === false) {
-                if ($given->getReturnType()-> validate( $option->getParenthesis()->getReturnType())->isSuccess() === false) {
+                if ($given->getReturnType()->validate( $option->getParenthesis()->getReturnType())->isSuccess() === false) {
                     continue;
                 }
             }
             foreach ($option->getParenthesis()->getParameters() as $optionParameter) {
-                foreach ($given->getParameters() as $targetParameter) {
+                foreach ($given->getParameters() as $targetParameter) { //TODO !!! doesnt work foreach must be on both
                     $validation = $optionParameter->getDatatype()-> validate($targetParameter->getData());
                     if ($validation->isSuccess() === false) {
                         continue 3; //continue with next option, because this doesn't fit

@@ -1,13 +1,13 @@
 <?php
 
-namespace PHell\Flow\IfClause;
+namespace PHell\Commands\IfClause;
 
 use PHell\Flow\Data\Data\Boolea;
 use PHell\Flow\Data\DatatypeValidators\BooleanTypeValidator;
 use PHell\Flow\Functions\FunctionObject;
-use PHell\Flow\Main\Code;
-use PHell\Flow\Main\EasyCommand;
-use PHell\Flow\Main\ExecutionResult;
+use Phell\Flow\Main\Code;
+use Phell\Flow\Main\EasyCommand;
+use PHell\Flow\Main\Returns\ExecutionResult;
 
 class IfConstruct extends EasyCommand
 {
@@ -21,15 +21,15 @@ class IfConstruct extends EasyCommand
         $this->ifClauses[] = new IfClause(new Boolea(true), $else);
     }
 
-    public function exec(FunctionObject $currentEnvironment): ExecutionResult
+    protected function exec(FunctionObject $currentEnvironment): ExecutionResult
     {
         $validator = new BooleanTypeValidator();
         foreach ($this->ifClauses as $clause) {
-            $value = $clause->getCondition()->getValue();
+            $value = $clause->getCondition()->getValue()->getData();
             $result = $validator->validate($value);
-            if ($result->isSuccess() && $value instanceof Boolea &&$value->getValue === true) // TODO !!!
+            if ($result->isSuccess() && $value instanceof Boolea && $value->getBool() === true)
             {
-                return $clause->exec($currentEnvironment);
+                return $clause->execute($currentEnvironment, $this->upper);
             }
         }
        return new ExecutionResult();

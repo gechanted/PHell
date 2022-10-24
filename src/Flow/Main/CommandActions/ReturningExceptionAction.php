@@ -1,6 +1,6 @@
 <?php
 
-namespace PHell\Flow\Main\CommandActions;
+namespace Phell\Flow\Main\CommandActions;
 
 class ReturningExceptionAction implements CommandAction
 {

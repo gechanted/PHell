@@ -2,7 +2,7 @@
 
 namespace PHell\Flow\Exceptions;
 
-class CanOnlyThrowObjectsException extends Exception
+class CanOnlyThrowObjectsException extends DataTypeMismatchException
 {
 
     const EXCEPTION_NAME = 'ThrowException';

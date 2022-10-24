@@ -3,10 +3,10 @@
 namespace PHell\Flow\Functions\StandardFunctions;
 
 use PHell\Flow\Functions\FunctionObject;
-use PHell\Flow\Main\EasyStatement;
-use PHell\Flow\Main\ExceptionReturnLoad;
-use PHell\Flow\Main\ReturnLoad;
-use PHell\Flow\Main\Statement;
+use Phell\Flow\Main\EasyStatement;
+use Phell\Flow\Main\Returns\ExceptionReturnLoad;
+use PHell\Flow\Main\Returns\ReturnLoad;
+use Phell\Flow\Main\Statement;
 
 class Dump extends EasyStatement
 {
@@ -15,7 +15,7 @@ class Dump extends EasyStatement
     {
     }
 
-    public function value(FunctionObject $currentEnvironment): ReturnLoad
+    protected function value(FunctionObject $currentEnvironment): ReturnLoad
     {
         $load = $this->statement->getValue($currentEnvironment, $this->upper);
         if ($load->isExceptionReturn()) {

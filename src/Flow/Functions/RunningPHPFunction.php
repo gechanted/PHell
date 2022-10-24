@@ -2,62 +2,61 @@
 
 namespace PHell\Flow\Functions;
 
+use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\Boolea;
 use PHell\Flow\Data\Data\ClosedResource;
+use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Data\Floa;
 use PHell\Flow\Data\Data\Intege;
 use PHell\Flow\Data\Data\Nil;
 use PHell\Flow\Data\Data\Resource;
 use PHell\Flow\Data\Data\Strin;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
-use PHell\Flow\Main\EasyStatement;
-use PHell\Flow\Main\ReturnLoad;
+use Phell\Flow\Main\EasyStatement;
+use PHell\Flow\Main\Returns\ReturnLoad;
 
 class RunningPHPFunction extends EasyStatement
 {
 
-    public function __construct(private readonly string $name, private readonly FunctionParenthesis $parenthesis)
+    public function __construct(private readonly PHPFunctionContainer $function,
+                                private readonly FunctionParenthesis $parenthesis)
     {
     }
 
-    public function value(FunctionObject $currentEnvironment): ReturnLoad
+    protected function value(FunctionObject $currentEnvironment): ReturnLoad
     {
-        $parameters = [];
-        foreach ($this->parenthesis->getParameters() as $parameter) {
-            $parameters[] = $parameter->getData()->v();
-        }
-
 
         try {
-            $result = call_user_func_array($this->name, $parameters);
+            $result = $this->function->invoke($this->parenthesis);
         } catch (\Throwable $throwable) {
             //TODO do Exception
         }
 
-        $return = null; //TODO convert from null to a useable Resource
+        return new ReturnLoad(self::convertPHPValue($result));
+    }
 
-        if (is_array($result)) {
-            if ($return !== null) { /* TODO throw Exception */ }
-        } if (is_bool($result)) {
-            if ($return !== null) { /* TODO throw Exception */ }
-            $return = new Boolea($result);
-        } if (is_int($result)) {
-            $return = new Intege($result);
-        } if (is_string($result)) {
-            $return = new Strin($result);
-        } if (is_float($result)) {
-            $return = new Floa($result);
-        } if (is_object($result)) {
-            $return = $PHPObjectConverter->convert($result);
-        } if (is_null($result)) {
-            $return = new Nil();
-        } if (is_resource($result)) {
-            $return = new Resource($result);
+    public static function convertPHPValue(mixed $value): DataInterface
+    {
+        if (is_array($value)) {
+            // TODO implement
+            throw new ShouldntHappenException();
+        } elseif (is_bool($value)) {
+            return new Boolea($value);
+        } elseif (is_int($value)) {
+            return new Intege($value);
+        } elseif (is_string($value)) {
+            return new Strin($value);
+        } elseif (is_float($value)) {
+            return new Floa($value);
+        } elseif (is_object($value)) {
+            return new PHPObject($value);
+        } elseif (is_null($value)) {
+            return new Nil();
+        } elseif (is_resource($value)) {
+            return new Resource($value);
         } else {
             //a closed resource??
-            $return = new ClosedResource($result);
+            return new ClosedResource($value);
         }
-
-        return new ReturnLoad($return);
     }
 }

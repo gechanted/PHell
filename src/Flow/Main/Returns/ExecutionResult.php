@@ -1,8 +1,8 @@
 <?php
 
-namespace PHell\Flow\Main;
+namespace PHell\Flow\Main\Returns;
 
-use PHell\Flow\Main\CommandActions\CommandAction;
+use Phell\Flow\Main\CommandActions\CommandAction;
 
 class ExecutionResult
 {

@@ -2,10 +2,11 @@
 
 namespace PHell\Flow\Main;
 
-use PHell\Flow\Exceptions\Exception;
+use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Main\Returns\ExceptionHandlingResult;
 
 interface CodeExceptionTransmitter
 {
 
-    public function transmit(Exception $exception): ExceptionHandlingResult;
+    public function transmit(FunctionObject $exception): ExceptionHandlingResult;
 }

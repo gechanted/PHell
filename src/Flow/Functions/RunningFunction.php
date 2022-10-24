@@ -6,14 +6,15 @@ use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Data\Voi;
 use PHell\Flow\Data\DatatypeValidators\DatatypeValidatorInterface;
-use PHell\Flow\Exceptions\Exception;
-use PHell\Flow\Main\Code;
-use PHell\Flow\Main\CommandActions\ContinueAction;
-use PHell\Flow\Main\CommandActions\ReturnAction;
-use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
-use PHell\Flow\Main\EasyStatement;
-use PHell\Flow\Main\ExceptionReturnLoad;
-use PHell\Flow\Main\ReturnLoad;
+use PHell\Flow\Exceptions\OverContinueException;
+use PHell\Flow\Exceptions\ReturnValueDoesntMatchType;
+use Phell\Flow\Main\Code;
+use Phell\Flow\Main\CommandActions\ContinueAction;
+use Phell\Flow\Main\CommandActions\ReturnAction;
+use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
+use Phell\Flow\Main\EasyStatement;
+use Phell\Flow\Main\Returns\ExceptionReturnLoad;
+use PHell\Flow\Main\Returns\ReturnLoad;
 
 class RunningFunction extends EasyStatement
 {
@@ -26,17 +27,18 @@ class RunningFunction extends EasyStatement
     {
     }
 
-    public function value(FunctionObject $currentEnvironment): ReturnLoad
+    protected function value(FunctionObject $currentEnvironment): ReturnLoad
     {
         foreach ($this->code->getStatements() as $statement) {
-            $result = $statement->execute($this->object, $this);
+            $result = $statement->execute($this->object, $this->upper);
             if ($result->isActionRequired()) {
 
                 $action = $result->getAction();
                 if ($action instanceof ReturnAction) {
                     return $this->return($action->getValue());
                 } elseif ($action instanceof ContinueAction) {
-                    // TODO throw error/exception here
+                    $this->upper->transmit(new OverContinueException());
+                    return new ExceptionReturnLoad();
                 } elseif ($action instanceof ReturningExceptionAction) {
                     return new ExceptionReturnLoad();
 
@@ -56,8 +58,7 @@ class RunningFunction extends EasyStatement
         if ($this->returnType->validate($value)) {
             return new ReturnLoad($value);
         }
-        //TODO throw specialized Exception
-        $this->upper->transmit(new Exception());
+        $this->upper->transmit(new ReturnValueDoesntMatchType());
         return new ExceptionReturnLoad();
     }
 }

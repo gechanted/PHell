@@ -4,8 +4,8 @@ namespace PHell\Flow\Functions;
 
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
-use PHell\Flow\Main\Code;
-use PHell\Flow\Main\Statement;
+use Phell\Flow\Main\Code;
+use Phell\Flow\Main\Statement;
 
 /**
  * the simple, not executed function
