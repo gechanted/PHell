@@ -11,8 +11,13 @@ use PHell\Flow\Data\Data\Intege;
 use PHell\Flow\Data\Data\Nil;
 use PHell\Flow\Data\Data\Resource;
 use PHell\Flow\Data\Data\Strin;
+use PHell\Flow\Exceptions\PHPException;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use Phell\Flow\Main\EasyStatement;
+use PHell\Flow\Main\Returns\DataReturnLoad;
+use Phell\Flow\Main\Returns\ExceptionReturnLoad;
+use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
 
 class RunningPHPFunction extends EasyStatement
@@ -29,10 +34,11 @@ class RunningPHPFunction extends EasyStatement
         try {
             $result = $this->function->invoke($this->parenthesis);
         } catch (\Throwable $throwable) {
-            //TODO do Exception
+            $r = $this->upper->transmit(new PHPException($throwable));
+            return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
         }
 
-        return new ReturnLoad(self::convertPHPValue($result));
+        return new DataReturnLoad(self::convertPHPValue($result));
     }
 
     public static function convertPHPValue(mixed $value): DataInterface

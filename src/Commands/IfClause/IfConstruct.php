@@ -2,11 +2,14 @@
 
 namespace PHell\Commands\IfClause;
 
+use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\Boolea;
 use PHell\Flow\Data\DatatypeValidators\BooleanTypeValidator;
 use PHell\Flow\Functions\FunctionObject;
 use Phell\Flow\Main\Code;
 use Phell\Flow\Main\EasyCommand;
+use PHell\Flow\Main\Returns\DataReturnLoad;
+use Phell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 
 class IfConstruct extends EasyCommand
@@ -25,7 +28,12 @@ class IfConstruct extends EasyCommand
     {
         $validator = new BooleanTypeValidator();
         foreach ($this->ifClauses as $clause) {
-            $value = $clause->getCondition()->getValue()->getData();
+            $RL = $clause->getCondition()->getValue();
+            if ($RL instanceof ExceptionReturnLoad) {
+                return $RL->getExecutionResult();
+            } if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+
+            $value = $RL->getData();
             $result = $validator->validate($value);
             if ($result->isSuccess() && $value instanceof Boolea && $value->getBool() === true)
             {

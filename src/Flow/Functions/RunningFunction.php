@@ -13,7 +13,9 @@ use Phell\Flow\Main\CommandActions\ContinueAction;
 use Phell\Flow\Main\CommandActions\ReturnAction;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use Phell\Flow\Main\EasyStatement;
+use PHell\Flow\Main\Returns\DataReturnLoad;
 use Phell\Flow\Main\Returns\ExceptionReturnLoad;
+use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
 
 class RunningFunction extends EasyStatement
@@ -36,11 +38,13 @@ class RunningFunction extends EasyStatement
                 $action = $result->getAction();
                 if ($action instanceof ReturnAction) {
                     return $this->return($action->getValue());
+
                 } elseif ($action instanceof ContinueAction) {
-                    $this->upper->transmit(new OverContinueException());
-                    return new ExceptionReturnLoad();
+                    $r = $this->upper->transmit(new OverContinueException());
+                    return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
+
                 } elseif ($action instanceof ReturningExceptionAction) {
-                    return new ExceptionReturnLoad();
+                    return new ExceptionReturnLoad(new ExecutionResult($action));
 
                     //TODO on redo command -> throw exception since it belong to loops
 
@@ -56,9 +60,9 @@ class RunningFunction extends EasyStatement
     private function return(DataInterface $value): ReturnLoad
     {
         if ($this->returnType->validate($value)) {
-            return new ReturnLoad($value);
+            return new DataReturnLoad($value);
         }
-        $this->upper->transmit(new ReturnValueDoesntMatchType());
-        return new ExceptionReturnLoad();
+        $r = $this->upper->transmit(new ReturnValueDoesntMatchType());
+        return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
     }
 }

@@ -6,6 +6,7 @@ use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\DatatypeValidators\PHellObjectDatatypeValidator;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
 use Phell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
 use ReflectionFunction;
@@ -63,7 +64,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
 
     public function v() { return $this; }
 
-    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad { return new ReturnLoad($this); }
+    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad { return new DataReturnLoad($this); }
 
 
     //TODO this currently doesn't allow Typechecks on Variables

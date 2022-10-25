@@ -5,9 +5,10 @@ use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Functions\FunctionObject;
 use Phell\Flow\Main\Code;
 use Phell\Flow\Main\CodeExceptionTransmitter;
+use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use Phell\Flow\Main\CommandActions\ShoveAction;
 use Phell\Flow\Main\EasyCommand;
-use Phell\Flow\Main\ExceptionHandlingResult;
+use PHell\Flow\Main\Returns\ExceptionHandlingResult;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultNoShove;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultShove;
 use PHell\Flow\Main\Returns\ExecutionResult;
@@ -31,8 +32,12 @@ class TryConstruct extends EasyCommand implements CodeExceptionTransmitter
             $result = $statement->execute($currentEnvironment, $this); //here is the new CodeExceptionTransmitter injected
             if ($result->isActionRequired()) {
 
-                if ()
-
+                if ($result instanceof ReturningExceptionAction) {
+                    //validate this is acceptor
+                    if ($result->getHandler() === $this) {
+                        return $result->getExecutionResult();
+                    }
+                }
                 return $result;
             }
         }
@@ -55,14 +60,15 @@ class TryConstruct extends EasyCommand implements CodeExceptionTransmitter
                     if ($result->isActionRequired()) {
 
                         if ($result instanceof ShoveAction) {
-                            return new ExceptionHandlingResultShove($result->getData());
+                            return new ExceptionHandlingResultShove($this, $result->getData());
                         }
 
-                        return new ExceptionHandlingResultNoShove($result);
+                        return new ExceptionHandlingResultNoShove($this, new ExecutionResult(new ReturningExceptionAction($this, $result)));
                     }
                 }
-                return new ExceptionHandlingResultNoShove(new Ex);
+                return new ExceptionHandlingResultNoShove($this, new ExecutionResult());
             }
         }
+        return $this->upper->transmit($exception);
     }
 }

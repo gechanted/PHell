@@ -1,7 +1,17 @@
 <?php
 
-namespace PHell\Flow\Main;
+namespace PHell\Flow\Main\Returns;
 
-interface ExceptionHandlingResult
+use PHell\Commands\TryCatch\TryConstruct;
+
+class ExceptionHandlingResult
 {
+    public function __construct(private readonly TryConstruct $handler)
+    {
+    }
+
+    public function getHandler(): TryConstruct
+    {
+        return $this->handler;
+    }
 }

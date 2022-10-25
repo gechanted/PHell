@@ -6,6 +6,7 @@ use PHell\Flow\Data\Datatypes\DatatypeInterface;
 use PHell\Flow\Data\DatatypeValidators\DatatypeValidation;
 use PHell\Flow\Functions\FunctionObject;
 use Phell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
 
@@ -39,6 +40,6 @@ class ClosedResource implements DataInterface
 
     public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
     {
-        return new ReturnLoad($this);
+        return new DataReturnLoad($this);
     }
 }

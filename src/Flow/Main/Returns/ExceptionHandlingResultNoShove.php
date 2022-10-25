@@ -2,14 +2,14 @@
 
 namespace PHell\Flow\Main\Returns;
 
-use PHell\Flow\Main\ExceptionHandlingResult;
-use PHell\Flow\Main\Returns\ExecutionResult;
+use PHell\Commands\TryCatch\TryConstruct;
 
-class ExceptionHandlingResultNoShove implements ExceptionHandlingResult
+class ExceptionHandlingResultNoShove extends ExceptionHandlingResult
 {
 
-    public function __construct(private readonly ExecutionResult $executionResult)
+    public function __construct(TryConstruct $handler, private readonly ExecutionResult $executionResult)
     {
+        parent::__construct($handler);
     }
 
     public function getExecutionResult(): ExecutionResult

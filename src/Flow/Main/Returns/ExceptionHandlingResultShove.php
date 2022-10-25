@@ -2,14 +2,15 @@
 
 namespace PHell\Flow\Main\Returns;
 
+use PHell\Commands\TryCatch\TryConstruct;
 use PHell\Flow\Data\Data\DataInterface;
-use PHell\Flow\Main\ExceptionHandlingResult;
 
-class ExceptionHandlingResultShove implements ExceptionHandlingResult
+class ExceptionHandlingResultShove extends ExceptionHandlingResult
 {
 
-    public function __construct(private readonly DataInterface $shoveBackValue)
+    public function __construct(TryConstruct $handler, private readonly DataInterface $shoveBackValue)
     {
+        parent::__construct($handler);
     }
 
     public function shallContinue(): bool
@@ -17,7 +18,7 @@ class ExceptionHandlingResultShove implements ExceptionHandlingResult
         return false;
     }
 
-    public function getShoveBackValue()
+    public function getShoveBackValue(): DataInterface
     {
         return $this->shoveBackValue;
     }

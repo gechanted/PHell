@@ -3,11 +3,15 @@
 namespace Phell\Flow\Main\Returns;
 
 
-class ExceptionReturnLoad extends ReturnLoad
+class ExceptionReturnLoad implements ReturnLoad
 {
 
-    public function __construct()
+    public function __construct(private readonly ExecutionResult $executionResult)
     {
-        parent::__construct(null);
+    }
+
+    public function getExecutionResult(): ExecutionResult
+    {
+        return $this->executionResult;
     }
 }
