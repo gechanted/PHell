@@ -10,7 +10,7 @@ use Phell\Flow\Main\Statement;
 /**
  * the simple, not executed function
  */
-class LambdaFunction //implements LambdaFunctionInterface
+class LambdaFunction //implements LambdaFunctionInterface TODO maybe
 {
 
     public function __construct(

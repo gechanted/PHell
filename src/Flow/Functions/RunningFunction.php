@@ -46,6 +46,7 @@ class RunningFunction extends EasyStatement
                 } elseif ($action instanceof ReturningExceptionAction) {
                     return new ExceptionReturnLoad(new ExecutionResult($action));
 
+
                     //TODO on redo command -> throw exception since it belong to loops
 
                 } else {
