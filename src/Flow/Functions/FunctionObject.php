@@ -2,6 +2,7 @@
 
 namespace PHell\Flow\Functions;
 
+use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\DatatypeValidators\PHellObjectDatatypeValidator;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
@@ -275,7 +276,7 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
                     $this->publicVars[$index] = $value;
                     break;
                 default:
-                    //TODO ShouldNotHappenException
+                    throw new ShouldntHappenException();
             }
         }
         return true;
@@ -389,39 +390,39 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
         return false;
     }
 
-    //call from inside to this object
-    //call to $this->etc
-    //TODO keep? $this->getPublicAndProtectedVariable does that without looking for privates? good or not?
-    public function getObjectInnerVar(string $index)
-    {
-        $var = $this->privateVars[$index];
-        if ($var !== null) {
-            return $var;
-        }
-
-        $var = $this->getPublicAndProtectedVariable($index);
-        if ($var !== null) {
-            return $var;
-        }
-
-        return null;
-    }
-
-    public function setObjectInnerVar(string $index, $value): bool
-    {
-        if ($this->checkAndSet($this->privateVars, $index, $value)) {
-            return true;
-        }
-        if ($this->setPublicAndProtectedVariable($index, $value)) {
-            return true;
-        }
-
-        //TODO maybe throw sth here?
-        $this->privateVars[$index] = $value;
-        if ($value === null) {
-            unset($this->privateVars[$index]);
-        }
-        return true;
-    }
+//    //call from inside to this object
+//    //call to $this->etc
+//    //TODO keep? $this->getPublicAndProtectedVariable does that without looking for privates? good or not?
+//    public function getObjectInnerVar(string $index)
+//    {
+//        $var = $this->privateVars[$index];
+//        if ($var !== null) {
+//            return $var;
+//        }
+//
+//        $var = $this->getPublicAndProtectedVariable($index);
+//        if ($var !== null) {
+//            return $var;
+//        }
+//
+//        return null;
+//    }
+//
+//    public function setObjectInnerVar(string $index, $value): bool
+//    {
+//        if ($this->checkAndSet($this->privateVars, $index, $value)) {
+//            return true;
+//        }
+//        if ($this->setPublicAndProtectedVariable($index, $value)) {
+//            return true;
+//        }
+//
+//        //TODO maybe throw sth here?
+//        $this->privateVars[$index] = $value;
+//        if ($value === null) {
+//            unset($this->privateVars[$index]);
+//        }
+//        return true;
+//    }
 
 }

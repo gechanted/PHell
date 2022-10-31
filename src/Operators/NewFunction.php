@@ -16,7 +16,7 @@ class NewFunction extends EasyCommand implements VisibilityAffected
     public function __construct(
         private readonly string $name,
         private readonly ValidatorFunctionParenthesis $parenthesis,
-        private readonly Code$code,
+        private readonly Code $code,
     ) { }
 
     public function changeVisibility(string $visibility)
