@@ -11,6 +11,7 @@ use PHell\Flow\Data\Data\Intege;
 use PHell\Flow\Data\Data\Nil;
 use PHell\Flow\Data\Data\Resource;
 use PHell\Flow\Data\Data\Strin;
+use PHell\Flow\Data\Data\UnexecutedFunctionCollection;
 use PHell\Flow\Exceptions\PHPException;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
@@ -19,6 +20,7 @@ use PHell\Flow\Main\Returns\DataReturnLoad;
 use Phell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
+use ReflectionFunction;
 
 class RunningPHPFunction extends EasyStatement
 {
@@ -46,6 +48,9 @@ class RunningPHPFunction extends EasyStatement
         if (is_array($value)) {
             // TODO implement
             throw new ShouldntHappenException();
+        } elseif (is_callable($value)) {
+            $reflection = new ReflectionFunction($value);
+            return new UnexecutedFunctionCollection([new PHPLambdaFunction(new PHPFunction($reflection))]);
         } elseif (is_bool($value)) {
             return new Boolea($value);
         } elseif (is_int($value)) {

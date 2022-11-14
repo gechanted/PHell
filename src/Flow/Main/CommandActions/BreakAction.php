@@ -4,9 +4,8 @@ namespace Phell\Flow\Main\CommandActions;
 
 use PHell\Exceptions\ShouldntHappenException;
 
-class ContinueAction implements CommandAction
+class BreakAction implements CommandAction
 {
-
     public function __construct(private int $times = 1)
     {
         if ($this->times <= 0) {

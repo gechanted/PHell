@@ -32,7 +32,7 @@ class LambdaFunction //implements LambdaFunctionInterface TODO maybe
         return $this->parenthesis;
     }
 
-    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack): Statement //TODO check if its ok
+    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack): Statement //TODO !check if its ok
     {
        return new RunningFunction(new FunctionObject($this->name, $stack, $this->origin, $parenthesis), $this->code, $parenthesis->getReturnType());
     }

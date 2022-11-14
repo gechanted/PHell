@@ -200,7 +200,6 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
     public function getOriginFunction(string $index): array
     {
         $functions = array_merge(
-            $this->getPrivateFunctions($index),
             $this->getProtectedFunctions($index),
             $this->getPublicFunctions($index));
 
@@ -229,6 +228,21 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
                 $reflection = new ReflectionFunction($index);
                 $functions[] = new PHPLambdaFunction(new PHPFunction($reflection));
             }
+        }
+        return $functions;
+    }
+
+    /**
+     * public function priorly declared in running function
+     * @return LambdaFunction[]
+     */
+    public function getObjectPubliclyAvailableFunction(string $index): array
+    {
+        $functions = array_merge(
+            $this->getPublicFunctions($index));
+
+        if ($this->origin !== null) {
+            $functions = array_merge($functions, $this->origin->getObjectPubliclyAvailableFunction($index));
         }
         return $functions;
     }
@@ -424,5 +438,6 @@ class FunctionObject extends PHellObjectDatatypeValidator implements DataInterfa
 //        }
 //        return true;
 //    }
+
 
 }

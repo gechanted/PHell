@@ -16,7 +16,7 @@ class PlusException extends OperatorInvalidInputException
         $inputTypeNames = [];
         foreach ($input as $dataInterface) {
             $typeNames = $dataInterface->getNames();
-            if (count($typeNames) === 0) {//if array empty => throw cause everything should have a type
+            if (count($typeNames) === 0) {//if array empty => throw because everything should have a type
                 throw new ShouldntHappenException();
             }
             $inputTypeNames[] = $typeNames[0];

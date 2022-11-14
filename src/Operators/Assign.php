@@ -2,46 +2,31 @@
 
 namespace PHell\Operators;
 
+use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Main\EasyStatement;
+use PHell\Flow\Main\Returns\DataReturnLoad;
+use Phell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
 use PHell\Flow\Main\Statement;
 
 class Assign extends EasyStatement implements VisibilityAffected
 {
 
-    //TODO split into assign and newVar
-
-    private string $visibility = FunctionObject::VISIBILITY_PRIVATE;
-
-    public function __construct(private readonly Variable $variable, private readonly Statement $statement)
+    public function __construct(private readonly Assignable $variable, private readonly Statement $statement)
     {
     }
 
     protected function value(FunctionObject $currentEnvironment): ReturnLoad
     {
-        switch ($this->scope) {
-
-            case self::SCOPE_INNER_OBJECT:
-                switch ($this->visibility){
-                    case FunctionObject::VISIBILITY_PUBLIC:
-//                        $currentEnvironment->
-                        // if there throw
-                        //assign
-                        break;
-                    case FunctionObject::VISIBILITY_PROTECTED:
-                        //if there throw
-                        //assign
-                        break;
-                    default:
-                        //assign
-                }
-
-        }
+        $returnLoad = $this->statement->getValue($currentEnvironment, $this->upper);
+        if ($returnLoad instanceof ExceptionReturnLoad) { return $returnLoad; }
+        if ($returnLoad instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+        return $this->variable->set($currentEnvironment, $returnLoad->getData());
     }
 
     public function changeVisibility(string $visibility)
     {
-        $this->visibility = $visibility;
+        $this->variable->changeVisibility($visibility);
     }
 }

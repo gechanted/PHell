@@ -9,6 +9,7 @@ use PHell\Flow\Data\DatatypeValidators\DatatypeValidatorInterface;
 use PHell\Flow\Exceptions\OverContinueException;
 use PHell\Flow\Exceptions\ReturnValueDoesntMatchType;
 use Phell\Flow\Main\Code;
+use Phell\Flow\Main\CommandActions\BreakAction;
 use Phell\Flow\Main\CommandActions\ContinueAction;
 use Phell\Flow\Main\CommandActions\ReturnAction;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
@@ -43,11 +44,14 @@ class RunningFunction extends EasyStatement
                     $r = $this->upper->transmit(new OverContinueException());
                     return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
 
+                } elseif ($action instanceof BreakAction) {
+                    $r = $this->upper->transmit(new OverBreakException());
+                    return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
+
                 } elseif ($action instanceof ReturningExceptionAction) {
                     return new ExceptionReturnLoad(new ExecutionResult($action));
 
 
-                    //TODO on redo command -> throw exception since it belong to loops
 
                 } else {
                     throw new ShouldntHappenException();

@@ -6,6 +6,7 @@ use PHell\Flow\Data\Data\UnexecutedFunctionCollection;
 use PHell\Flow\Data\DatatypeValidators\UnknownDatatypeValidator;
 use PHell\Flow\Exceptions\Exception;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use PHell\Flow\Main\CodeExceptionTransmitter;
 
 class FunctionResolver
 {
@@ -22,7 +23,7 @@ class FunctionResolver
      * @param FunctionParenthesis $given
      * @param UnexecutedFunctionCollection $possibleOptions
      */
-    public static function resolve(FunctionParenthesis $given, UnexecutedFunctionCollection $possibleOptions): Exception|LambdaFunction
+    public static function resolve(FunctionParenthesis $given, UnexecutedFunctionCollection $possibleOptions, CodeExceptionTransmitter $upper): Exception|LambdaFunction
     {
         $approach = self::INDECISIVE_OVERLOAD_APPROACH_FITTING;
         $best = $bestDepth = null;
@@ -38,6 +39,7 @@ class FunctionResolver
             foreach ($option->getParenthesis()->getParameters() as $optionParameter) {
                 foreach ($given->getParameters() as $targetParameter) { //TODO !!! doesnt work foreach must be on both
                     //TODO !!! doesnt check if more parameters are required, and whats optional
+                    //TODO make both arrays to iterable for faking parameter requirements, like: f(array $params...)
                     $validation = $optionParameter->getDatatype()-> validate($targetParameter->getData());
                     if ($validation->isSuccess() === false) {
                         continue 3; //continue with next option, because this doesn't fit

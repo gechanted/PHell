@@ -13,11 +13,6 @@ class ExceptionHandlingResultShove extends ExceptionHandlingResult
         parent::__construct($handler);
     }
 
-    public function shallContinue(): bool
-    {
-        return false;
-    }
-
     public function getShoveBackValue(): DataInterface
     {
         return $this->shoveBackValue;

@@ -19,7 +19,7 @@ class FunctionParenthesis
      * @param DatatypeValidatorInterface $returnType
      */
     public function __construct(
-        private readonly array $parameters,
+        private array $parameters,
         private readonly DatatypeValidatorInterface $returnType
     ) {}
 
@@ -34,6 +34,11 @@ class FunctionParenthesis
     public function getReturnType(): DatatypeValidatorInterface
     {
         return $this->returnType;
+    }
+
+    public function addParameter(FunctionParenthesisParameter $parameter): void
+    {
+        $this->parameters[] = $parameter;
     }
 
 }

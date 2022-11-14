@@ -2,12 +2,12 @@
 
 namespace PHell\Flow\Exceptions;
 
-class DataTypeMismatchException extends RuntimeException
+class RuntimeException extends Exception
 {
 
     public function __construct(string $name, string $msg, array $parentNames = [])
     {
-        $parentNames[] = 'DataTypeMismatchException';
+        $parentNames[] = 'RuntimeException';
         parent::__construct($name, $msg, $parentNames);
     }
 }

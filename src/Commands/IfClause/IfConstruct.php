@@ -28,16 +28,18 @@ class IfConstruct extends EasyCommand
     {
         $validator = new BooleanTypeValidator();
         foreach ($this->ifClauses as $clause) {
-            $RL = $clause->getCondition()->getValue();
-            if ($RL instanceof ExceptionReturnLoad) {
-                return $RL->getExecutionResult();
-            } if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+            $RL = $clause->getCondition()->getValue($currentEnvironment, $this->upper);
+            if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
+            if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
 
             $value = $RL->getData();
             $result = $validator->validate($value);
-            if ($result->isSuccess() && $value instanceof Boolea && $value->getBool() === true)
-            {
-                return $clause->execute($currentEnvironment, $this->upper);
+            if ($result->isSuccess()) {
+                if ($value instanceof Boolea && $value->getBool() === true) {
+                    return $clause->execute($currentEnvironment, $this->upper);
+                }
+            } else {
+                //TODO ? if result not a bool throw
             }
         }
        return new ExecutionResult();
