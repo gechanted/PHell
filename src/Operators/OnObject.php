@@ -28,6 +28,7 @@ class OnObject extends EasyStatement implements Assignable
         if ($returnLoad instanceof ExceptionReturnLoad) { return $returnLoad; }
         if ($returnLoad instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
         $object = $returnLoad->getData();
+        //TODO !!! add check if this actually returns a FunctionObject, cause you cant "null->f(x)" / call a function on a basic datatype
 
         if ($object === $currentEnvironment) {
             $this->furtherCall->changeScope(ScopeAffected::SCOPE_THIS_OBJECT_CALL);

@@ -4,6 +4,7 @@ namespace PHell\Flow\Data\DatatypeValidators;
 
 use PHell\Flow\Data\Datatypes\DatatypeInterface;
 
+/** @deprecated  */
 class PHPObjectDatatypeValidator implements DatatypeValidatorInterface
 {
     const PHP_OBJECT_TYPE = 'PhpObject';

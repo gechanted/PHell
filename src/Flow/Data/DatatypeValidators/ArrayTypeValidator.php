@@ -5,8 +5,11 @@ namespace PHell\Flow\Data\DatatypeValidators;
 use PHell\Flow\Data\Datatypes\ArrayType;
 use PHell\Flow\Data\Datatypes\DatatypeInterface;
 
+/** @deprecated  */
 class ArrayTypeValidator implements DatatypeValidatorInterface
 {
+    //TODO phase out
+
     const TYPE_ARRAY = 'array';
 
     public function __construct(protected readonly ?DatatypeValidatorInterface $datatypeValidator = null)

@@ -2,17 +2,17 @@
 
 namespace PHell\Commands\TryCatch;
 
-use PHell\Flow\Data\DatatypeValidators\PHellObjectDatatypeValidator;
+use PHell\Flow\Data\DatatypeValidators\PHellObjectDatatype;
 use Phell\Flow\Main\Code;
 
 class CatchClause
 {
 
-    public function __construct(private readonly PHellObjectDatatypeValidator $objectValidator, private readonly Code $code)
+    public function __construct(private readonly PHellObjectDatatype $objectValidator, private readonly Code $code)
     {
     }
 
-    public function getObjectValidator(): PHellObjectDatatypeValidator
+    public function getObjectValidator(): PHellObjectDatatype
     {
         return $this->objectValidator;
     }

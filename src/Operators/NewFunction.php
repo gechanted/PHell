@@ -17,6 +17,7 @@ class NewFunction extends EasyCommand implements VisibilityAffected
         private readonly string $name,
         private readonly ValidatorFunctionParenthesis $parenthesis,
         private readonly Code $code,
+        //TODO add strict here
     ) { }
 
     public function changeVisibility(string $visibility)
@@ -26,6 +27,7 @@ class NewFunction extends EasyCommand implements VisibilityAffected
 
     protected function exec(FunctionObject $currentEnvironment): ExecutionResult
     {
+        //TODO if strict then $currentEnvironment is scewed : must be replaced by sth like "use ($var1, $var2)"
         $function = new LambdaFunction($this->name, $currentEnvironment, $this->parenthesis, $this->code);
         switch ($this->visibility) {
             case FunctionObject::VISIBILITY_PUBLIC:

@@ -25,6 +25,7 @@ use PHell\Flow\Main\Statement;
 class ArrayOperator extends EasyStatement implements Assignable
 {
 
+    //TODO maybe add possibility to work on a string as an array of chars
     public function __construct(private readonly Statement $array, private readonly ?Statement $index = null)
     {
     }

@@ -3,6 +3,7 @@
 namespace PHell\Flow\Functions;
 
 use PHell\Exceptions\ShouldntHappenException;
+use PHell\Flow\Data\Data\Arra;
 use PHell\Flow\Data\Data\Boolea;
 use PHell\Flow\Data\Data\ClosedResource;
 use PHell\Flow\Data\Data\DataInterface;
@@ -46,8 +47,13 @@ class RunningPHPFunction extends EasyStatement
     public static function convertPHPValue(mixed $value): DataInterface
     {
         if (is_array($value)) {
-            // TODO implement
-            throw new ShouldntHappenException();
+            $array = new Arra([]);
+            foreach ($value as $key => $item) {
+                $pHellItem = self::convertPHPValue($item);
+                $pHellKey = self::convertPHPValue($key);
+                $array->set($pHellItem, $pHellKey);
+            }
+            return $array;
         } elseif (is_callable($value)) {
             $reflection = new ReflectionFunction($value);
             return new UnexecutedFunctionCollection([new PHPLambdaFunction(new PHPFunction($reflection))]);

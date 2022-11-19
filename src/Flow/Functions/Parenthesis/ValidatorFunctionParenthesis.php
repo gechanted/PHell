@@ -9,7 +9,7 @@ class ValidatorFunctionParenthesis
 
     /**
      * $vars  = array['index' => 'datatype']
-     * $returntype = 'datatype'
+     * $returntype = 'datatypevalidator'
      * // visibility is handled in containing classes
      * // strict is handled with the originator
      * //final could be implemented

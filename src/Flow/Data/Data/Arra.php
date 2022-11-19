@@ -55,6 +55,11 @@ class Arra extends ArrayType implements DataInterface
             }
         }
 
+        return $this->set($data, $index);
+    }
+
+    public function set(DataInterface $data, ?DataInterface $index = null): ReturnLoad
+    {
         if ($index === null) {
             $this->content[] = $data;
         } else {

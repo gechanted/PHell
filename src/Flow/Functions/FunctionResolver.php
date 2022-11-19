@@ -3,77 +3,96 @@
 namespace PHell\Flow\Functions;
 
 use PHell\Flow\Data\Data\UnexecutedFunctionCollection;
-use PHell\Flow\Data\DatatypeValidators\UnknownDatatypeValidator;
+use PHell\Flow\Exceptions\AmbiguousOverloadFunctionCallException;
 use PHell\Flow\Exceptions\Exception;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
 use PHell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Main\Returns\ReturnLoad;
 
 class FunctionResolver
 {
-
-    //TODO options in config
-    //in case of 2 fitting overload functions
-    public const INDECISIVE_OVERLOAD_APPROACH_CANCEL = 'indecisive overload approach cancel';
-    public const INDECISIVE_OVERLOAD_APPROACH_WARN = 'indecisive overload approach warn';
-    public const INDECISIVE_OVERLOAD_APPROACH_RANDOM = 'indecisive overload approach random';
-    public const INDECISIVE_OVERLOAD_APPROACH_FITTING = 'indecisive overload approach fitting';
-
 
     /**
      * @param FunctionParenthesis $given
      * @param UnexecutedFunctionCollection $possibleOptions
      */
-    public static function resolve(FunctionParenthesis $given, UnexecutedFunctionCollection $possibleOptions, CodeExceptionTransmitter $upper): Exception|LambdaFunction
+    public static function resolve(FunctionParenthesis $given, UnexecutedFunctionCollection $possibleOptions, CodeExceptionTransmitter $upper): ReturnLoad|LambdaFunction
     {
-        $approach = self::INDECISIVE_OVERLOAD_APPROACH_FITTING;
-        $best = $bestDepth = null;
+        $solutions = [];
+        $solutionScores = [];
 
         foreach ($possibleOptions->v() as $option) {
             $depth = 0;
 
-            if ($given->getReturnType() instanceof UnknownDatatypeValidator === false) {
-                if ($given->getReturnType()->validate( $option->getParenthesis()->getReturnType())->isSuccess() === false) {
-                    continue;
+//TODO maybe add returntype requirements: the next function requires a certain type, so this function has the return the certain type
+
+//            if ($given->getReturnType() instanceof UnknownDatatypeValidator === false) {
+//                if ($option->getParenthesis()->getReturnType()->validate( $given->getReturnType())->isSuccess() === false) {
+//                    continue;
+//                }
+//            }
+
+            $oParams = $option->getParenthesis()->getParameters();
+            $gParams= $given->getParameters();
+            $counter = 0;
+            while (true) {
+                //loop
+                //element of given and option
+                if (array_key_exists($counter, $oParams) === false) {
+                    break;
                 }
-            }
-            foreach ($option->getParenthesis()->getParameters() as $optionParameter) {
-                foreach ($given->getParameters() as $targetParameter) { //TODO !!! doesnt work foreach must be on both
-                    //TODO !!! doesnt check if more parameters are required, and whats optional
-                    //TODO make both arrays to iterable for faking parameter requirements, like: f(array $params...)
-                    $validation = $optionParameter->getDatatype()-> validate($targetParameter->getData());
-                    if ($validation->isSuccess() === false) {
-                        continue 3; //continue with next option, because this doesn't fit
+                $optionParameter = $oParams[$counter];
+                if (array_key_exists($counter, $gParams) === false) {
+                    if ($optionParameter->isOptional()) {
+                        continue;
+                    } else {
+                        continue 2; //continue with next option, because this doesn't fit
                     }
-                    $depth += $validation->getDepth();
                 }
+                $targetParameter = $gParams[$counter];
+
+                //validate
+                $validation = $optionParameter->getDatatype()-> validate($targetParameter->getData());
+                if ($validation->isSuccess() === false) {
+                    continue 2; //continue with next option, because this doesn't fit
+                }
+                $depth += $validation->getDepth();
             }
 
             //fits
-            if ($best === null) {
-                if ($approach === self::INDECISIVE_OVERLOAD_APPROACH_RANDOM) {
-                    return $option;
+            $solutions[] = $option;
+            $solutionScores[] = $option;
+
+        }
+
+        //TODO if best as an array is filled with more than 2 results
+        // also throw if best is empty => there are no results
+        $solutionCount = count($solutions);
+        if ($solutionCount === 0) {
+            //TODO throw no solution Exception
+        }
+        elseif ($solutionCount !== 1) {
+            $return = $upper->transmit(new AmbiguousOverloadFunctionCallException($solutions, $solutionScores));
+        }
+        //TODO
+        // if return is int
+        //pick with int
+        //else
+        //executed first function with highest score
+        switch ($approach) {
+            case self::INDECISIVE_OVERLOAD_APPROACH_CANCEL:
+                return new Exception();//TODO correct exception here
+
+            case self::INDECISIVE_OVERLOAD_APPROACH_WARN:
+                //TODO implement warning system
+            case self::INDECISIVE_OVERLOAD_APPROACH_FITTING:
+                if ($bestDepth > $depth) {  //lower depth means less abstract
+                    $best = $option;
+                    $bestDepth = $depth;
                 }
-                $best = $option;
-                $bestDepth = $depth;
-
-            } else {
-                switch ($approach) {
-                    case self::INDECISIVE_OVERLOAD_APPROACH_CANCEL:
-                        return new Exception();//TODO correct exception here
-
-                    case self::INDECISIVE_OVERLOAD_APPROACH_WARN:
-                        //TODO implement warning system
-                    case self::INDECISIVE_OVERLOAD_APPROACH_FITTING:
-                        if ($bestDepth > $depth) {  //lower depth means less abstract
-                            $best = $option;
-                            $bestDepth = $depth;
-                        }
-                        if ($bestDepth === $depth) {
-                            //TODO warn
-                        }
-
+                if ($bestDepth === $depth) {
+                    //TODO warn
                 }
-            }
 
         }
 

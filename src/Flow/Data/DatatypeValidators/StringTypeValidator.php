@@ -4,6 +4,7 @@ namespace PHell\Flow\Data\DatatypeValidators;
 
 use PHell\Flow\Data\Datatypes\DatatypeInterface;
 
+/** @deprecated  */
 class StringTypeValidator implements DatatypeValidatorInterface
 {
 

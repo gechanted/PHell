@@ -4,6 +4,7 @@ namespace PHell\Flow\Data\DatatypeValidators;
 
 use PHell\Flow\Data\Datatypes\DatatypeInterface;
 
+/** @deprecated  */
 class IntegerTypeValidator implements DatatypeValidatorInterface
 {
     const TYPE_INTEGER = 'integer';

@@ -59,7 +59,7 @@ class TryConstruct extends EasyCommand implements CodeExceptionTransmitter
                     $result = $statement->execute($this->currentEnvironment, $this->upper);
                     if ($result->isActionRequired()) {
 
-                        if ($result instanceof ShoveAction) {
+                        if ($result instanceof ShoveAction) { //TODO if Shove without data
                             return new ExceptionHandlingResultShove($this, $result->getData());
                         }
 
