@@ -15,5 +15,3 @@ Reflections??
 Operators
 
 CatapultReturns (skip?)
-
-TYPES!!!!

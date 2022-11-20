@@ -3,7 +3,7 @@
 namespace PHell\Commands\Loop;
 
 use PHell\Exceptions\ShouldntHappenException;
-use PHell\Flow\Data\DatatypeValidators\BooleanTypeValidator;
+use PHell\Flow\Data\Datatypes\BooleanType;
 use PHell\Flow\Exceptions\LoopStatementNotBoolException;
 use PHell\Flow\Functions\FunctionObject;
 use Phell\Flow\Main\Code;
@@ -28,7 +28,7 @@ class DoWhileLoop extends EasyCommand
 
     protected function exec(FunctionObject $currentEnvironment): ExecutionResult
     {
-        $validator = new BooleanTypeValidator();
+        $validator = new BooleanType();
         while (true) {
 
             //execute do code

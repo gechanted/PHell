@@ -5,9 +5,9 @@ use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\Floa;
 use PHell\Flow\Data\Data\Intege;
 use PHell\Flow\Data\Data\Strin;
-use PHell\Flow\Data\DatatypeValidators\FloatTypeValidator;
-use PHell\Flow\Data\DatatypeValidators\IntegerTypeValidator;
-use PHell\Flow\Data\DatatypeValidators\StringTypeValidator;
+use PHell\Flow\Data\Datatypes\FloatType;
+use PHell\Flow\Data\Datatypes\IntegerType;
+use PHell\Flow\Data\Datatypes\StringType;
 use PHell\Flow\Exceptions\PlusException;
 use PHell\Flow\Functions\FunctionObject;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
@@ -41,9 +41,9 @@ class Plus extends EasyStatement
         $v1 = $r1->getData();
         $v2 = $r2->getData();
 
-        $intValidator = new IntegerTypeValidator();
-        $floatValidator = new FloatTypeValidator();
-        $stringValidator = new StringTypeValidator();
+        $intValidator = new IntegerType();
+        $floatValidator = new FloatType();
+        $stringValidator = new StringType();
         if ($intValidator->validate($v1) && $intValidator->validate($v2)) {
             $return = new Intege($v1->v() + $v2->v());
 

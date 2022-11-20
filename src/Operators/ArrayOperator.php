@@ -5,9 +5,9 @@ namespace PHell\Operators;
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\Arra;
 use PHell\Flow\Data\Data\DataInterface;
-use PHell\Flow\Data\DatatypeValidators\ArrayTypeValidator;
-use PHell\Flow\Data\DatatypeValidators\IntegerTypeValidator;
-use PHell\Flow\Data\DatatypeValidators\StringTypeValidator;
+use PHell\Flow\Data\Datatypes\ArrayType;
+use PHell\Flow\Data\Datatypes\IntegerType;
+use PHell\Flow\Data\Datatypes\StringType;
 use PHell\Flow\Exceptions\ArrayIndexNotGivenException;
 use PHell\Flow\Exceptions\IndexDoesNotExistException;
 use PHell\Flow\Exceptions\ValueNotAnArrayException;
@@ -36,7 +36,7 @@ class ArrayOperator extends EasyStatement implements Assignable
         if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
         if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
 
-        $arrValidator = new ArrayTypeValidator();
+        $arrValidator = new ArrayType();
         $arrayValue = $RL->getData();
         if ($arrValidator->validate($arrayValue)->isSuccess() === false) {
             $exceptionResult = $this->upper->transmit(new ValueNotAnArrayException($arrayValue));
@@ -54,8 +54,8 @@ class ArrayOperator extends EasyStatement implements Assignable
         if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
         if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
 
-        $stringValidator = new StringTypeValidator();
-        $intValidator = new IntegerTypeValidator();
+        $stringValidator = new StringType();
+        $intValidator = new IntegerType();
         $indexValue = $RL->getData();
         if ($stringValidator->validate($indexValue)->isSuccess() === false || $intValidator->validate($indexValue)->isSuccess() === false) {
             $exceptionResult = $this->upper->transmit(new ValueNotAnIndexException($indexValue));
@@ -76,7 +76,7 @@ class ArrayOperator extends EasyStatement implements Assignable
         if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
         if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
 
-        $arrValidator = new ArrayTypeValidator();
+        $arrValidator = new ArrayType();
         $arrayValue = $RL->getData();
         if ($arrValidator->validate($arrayValue)->isSuccess() === false) {
             $exceptionResult = $this->upper->transmit(new ValueNotAnArrayException($arrayValue));
@@ -91,8 +91,8 @@ class ArrayOperator extends EasyStatement implements Assignable
         if ($this->index === null) {
             $indexValue = null;
         } else {
-            $stringValidator = new StringTypeValidator();
-            $intValidator = new IntegerTypeValidator();
+            $stringValidator = new StringType();
+            $intValidator = new IntegerType();
             $indexValue = $RL->getData();
             if ($stringValidator->validate($indexValue)->isSuccess() === false && $intValidator->validate($indexValue)->isSuccess() === false) {
                 $exceptionResult = $this->upper->transmit(new ValueNotAnIndexException($indexValue));

@@ -22,14 +22,14 @@ class DatatypeConstructAND extends DatatypeConstructOR
 
     public function dumpType(): string
     {
-        $result = '(';
+        $result = '';
         foreach ($this->datatypes as $type) {
-            if ($result !== '(') {
+            if ($result !== '') {
                 $result .= ' && ';
             }
             $result .= $type->dumpType();
         }
-        return $result . ')';
+        return '(' . $result . ')';
     }
 
     public function isA(DatatypeInterface $givenIn): DatatypeValidation

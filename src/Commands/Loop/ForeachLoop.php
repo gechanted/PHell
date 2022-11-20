@@ -2,10 +2,13 @@
 namespace PHell\Commands\Loop;
 
 use PHell\Exceptions\ShouldntHappenException;
-use PHell\Flow\Data\DatatypeValidators\ArrayTypeValidator;
+use PHell\Flow\Data\Datatypes\ArrayType;
 use PHell\Flow\Exceptions\ForeachStatementNotArrayException;
 use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Functions\RunningPHPFunction;
 use Phell\Flow\Main\Code;
+use Phell\Flow\Main\CommandActions\BreakAction;
+use Phell\Flow\Main\CommandActions\ContinueAction;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use PHell\Flow\Main\EasyCommand;
 use PHell\Flow\Main\Returns\DataReturnLoad;
@@ -32,7 +35,7 @@ class ForeachLoop extends EasyCommand
         if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
         if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
 
-        $validator = new ArrayTypeValidator();
+        $validator = new ArrayType();
         $value = $RL->getData();
         if ($validator->validate($value)->isSuccess() === false) {
             $exceptionResult = $this->upper->transmit(new ForeachStatementNotArrayException($value));
@@ -45,19 +48,44 @@ class ForeachLoop extends EasyCommand
             $shoveValue = $exceptionResult->getShoveBackValue();
             if ($validator->validate($shoveValue)->isSuccess()) {
                 $value = $shoveValue->v();
+            } else {
+                return new ExecutionResult();
             }
         }
 
-        if (is_array($value->v()) === false) {
-            return new ExecutionResult();
+        if (is_iterable($value->v()) === false) {
+            throw new ShouldntHappenException();
         }
 
         foreach ($value->v() as $key => $item) {
+            $this->valueVariable->set($currentEnvironment, $this->upper, $item);
+            $this->keyVariable->set($currentEnvironment, $this->upper, RunningPHPFunction::convertPHPValue($key));
 
-            $this->valueVariable->set($currentEnvironment, $item);
-
-            $this->keyVariable->set($currentEnvironment, $key);
-
+            //execute
+            foreach ($this->code->getStatements() as $statement) {
+                $executionResult = $statement->execute($currentEnvironment, $this->upper);
+                if ($executionResult->isActionRequired()) {
+                    $action = $executionResult->getAction();
+                    if ($action instanceof ContinueAction) {
+                        if ($action->thisTime()) {
+                            continue 2;
+                        } else {
+                            $action->decrement();
+                            return new ExecutionResult($action);
+                        }
+                    } else if ($action instanceof BreakAction) {
+                        if ($action->thisTime()) {
+                            break 2;
+                        } else {
+                            $action->decrement();
+                            return new ExecutionResult($action);
+                        }
+                    }
+                    return $executionResult;
+                }
+            }
         }
+
+        return new ExecutionResult();
     }
 }

@@ -3,15 +3,15 @@
 namespace PHell\Flow\Exceptions;
 
 use PHell\Flow\Data\Data\DataInterface;
-use PHell\Flow\Data\DatatypeValidators\IntegerTypeValidator;
-use PHell\Flow\Data\DatatypeValidators\StringTypeValidator;
+use PHell\Flow\Data\Datatypes\IntegerType;
+use PHell\Flow\Data\Datatypes\StringType;
 
 class ValueNotAnIndexException extends OperatorInvalidInputException
 {
 
     public function __construct(private readonly DataInterface $input)
     {
-        parent::__construct('ValueNotAnIndexException', 'ArrayOperator', [StringTypeValidator::TYPE_STRING, IntegerTypeValidator::TYPE_INTEGER], [$this->input->getNames()[0]]);
+        parent::__construct('ValueNotAnIndexException', 'ArrayOperator', [StringType::TYPE_STRING, IntegerType::TYPE_INTEGER], [$this->input->getNames()[0]]);
         $this->setObjectOuterVar('value', $this->input);
     }
 

@@ -2,12 +2,12 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Flow\Data\DatatypeValidators\ArrayTypeValidator;
-use PHell\Flow\Data\DatatypeValidators\BooleanTypeValidator;
-use PHell\Flow\Data\DatatypeValidators\FloatTypeValidator;
-use PHell\Flow\Data\DatatypeValidators\IntegerTypeValidator;
-use PHell\Flow\Data\DatatypeValidators\StringTypeValidator;
-use PHell\Flow\Data\DatatypeValidators\UnknownDatatypeValidator;
+use PHell\Flow\Data\Datatypes\ArrayType;
+use PHell\Flow\Data\Datatypes\BooleanType;
+use PHell\Flow\Data\Datatypes\FloatType;
+use PHell\Flow\Data\Datatypes\IntegerType;
+use PHell\Flow\Data\Datatypes\StringType;
+use PHell\Flow\Data\Datatypes\UnknownDatatype;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesisParameter;
@@ -22,25 +22,25 @@ class PHPLambdaFunction extends LambdaFunction
         $params = [];
         foreach ($function->getParameters() as $parameter) {
             if ($parameter->getType() === null) {
-                $datatype = new UnknownDatatypeValidator();
+                $datatype = new UnknownDatatype();
             } else if($parameter->getType()->getName() === 'string') {
-                $datatype = new StringTypeValidator();
+                $datatype = new StringType();
             } else if($parameter->getType()->getName() === 'int') {
-                $datatype = new IntegerTypeValidator();
+                $datatype = new IntegerType();
             } else if($parameter->getType()->getName() === 'float') {
-                $datatype = new FloatTypeValidator();
+                $datatype = new FloatType();
             } else if($parameter->getType()->getName() === 'array') {
-                $datatype = new ArrayTypeValidator();
+                $datatype = new ArrayType();
             } else if($parameter->getType()->getName() === 'bool') {
-                $datatype = new BooleanTypeValidator();
+                $datatype = new BooleanType();
             } else if($parameter->getType()->getName() === 'object') {
-                $datatype = new UnknownDatatypeValidator(); //TODO maybe
+                $datatype = new UnknownDatatype(); //TODO maybe
             } else {
-                $datatype = new UnknownDatatypeValidator();
+                $datatype = new UnknownDatatype();
             }
             $params[] = new ValidatorFunctionParenthesisParameter($parameter->getName(), $datatype);
         }
-        $parenthesis = new ValidatorFunctionParenthesis($params, new UnknownDatatypeValidator());
+        $parenthesis = new ValidatorFunctionParenthesis($params, new UnknownDatatype());
 
         parent::__construct($this->function->getName(), null, $parenthesis, new Code([]));
     }

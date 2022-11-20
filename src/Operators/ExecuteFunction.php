@@ -4,7 +4,7 @@ namespace PHell\Operators;
 
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\UnexecutedFunctionCollection;
-use PHell\Flow\Data\DatatypeValidators\UnknownDatatypeValidator;
+use PHell\Flow\Data\Datatypes\UnknownDatatype;
 use PHell\Flow\Exceptions\ValueNotALambdaFunctionCollectionException;
 use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Functions\FunctionResolver;
@@ -40,7 +40,7 @@ class ExecuteFunction extends EasyStatement
         }
 
 
-        $parenthesis = new FunctionParenthesis([], new UnknownDatatypeValidator());
+        $parenthesis = new FunctionParenthesis([], new UnknownDatatype());
         foreach ($this->params as $statement) {
             if ($statement instanceof Statement === false) { throw new ShouldntHappenException(); }
             $RL = $statement->getValue($currentEnvironment, $this->upper);
@@ -50,8 +50,11 @@ class ExecuteFunction extends EasyStatement
             $parenthesis->addParameter(new FunctionParenthesisParameter($RL->getData()));
         }
 
-        $lambda = $lambdaOrException = FunctionResolver::resolve($parenthesis, $functionCollection, $this->upper);
-        //TODO do
+        $lambdaOrReturnload = FunctionResolver::resolve($parenthesis, $functionCollection, $this->upper);
+        if ($lambdaOrReturnload instanceof ReturnLoad) {
+            return $lambdaOrReturnload;
+        }
+        $lambda = $lambdaOrReturnload;
 
         $runningFunction = $lambda->generateRunningFunction($parenthesis, $currentEnvironment);
         return $runningFunction->getValue($currentEnvironment, $this->upper);

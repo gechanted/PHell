@@ -4,7 +4,7 @@ namespace PHell\Commands\IfClause;
 
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\Boolea;
-use PHell\Flow\Data\DatatypeValidators\BooleanTypeValidator;
+use PHell\Flow\Data\Datatypes\BooleanType;
 use PHell\Flow\Functions\FunctionObject;
 use Phell\Flow\Main\Code;
 use Phell\Flow\Main\EasyCommand;
@@ -26,7 +26,7 @@ class IfConstruct extends EasyCommand
 
     protected function exec(FunctionObject $currentEnvironment): ExecutionResult
     {
-        $validator = new BooleanTypeValidator();
+        $validator = new BooleanType();
         foreach ($this->ifClauses as $clause) {
             $RL = $clause->getCondition()->getValue($currentEnvironment, $this->upper);
             if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
@@ -39,7 +39,7 @@ class IfConstruct extends EasyCommand
                     return $clause->execute($currentEnvironment, $this->upper);
                 }
             } else {
-                //TODO ? if result not a bool throw
+                //TODO ! if result not a bool throw
             }
         }
        return new ExecutionResult();

@@ -2,13 +2,13 @@
 
 namespace PHell\Flow\Functions\Parenthesis;
 
-use PHell\Flow\Data\DatatypeValidators\DatatypeValidatorInterface;
+use PHell\Flow\Data\Datatypes\DatatypeInterface;
 use PHell\Flow\Main\Statement;
 
 class ValidatorFunctionParenthesisParameter
 {
 
-    public function __construct(private readonly string $name, private readonly DatatypeValidatorInterface $datatype, private readonly ?Statement $default = null)
+    public function __construct(private readonly string $name, private readonly DatatypeInterface $datatype, private readonly ?Statement $default = null)
     {
     }
 
@@ -17,7 +17,7 @@ class ValidatorFunctionParenthesisParameter
         return $this->name;
     }
 
-    public function getDatatype(): DatatypeValidatorInterface
+    public function getDatatype(): DatatypeInterface
     {
         return $this->datatype;
     }
