@@ -7,7 +7,8 @@ use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Data\Undefined;
 use PHell\Flow\Exceptions\CannotChangeForeignObjectException;
 use PHell\Flow\Functions\FunctionObject;
-use PHell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Main\CodeExceptionHandler;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
@@ -27,7 +28,7 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
         $this->scope = $scope;
     }
 
-    public function changeVisibility(string $visibility)
+    public function changeVisibility(string $visibility): void
     {
         $this->visibility = $visibility;
     }
@@ -38,17 +39,17 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
     {
     }
 
-    protected function value(FunctionObject $currentEnvironment): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         switch ($this->scope) {
             case self::SCOPE_INNER_OBJECT:
-                $value = $currentEnvironment->getNormalVar($this->name);
+                $value = $currentEnvironment->getObject()->getNormalVar($this->name);
                 if ($value === null) {
-                    $this->set($currentEnvironment, $this->upper, new Undefined());
+                    $this->set($currentEnvironment, $exHandler, new Undefined());
                 }
                 break;
             case self::SCOPE_THIS_OBJECT_CALL:
-                $value = $currentEnvironment->getPublicAndProtectedVariable($this->name);
+                $value = $currentEnvironment->getObject()->getPublicAndProtectedVariable($this->name);
                 break;
             default:
                 if ($this->scope instanceof FunctionObject === false) {
@@ -64,12 +65,12 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
     }
 
 
-    public function set(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper, ?DataInterface $value): ReturnLoad
+    public function set(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler, ?DataInterface $value): ReturnLoad
     {
         switch ($this->scope) {
 
             case self::SCOPE_INNER_OBJECT:
-                $currentEnvironment->setNormalVar($this->name, $value, $this->visibility);
+                $currentEnvironment->getObject()->setNormalVar($this->name, $value, $this->visibility);
                 break;
 
             case self::SCOPE_THIS_OBJECT_CALL:
@@ -78,15 +79,15 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
                 //basicly only use visibility only when normally declaring
                 //otherwise computer says no
                 if ($this->visibility !== FunctionObject::VISIBILITY_PRIVATE) {
-                    $r = $upper->transmit(new CannotChangeForeignObjectException());
+                    $r = $exHandler->transmit(new CannotChangeForeignObjectException());
                     return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
                 }
-                $currentEnvironment->setPublicAndProtectedVariable($this->name, $value);
+                $currentEnvironment->getObject()->setPublicAndProtectedVariable($this->name, $value);
                 break;
 
             default: //case self::SCOPE_FOREIGN_OBJECT_CALL
                 if ($this->visibility !== FunctionObject::VISIBILITY_PRIVATE) {
-                    $r = $upper->transmit(new CannotChangeForeignObjectException());
+                    $r = $exHandler->transmit(new CannotChangeForeignObjectException());
                     return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
                 }
 

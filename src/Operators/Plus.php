@@ -9,7 +9,8 @@ use PHell\Flow\Data\Datatypes\FloatType;
 use PHell\Flow\Data\Datatypes\IntegerType;
 use PHell\Flow\Data\Datatypes\StringType;
 use PHell\Flow\Exceptions\PlusException;
-use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Main\CodeExceptionHandler;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use Phell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
@@ -29,17 +30,15 @@ class Plus extends EasyStatement
         $this->s2 = $s2;
     }
 
-    protected function value(FunctionObject $currentEnvironment): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
-        $r1 = $this->s1->getValue($currentEnvironment, $this->upper);
-        if ($r1 instanceof ExceptionReturnLoad) { return $r1; }
-        $r2 = $this->s2->getValue($currentEnvironment, $this->upper);
-        if ($r2 instanceof ExceptionReturnLoad) { return $r2; }
-        if ($r1 instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
-        if ($r2 instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+        $rl1 = $this->s1->getValue($currentEnvironment, $exHandler);
+        if ($rl1 instanceof DataReturnLoad === false) { return $rl1; }
+        $rl2 = $this->s2->getValue($currentEnvironment, $exHandler);
+        if ($rl2 instanceof DataReturnLoad === false) { return $rl2; }
 
-        $v1 = $r1->getData();
-        $v2 = $r2->getData();
+        $v1 = $rl1->getData();
+        $v2 = $rl2->getData();
 
         $intValidator = new IntegerType();
         $floatValidator = new FloatType();
@@ -54,7 +53,7 @@ class Plus extends EasyStatement
             $return = new Strin($v1->v() . $v2->v());
 
         } else {
-            $r = $this->upper->transmit(new PlusException([$v1, $v2]));
+            $r = $exHandler->transmit(new PlusException([$v1, $v2]));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
             //nothing (not a type) i can deal with currently
         }

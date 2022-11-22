@@ -1,6 +1,8 @@
 <?php
 
-class A {
+class A // extends B
+//actually funny: PHP prevents infinite extendings (extensions?) from class A to B and back, by simply not knowing one of them XD
+{
     public function getThis()
     {
         return $this;

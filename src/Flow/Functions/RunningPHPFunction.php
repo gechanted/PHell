@@ -15,6 +15,7 @@ use PHell\Flow\Data\Data\Strin;
 use PHell\Flow\Data\Data\UnexecutedFunctionCollection;
 use PHell\Flow\Exceptions\PHPException;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use PHell\Flow\Main\CodeExceptionHandler;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use Phell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
@@ -31,13 +32,13 @@ class RunningPHPFunction extends EasyStatement
     {
     }
 
-    protected function value(FunctionObject $currentEnvironment): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
 
         try {
             $result = $this->function->invoke($this->parenthesis);
         } catch (\Throwable $throwable) {
-            $r = $this->upper->transmit(new PHPException($throwable));
+            $r = $exHandler->transmit(new PHPException($throwable));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
         }
 

@@ -5,6 +5,8 @@ namespace PHell\Operators;
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Exceptions\CanOnlyThrowObjectsException;
 use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Main\CodeExceptionHandler;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use Phell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
@@ -22,14 +24,14 @@ class ThrowOperator extends EasyStatement
     {
     }
 
-    protected function value(FunctionObject $currentEnvironment): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
-        $exception = $this->statement->getValue($currentEnvironment, $this->upper);
+        $exception = $this->statement->getValue($currentEnvironment, $exHandler);
         if ($exception instanceof FunctionObject === false) {
-            $r = $this->upper->transmit(new CanOnlyThrowObjectsException());
+            $r = $exHandler->transmit(new CanOnlyThrowObjectsException());
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
         }
-        $result = $this->upper->transmit($exception);
+        $result = $exHandler->transmit($exception);
         if ($result instanceof ExceptionHandlingResultShove) {
             return new DataReturnLoad($result->getShoveBackValue());
         }

@@ -10,11 +10,13 @@ use PHell\Flow\Exceptions\OverBreakException;
 use PHell\Flow\Exceptions\OverContinueException;
 use PHell\Flow\Exceptions\ReturnValueDoesntMatchType;
 use Phell\Flow\Main\Code;
+use PHell\Flow\Main\CodeExceptionHandler;
 use Phell\Flow\Main\CommandActions\BreakAction;
 use Phell\Flow\Main\CommandActions\ContinueAction;
 use Phell\Flow\Main\CommandActions\ReturnAction;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use Phell\Flow\Main\EasyStatement;
+use PHell\Flow\Main\Returns\CatapultReturnLoad;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use Phell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
@@ -25,9 +27,9 @@ class RunningFunction extends EasyStatement
 
     //TODO maybe add a check on transmitException if the Exceptions are in function description (warning if not)
 
-    public function __construct(private readonly FunctionObject             $object,
-                                private readonly Code                       $code,
-                                private readonly DatatypeInterface $returnType)
+    public function __construct(private readonly FunctionObject      $object,
+                                private readonly Code                $code,
+                                private readonly DatatypeInterface   $returnType)
     {
     }
 
@@ -38,50 +40,65 @@ class RunningFunction extends EasyStatement
 
     public function isActive(): bool
     {
-        //TODO !!!!!!!! impotent
+        return $this->active;
     }
 
-    protected function value(FunctionObject $currentEnvironment): ReturnLoad
+    private bool $active = false;
+
+    public function getObject(): FunctionObject
     {
+        return $this->object;
+    }
+
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
+    {
+        $this->active = true;
         foreach ($this->code->getStatements() as $statement) {
-            $result = $statement->execute($this->object, $this->upper);
+            $result = $statement->execute($this, $exHandler);
             if ($result->isActionRequired()) {
 
                 $action = $result->getAction();
                 if ($action instanceof ReturnAction) {
                     if ($action->getFunction() !== null && $action->getFunction() !== $this) {
-                        return $result; //TODO new Returnload
+                        $this->active = false;
+                        return new CatapultReturnLoad($action->getFunction(), $action->getValue());
                     }
-                    return $this->return($action->getValue());
+                    $this->active = false;
+                    return $this->return($action->getValue(), $exHandler);
 
                 } elseif ($action instanceof ContinueAction) {
-                    $r = $this->upper->transmit(new OverContinueException());
+                    $r = $exHandler->transmit(new OverContinueException());
+                    $this->active = false;
                     return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
 
                 } elseif ($action instanceof BreakAction) {
-                    $r = $this->upper->transmit(new OverBreakException());
+                    $r = $exHandler->transmit(new OverBreakException());
+                    $this->active = false;
                     return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
 
                 } elseif ($action instanceof ReturningExceptionAction) {
+                    $this->active = false;
                     return new ExceptionReturnLoad(new ExecutionResult($action));
 
                     //TODO if shove action => throw exception
 
                 } else {
+                    $this->active = false;
                     throw new ShouldntHappenException();
                 }
             }
         }
 
-        return $this->return(new Voi());
+        $this->active = false;
+        return $this->return(new Voi(), $exHandler);
     }
 
-    private function return(DataInterface $value): ReturnLoad
+    private function return(DataInterface $value, CodeExceptionHandler $exHandler): ReturnLoad
     {
         if ($this->returnType->validate($value)) {
             return new DataReturnLoad($value);
         }
-        $r = $this->upper->transmit(new ReturnValueDoesntMatchType());
+        $r = $exHandler->transmit(new ReturnValueDoesntMatchType());
         return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
     }
 }

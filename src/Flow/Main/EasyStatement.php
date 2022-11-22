@@ -2,26 +2,20 @@
 
 namespace PHell\Flow\Main;
 
-use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Functions\RunningFunction;
 use Phell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
-use PHell\Flow\Main\Returns\ReturnLoad;
 
 abstract class EasyStatement implements Command, Statement
 {
-    protected CodeExceptionTransmitter $upper;
-
-    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
+    public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult
     {
-        $return = $this->getValue($currentEnvironment, $upper);
-        return ($return instanceof ExceptionReturnLoad ? $return->getExecutionResult() : new ExecutionResult());
-    }
+        $return = $this->getValue($currentEnvironment, $exHandler);
 
-    abstract protected function value(FunctionObject $currentEnvironment): ReturnLoad;
-
-    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
-    {
-        $this->upper = $upper;
-        return $this->value($currentEnvironment);
+        return
+            ($return instanceof ExceptionReturnLoad
+                ? $return->getExecutionResult()
+                : new ExecutionResult());
+        //TODO new Returnload
     }
 }

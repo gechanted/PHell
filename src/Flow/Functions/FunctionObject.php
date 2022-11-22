@@ -6,9 +6,8 @@ use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Datatypes\PHellObjectDatatype;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
-use Phell\Flow\Main\CodeExceptionTransmitter;
+use Phell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\DataReturnLoad;
-use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
 use ReflectionFunction;
 
@@ -35,6 +34,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
 
     private string $name;
 
+    //TODO make name nullable cause some objects just arent named => (unnamedObject instanceof unnamedObject = false) for the validator
     public function __construct(string $name, ?FunctionObject $stack, ?FunctionObject $origin, ?FunctionParenthesis $parenthesis)
     {
         parent::__construct($name);
@@ -63,8 +63,34 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
 
     public function v() { return $this; }
 
-    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad { return new DataReturnLoad($this); }
+    //Theoretically should never be called, due to this being a VO and not Easily instantiable like an actual "string"
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad { return new DataReturnLoad($this); }
 
+    public function dumpValue(): string
+    {
+        $dump = 'Object<'.$this->name.'> {'.PHP_EOL;
+        foreach ($this->publicVars as $var) { $dump .= 'public '.$var->dumpValue().PHP_EOL; }
+        foreach ($this->protectedVars as $var) { $dump .= 'protected '.$var->dumpValue().PHP_EOL; }
+        foreach ($this->privateVars as $var) { $dump .= 'private '.$var->dumpValue().PHP_EOL; }
+        $dump .= PHP_EOL;
+        foreach ($this->publicFunctions as $function) { $dump .= 'public '.$this->dumpLambda($function); }
+        foreach ($this->protectedFunctions as $function) { $dump .= 'protected '.$this->dumpLambda($function); }
+        foreach ($this->privateFunctions as $function) { $dump .= 'private '.$this->dumpLambda($function); }
+        $dump .= PHP_EOL.'origin: '. PHP_EOL;
+        $dump .= $this->origin->dumpValue().PHP_EOL;
+        $dump .= PHP_EOL.'parents: ['. PHP_EOL;
+        foreach ($this->parents as $parent) {
+            $dump .= $parent->dumpValue().PHP_EOL;
+        }
+        $dump .= ']'.PHP_EOL;
+        $dump .= '}';
+        return $dump;
+    }
+
+    private function dumpLambda(LambdaFunction $function): string
+    {
+        return $function->getName().'('.$function->dumpParenthesis().'):'.$function->getParenthesis()->getReturnType()->dumpType().PHP_EOL;
+    }
 
     //TODO this currently doesn't allow Typechecks on Variables
     /** @var DataInterface[] */
@@ -85,8 +111,10 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     // extend --------------------------------------------
     public bool $SAFETY_CHECK_ON_EXTEND = true; // TODO config
 
-    public function extend(FunctionObject $newParent, CodeExceptionTransmitter $exceptionTransmitter): void
+    public function extend(FunctionObject $newParent, CodeExceptionHandler $exceptionTransmitter): void
     {
+        //TODO !! what about complete overwrites?, not just overloads
+        // premark them here ? for later getF() so its there excluded?
         if ($this->checkExtensionRecursionParents($this) === false) {
             //TODO throw Exception
             return;
@@ -316,9 +344,10 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     public function getNormalVar(string $index): ?DataInterface
     {
         if ($index === 'this') {
-            //TODO !!! problem: $this might not be >this object<, but a child, and >this object< a parent of that child
             return $this;
         }
+        //TODO !! config this !!
+        //TODO add name for going up the origin
         //TODO here add a param for runningfunction
         if (array_key_exists($index, $this->privateVars)) {
             return $this->privateVars[$index];

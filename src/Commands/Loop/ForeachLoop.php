@@ -4,13 +4,14 @@ namespace PHell\Commands\Loop;
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Datatypes\ArrayType;
 use PHell\Flow\Exceptions\ForeachStatementNotArrayException;
-use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Functions\RunningFunction;
 use PHell\Flow\Functions\RunningPHPFunction;
 use Phell\Flow\Main\Code;
+use PHell\Flow\Main\CodeExceptionHandler;
+use PHell\Flow\Main\Command;
 use Phell\Flow\Main\CommandActions\BreakAction;
 use Phell\Flow\Main\CommandActions\ContinueAction;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
-use PHell\Flow\Main\EasyCommand;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultNoShove;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultShove;
@@ -19,7 +20,7 @@ use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Statement;
 use PHell\Operators\Variable;
 
-class ForeachLoop extends EasyCommand
+class ForeachLoop implements Command
 {
     public function __construct(
         private readonly Statement $array,
@@ -29,16 +30,16 @@ class ForeachLoop extends EasyCommand
     {
     }
 
-    protected function exec(FunctionObject $currentEnvironment): ExecutionResult
+    public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult#
     {
-        $RL = $this->array->getValue($currentEnvironment, $this->upper);
+        $RL = $this->array->getValue($currentEnvironment, $exHandler);
         if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
         if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
 
         $validator = new ArrayType();
         $value = $RL->getData();
         if ($validator->validate($value)->isSuccess() === false) {
-            $exceptionResult = $this->upper->transmit(new ForeachStatementNotArrayException($value));
+            $exceptionResult = $exHandler->transmit(new ForeachStatementNotArrayException($value));
             if ($exceptionResult instanceof ExceptionHandlingResultNoShove) {
                 return new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), $exceptionResult->getExecutionResult()));
             }
@@ -58,12 +59,12 @@ class ForeachLoop extends EasyCommand
         }
 
         foreach ($value->v() as $key => $item) {
-            $this->valueVariable->set($currentEnvironment, $this->upper, $item);
-            $this->keyVariable->set($currentEnvironment, $this->upper, RunningPHPFunction::convertPHPValue($key));
+            $this->valueVariable->set($currentEnvironment, $exHandler, $item);
+            $this->keyVariable->set($currentEnvironment, $exHandler, RunningPHPFunction::convertPHPValue($key));
 
             //execute
             foreach ($this->code->getStatements() as $statement) {
-                $executionResult = $statement->execute($currentEnvironment, $this->upper);
+                $executionResult = $statement->execute($currentEnvironment, $exHandler);
                 if ($executionResult->isActionRequired()) {
                     $action = $executionResult->getAction();
                     if ($action instanceof ContinueAction) {

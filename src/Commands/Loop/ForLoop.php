@@ -2,23 +2,24 @@
 
 namespace PHell\Commands\Loop;
 
-use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Functions\RunningFunction;
 use Phell\Flow\Main\Code;
-use PHell\Flow\Main\EasyCommand;
+use PHell\Flow\Main\CodeExceptionHandler;
+use PHell\Flow\Main\Command;
 use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Statement;
 
-class ForLoop extends EasyCommand
+class ForLoop implements Command
 {
     public function __construct(private readonly Code      $setupCode,
                                 private readonly Statement $forLoopParenthesis,
                                 private readonly Code      $executionCode
     ){}
 
-    protected function exec(FunctionObject $currentEnvironment): ExecutionResult
+    public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult
     {
         foreach ($this->setupCode->getStatements() as $statement) {
-            $result = $statement->execute($currentEnvironment, $this->upper);
+            $result = $statement->execute($currentEnvironment, $exHandler);
             if ($result->isActionRequired()) {
                 return $result;
             }
@@ -26,7 +27,7 @@ class ForLoop extends EasyCommand
 
         $loop = new DoWhileLoop(new Code(), $this->forLoopParenthesis, $this->executionCode);
 
-        return $loop->execute($currentEnvironment, $this->upper);
+        return $loop->execute($currentEnvironment, $exHandler);
     }
 
 }

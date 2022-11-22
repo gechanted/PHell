@@ -3,8 +3,8 @@
 namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\NullType;
-use PHell\Flow\Functions\FunctionObject;
-use Phell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Functions\RunningFunction;
+use Phell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
 
@@ -16,7 +16,7 @@ class Nil extends NullType implements DataInterface
         return null;
     }
 
-    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         return new DataReturnLoad($this);
     }

@@ -3,8 +3,8 @@
 namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\ClosedResourceType;
-use PHell\Flow\Functions\FunctionObject;
-use Phell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Functions\RunningFunction;
+use Phell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
 
@@ -20,7 +20,7 @@ class ClosedResource extends ClosedResourceType implements DataInterface
         return $this->resource;
     }
 
-    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         return new DataReturnLoad($this);
     }

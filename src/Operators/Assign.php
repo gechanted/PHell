@@ -4,6 +4,8 @@ namespace PHell\Operators;
 
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use Phell\Flow\Main\Returns\ExceptionReturnLoad;
@@ -17,16 +19,17 @@ class Assign extends EasyStatement implements VisibilityAffected
     {
     }
 
-    protected function value(FunctionObject $currentEnvironment): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
-        $returnLoad = $this->statement->getValue($currentEnvironment, $this->upper);
+        $returnLoad = $this->statement->getValue($currentEnvironment, $exHandler);
         if ($returnLoad instanceof ExceptionReturnLoad) { return $returnLoad; }
         if ($returnLoad instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
-        return $this->variable->set($currentEnvironment, $returnLoad->getData());
+        return $this->variable->set($currentEnvironment, $exHandler, $returnLoad->getData());
     }
 
-    public function changeVisibility(string $visibility)
+    public function changeVisibility(string $visibility): void
     {
+        //TODO if var is an OnOject this crashes: so if $var not VisibilityAffected throw an actual Exception => this is Syntax Error
         $this->variable->changeVisibility($visibility);
     }
 }

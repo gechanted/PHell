@@ -2,12 +2,10 @@
 namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\StringType;
-use PHell\Flow\Functions\FunctionObject;
-use Phell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Functions\RunningFunction;
+use Phell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\DataReturnLoad;
-use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
-use Phell\Flow\Main\Statement;
 
 class Strin extends StringType implements DataInterface
 {
@@ -25,13 +23,13 @@ class Strin extends StringType implements DataInterface
         return $this->value;
     }
 
-    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         return new DataReturnLoad($this);
     }
 
     public function dumpValue(): string
     {
-        return '"'.$this->value.'"';
+        return '"'.$this->value.'"'; //TODO !! mask value
     }
 }

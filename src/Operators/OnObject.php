@@ -5,7 +5,8 @@ namespace PHell\Operators;
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Functions\FunctionObject;
-use PHell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use Phell\Flow\Main\Returns\ExceptionReturnLoad;
@@ -22,9 +23,9 @@ class OnObject extends EasyStatement implements Assignable
     {
     }
 
-    protected function value(FunctionObject $currentEnvironment): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
-        $returnLoad = $this->object->getValue($currentEnvironment, $this->upper);
+        $returnLoad = $this->object->getValue($currentEnvironment, $exHandler);
         if ($returnLoad instanceof ExceptionReturnLoad) { return $returnLoad; }
         if ($returnLoad instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
         $object = $returnLoad->getData();
@@ -36,11 +37,11 @@ class OnObject extends EasyStatement implements Assignable
             $this->furtherCall->changeScope($object);
         }
 
-        return $this->furtherCall->getValue($currentEnvironment, $this->upper);
+        return $this->furtherCall->getValue($currentEnvironment, $exHandler);
     }
 
-    public function set(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper, ?DataInterface $value): ReturnLoad
+    public function set(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler, ?DataInterface $value): ReturnLoad
     {
-        return $this->furtherCall->set($currentEnvironment, $upper, $value);
+        return $this->furtherCall->set($currentEnvironment, $exHandler, $value);
     }
 }

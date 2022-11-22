@@ -8,7 +8,7 @@ use PHell\Flow\Exceptions\AmbiguousOverloadFunctionCallException;
 use PHell\Flow\Exceptions\Exception;
 use PHell\Flow\Exceptions\NoOverloadFunctionException;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
-use PHell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Main\CodeExceptionHandler;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultNoShove;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultShove;
@@ -23,7 +23,7 @@ class FunctionResolver
      * @param FunctionParenthesis $given
      * @param UnexecutedFunctionCollection $possibleOptions
      */
-    public static function resolve(FunctionParenthesis $given, UnexecutedFunctionCollection $possibleOptions, CodeExceptionTransmitter $upper): ReturnLoad|LambdaFunction
+    public static function resolve(FunctionParenthesis $given, UnexecutedFunctionCollection $possibleOptions, CodeExceptionHandler $upper): ReturnLoad|LambdaFunction
     {
         $solutions = [];
         $solutionScores = [];

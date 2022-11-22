@@ -3,11 +3,12 @@
 namespace PHell\Operators;
 
 use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Command;
-use PHell\Flow\Main\EasyCommand;
 use PHell\Flow\Main\Returns\ExecutionResult;
 
-class ProtectedOperator extends EasyCommand
+class ProtectedOperator implements Command
 {
 
     public function __construct(private readonly VisibilityAffected&Command $command)
@@ -15,8 +16,8 @@ class ProtectedOperator extends EasyCommand
         $this->command->changeVisibility(FunctionObject::VISIBILITY_PROTECTED);
     }
 
-    protected function exec(FunctionObject $currentEnvironment): ExecutionResult
+    public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult
     {
-        return $this->command->execute($currentEnvironment, $this->upper);
+        return $this->command->execute($currentEnvironment, $exHandler);
     }
 }

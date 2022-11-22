@@ -3,9 +3,9 @@
 namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\UnexecutedFunctionCollectionType;
-use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Functions\LambdaFunction;
-use PHell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
 
@@ -22,7 +22,7 @@ class UnexecutedFunctionCollection extends UnexecutedFunctionCollectionType impl
         return $this->lambdaFunctions;
     }
 
-    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         return new DataReturnLoad($this);
     }
@@ -31,11 +31,7 @@ class UnexecutedFunctionCollection extends UnexecutedFunctionCollectionType impl
     {
         $dump = '';
         foreach ($this->lambdaFunctions as $key => $function) {
-            $dump .= $key.' => (';
-            foreach ($function->getParenthesis()->getParameters() as $parameter) {
-                $dump .= $parameter->getDatatype()->dumpType() . ($parameter->isOptional() ? '(opt)' : '').', ';
-            }
-            $dump .= ')'.PHP_EOL;
+            $dump .= $key.' => ('.$function->dumpParenthesis().'):'.$function->getParenthesis()->getReturnType()->dumpType().PHP_EOL;
         }
         return self::TYPE_LAMBDA.'('.$function->getName().')['.$dump.']';
     }

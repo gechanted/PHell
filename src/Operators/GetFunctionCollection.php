@@ -5,6 +5,8 @@ namespace PHell\Operators;
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\UnexecutedFunctionCollection;
 use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
@@ -18,18 +20,18 @@ class GetFunctionCollection extends EasyStatement implements ScopeAffected
     {
     }
 
-    protected function value(FunctionObject $currentEnvironment): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         switch ($this->scope) {
             case ScopeAffected::SCOPE_INNER_OBJECT:
-                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getStackFunction($this->name)));
+                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getObject()->getStackFunction($this->name)));
             case ScopeAffected::SCOPE_THIS_OBJECT_CALL:
-                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getOriginFunction($this->name)));
+                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getObject()->getOriginFunction($this->name)));
             default :
                 if ($this->scope instanceof FunctionObject === false) {
                     throw new ShouldntHappenException();
                 }
-                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getObjectPubliclyAvailableFunction($this->name)));
+                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getObject()->getObjectPubliclyAvailableFunction($this->name)));
         }
     }
 

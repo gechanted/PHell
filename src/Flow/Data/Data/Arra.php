@@ -6,8 +6,8 @@ use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Datatypes\ArrayType;
 use PHell\Flow\Data\Datatypes\DatatypeInterface;
 use PHell\Flow\Exceptions\ArrayTypeNotMatchedException;
-use PHell\Flow\Functions\FunctionObject;
-use Phell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Functions\RunningFunction;
+use Phell\Flow\Main\CodeExceptionHandler;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultNoShove;
@@ -33,7 +33,7 @@ class Arra extends ArrayType implements DataInterface
         return $this->content;
     }
 
-    public function assign(CodeExceptionTransmitter $upper, DataInterface $data, ?DataInterface $index = null): ReturnLoad
+    public function assign(CodeExceptionHandler $upper, DataInterface $data, ?DataInterface $index = null): ReturnLoad
     {
         if ($this->type !== null) {
             if ($this->type->validate($data)->isSuccess() === false) {
@@ -68,7 +68,7 @@ class Arra extends ArrayType implements DataInterface
         return new DataReturnLoad($data);
     }
 
-    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         return new DataReturnLoad($this);
     }
@@ -79,6 +79,6 @@ class Arra extends ArrayType implements DataInterface
         foreach ($this->content as $key => $value) {
             $dump .= (is_int($key) ? $key : '"'.$key.'"').' => '.$value->dumpValue(). PHP_EOL;
         }
-        return 'array<'.$this->type->dumpType().'>['.$dump.']'; //TODO indents 'n stuff
+        return 'array<'.$this->type->dumpType().'>['.$dump.']';
     }
 }

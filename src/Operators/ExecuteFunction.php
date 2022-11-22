@@ -10,6 +10,8 @@ use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Functions\FunctionResolver;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\FunctionParenthesisParameter;
+use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Main\CodeExceptionHandler;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
@@ -26,16 +28,16 @@ class ExecuteFunction extends EasyStatement
     {
     }
 
-    protected function value(FunctionObject $currentEnvironment): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
-        $RL = $this->function->getValue($currentEnvironment, $this->upper);
+        $RL = $this->function->getValue($currentEnvironment, $exHandler);
         if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
         if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
 
         $lambdaValidator = new UnexecutedFunctionCollection([]);
         $functionCollection = $RL->getData();
         if ($lambdaValidator->validate($functionCollection)->isSuccess() === false) {
-            $exceptionResult = $this->upper->transmit(new ValueNotALambdaFunctionCollectionException($functionCollection));
+            $exceptionResult = $exHandler->transmit(new ValueNotALambdaFunctionCollectionException($functionCollection));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
         }
 
@@ -43,20 +45,20 @@ class ExecuteFunction extends EasyStatement
         $parenthesis = new FunctionParenthesis([], new UnknownDatatype());
         foreach ($this->params as $statement) {
             if ($statement instanceof Statement === false) { throw new ShouldntHappenException(); }
-            $RL = $statement->getValue($currentEnvironment, $this->upper);
+            $RL = $statement->getValue($currentEnvironment, $exHandler);
             if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
             if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
 
             $parenthesis->addParameter(new FunctionParenthesisParameter($RL->getData()));
         }
 
-        $lambdaOrReturnload = FunctionResolver::resolve($parenthesis, $functionCollection, $this->upper);
+        $lambdaOrReturnload = FunctionResolver::resolve($parenthesis, $functionCollection, $exHandler);
         if ($lambdaOrReturnload instanceof ReturnLoad) {
             return $lambdaOrReturnload;
         }
         $lambda = $lambdaOrReturnload;
 
-        $runningFunction = $lambda->generateRunningFunction($parenthesis, $currentEnvironment);
-        return $runningFunction->getValue($currentEnvironment, $this->upper);
+        $runningFunction = $lambda->generateRunningFunction($parenthesis, $currentEnvironment->getObject());
+        return $runningFunction->getValue($currentEnvironment, $exHandler);
     }
 }

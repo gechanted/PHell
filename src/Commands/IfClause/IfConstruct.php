@@ -5,14 +5,15 @@ namespace PHell\Commands\IfClause;
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\Boolea;
 use PHell\Flow\Data\Datatypes\BooleanType;
-use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Functions\RunningFunction;
 use Phell\Flow\Main\Code;
-use Phell\Flow\Main\EasyCommand;
+use PHell\Flow\Main\CodeExceptionHandler;
+use PHell\Flow\Main\Command;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use Phell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 
-class IfConstruct extends EasyCommand
+class IfConstruct implements Command
 {
 
     /**
@@ -24,11 +25,11 @@ class IfConstruct extends EasyCommand
         $this->ifClauses[] = new IfClause(new Boolea(true), $else);
     }
 
-    protected function exec(FunctionObject $currentEnvironment): ExecutionResult
+    public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult
     {
         $validator = new BooleanType();
         foreach ($this->ifClauses as $clause) {
-            $RL = $clause->getCondition()->getValue($currentEnvironment, $this->upper);
+            $RL = $clause->getCondition()->getValue($currentEnvironment, $exHandler);
             if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
             if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
 
@@ -36,7 +37,7 @@ class IfConstruct extends EasyCommand
             $result = $validator->validate($value);
             if ($result->isSuccess()) {
                 if ($value instanceof Boolea && $value->getBool() === true) {
-                    return $clause->execute($currentEnvironment, $this->upper);
+                    return $clause->execute($currentEnvironment, $exHandler);
                 }
             } else {
                 //TODO ! if result not a bool throw

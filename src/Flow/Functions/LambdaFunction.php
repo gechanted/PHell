@@ -32,6 +32,19 @@ class LambdaFunction //implements LambdaFunctionInterface TODO maybe implement a
         return $this->parenthesis;
     }
 
+    public function dumpParenthesis(): string
+    {
+        $dump = '';
+        foreach ($this->parenthesis->getParameters() as $parameter) {
+            if ($dump !== ''){
+                $dump .= ', ';
+            }
+            $dump .= $parameter->getDatatype()->dumpType() . ($parameter->isOptional() ? '(opt)' : '');
+        }
+
+        return $dump;
+    }
+
     public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack): Statement //TODO !check if its ok
     {
        return new RunningFunction(new FunctionObject($this->name, $stack, $this->origin, $parenthesis), $this->code, $parenthesis->getReturnType());

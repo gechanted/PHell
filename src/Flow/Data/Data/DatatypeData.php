@@ -2,18 +2,15 @@
 
 namespace PHell\Flow\Data\Data;
 
-use PHell\Flow\Data\Datatypes\AbstractType;
+use PHell\Flow\Data\Datatypes\DatatypeDataType;
 use PHell\Flow\Data\Datatypes\DatatypeInterface;
-use PHell\Flow\Data\Datatypes\DatatypeValidation;
-use PHell\Flow\Functions\FunctionObject;
-use PHell\Flow\Main\CodeExceptionTransmitter;
+use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
 
-class DatatypeData extends AbstractType implements DataInterface
+class DatatypeData extends DatatypeDataType implements DataInterface
 {
-
-    const TYPE_DATATYPE = 'datatype';
 
     public function __construct(private readonly DatatypeInterface $datatype)
     {
@@ -24,22 +21,7 @@ class DatatypeData extends AbstractType implements DataInterface
        return $this->datatype;
     }
 
-    public function getNames(): array
-    {
-        return [self::TYPE_DATATYPE];
-    }
-
-    public function dumpType(): string
-    {
-        return self::TYPE_DATATYPE;
-    }
-
-    public function realValidate(DatatypeInterface $datatype): DatatypeValidation
-    {
-        return new DatatypeValidation(in_array(self::TYPE_DATATYPE, $datatype->getNames(), true), 0);
-    }
-
-    public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
+    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         return new DataReturnLoad($this);
     }

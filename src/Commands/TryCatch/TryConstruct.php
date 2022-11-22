@@ -2,21 +2,22 @@
 namespace PHell\Commands\TryCatch;
 
 use PHell\Exceptions\ShouldntHappenException;
-use PHell\Flow\Data\Datatypes\UnknownDatatype;
 use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Functions\RunningFunction;
 use Phell\Flow\Main\Code;
-use Phell\Flow\Main\CodeExceptionTransmitter;
+use Phell\Flow\Main\CodeExceptionHandler;
+use PHell\Flow\Main\Command;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use Phell\Flow\Main\CommandActions\ShoveAction;
-use Phell\Flow\Main\EasyCommand;
 use PHell\Flow\Main\Returns\ExceptionHandlingResult;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultNoShove;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultShove;
 use PHell\Flow\Main\Returns\ExecutionResult;
 
-class TryConstruct extends EasyCommand implements CodeExceptionTransmitter
+class TryConstruct implements CodeExceptionHandler, Command
 {
-    private ?FunctionObject $currentEnvironment;
+    private ?RunningFunction $currentEnvironment;
+    private ?CodeExceptionHandler $exHandler;
 
     /**
      * @param Code $code
@@ -27,9 +28,10 @@ class TryConstruct extends EasyCommand implements CodeExceptionTransmitter
 //        $this->catchClauses[] = new CatchClause(new UnknownDatatype(), , $elseFinally); //TODO add an else Statement
     }
 
-    protected function exec(FunctionObject $currentEnvironment): ExecutionResult
+    public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult
     {
         $this->currentEnvironment = $currentEnvironment;
+        $this->exHandler = $exHandler;
         foreach ($this->code->getStatements() as $statement) {
             $result = $statement->execute($currentEnvironment, $this); //here is the new CodeExceptionTransmitter injected
             if ($result->isActionRequired()) {
@@ -59,7 +61,7 @@ class TryConstruct extends EasyCommand implements CodeExceptionTransmitter
                 //TODO !!! add variable  which actually contains the exception
                 foreach ($catch->getCode()->getStatements() as $statement) {
 
-                    $result = $statement->execute($this->currentEnvironment, $this->upper);
+                    $result = $statement->execute($this->currentEnvironment, $this->exHandler);
                     if ($result->isActionRequired()) {
 
                         if ($result instanceof ShoveAction) { //TODO if Shove without data
@@ -73,6 +75,6 @@ class TryConstruct extends EasyCommand implements CodeExceptionTransmitter
             }
         }
 
-        return $this->upper->transmit($exception);
+        return $this->exHandler->transmit($exception);
     }
 }
