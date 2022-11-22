@@ -2,6 +2,9 @@
 
 namespace PHell\Flow\Data\Datatypes;
 
+/**
+ * maybe alias as 'Anything'
+ */
 class UnknownDatatype extends AbstractType implements DatatypeInterface
 {
 

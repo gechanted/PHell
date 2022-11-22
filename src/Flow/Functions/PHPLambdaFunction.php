@@ -33,8 +33,10 @@ class PHPLambdaFunction extends LambdaFunction
                 $datatype = new ArrayType();
             } else if($parameter->getType()->getName() === 'bool') {
                 $datatype = new BooleanType();
+            } else if($parameter->getType()->getName() === 'callable') {
+                $datatype = new UnknownDatatype(); //TODO maybe with invoke ? and UnexecutedFunctionCollection ?
             } else if($parameter->getType()->getName() === 'object') {
-                $datatype = new UnknownDatatype(); //TODO maybe
+                $datatype = new UnknownDatatype(); //TODO maybe : have to work with PHPObjectDatatype
             } else {
                 $datatype = new UnknownDatatype();
             }

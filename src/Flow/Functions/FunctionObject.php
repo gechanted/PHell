@@ -45,7 +45,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
 
         if ($parenthesis !== null) {
             foreach ($parenthesis->getParameters() as $parameter) {
-                $this->privateVars[$parameter->getName()] = $parameter->getData();
+                $this->privateVars[$parameter->getName()] = $parameter->getData();  // TODO !! check parenthesis
             }
         }
     }
@@ -60,8 +60,6 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         return $resultArray;
     }
 
-
-    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult { return new ExecutionResult(); }
 
     public function v() { return $this; }
 
@@ -299,6 +297,8 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     /** normal var call */
     public function checkAndSetOriginatorVar(string $index, ?DataInterface $value): bool
     {
+        // TODO check for special vars like $this and $runningfunction
+
         $isSet = $this->checkAndSet($this->publicVars, $index, $value) ||
             $this->checkAndSet($this->protectedVars, $index, $value) ||
             $this->checkAndSet($this->privateVars, $index, $value);
@@ -316,8 +316,10 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     public function getNormalVar(string $index): ?DataInterface
     {
         if ($index === 'this') {
-            return $this; //TODO maybe give out a proxy? which can access $this objects inner vars ,on outer calls
+            //TODO !!! problem: $this might not be >this object<, but a child, and >this object< a parent of that child
+            return $this;
         }
+        //TODO here add a param for runningfunction
         if (array_key_exists($index, $this->privateVars)) {
             return $this->privateVars[$index];
         }

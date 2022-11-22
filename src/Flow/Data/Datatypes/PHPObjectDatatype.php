@@ -20,5 +20,6 @@ class PHPObjectDatatype extends AbstractType implements DatatypeInterface
     public function realValidate(DatatypeInterface $datatype): DatatypeValidation
     {
         return new DatatypeValidation(in_array(self::PHP_OBJECT_TYPE, $datatype->getNames(), true), 0);
+        //TODO + check if Data is also PHPObject + classname + parents
     }
 }

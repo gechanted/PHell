@@ -2,16 +2,24 @@
 
 namespace Phell\Flow\Main\CommandActions;
 
+use PHell\Flow\Data\Data\RunningFunctionData;
+use PHell\Flow\Data\Data\Voi;
+use PHell\Flow\Data\Datatypes\DatatypeInterface;
+
 class ReturnAction implements CommandAction
 {
 
-    //TODO add parameter for catapult returning
-    public function __construct(private $value)
+    public function __construct(private readonly DatatypeInterface $value = new Voi(), private readonly ?RunningFunctionData $function = null)
     {
     }
 
-    public function getValue()
+    public function getValue(): DatatypeInterface
     {
         return $this->value;
+    }
+
+    public function getFunction(): ?RunningFunctionData
+    {
+        return $this->function;
     }
 }

@@ -24,11 +24,6 @@ class Boolea extends BooleanType implements DataInterface
         return new self($v);
     }
 
-    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
-    {
-        return new ExecutionResult();
-    }
-
     public function v()
     {
         return $this->value;
@@ -37,5 +32,10 @@ class Boolea extends BooleanType implements DataInterface
     public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
     {
         return new DataReturnLoad($this);
+    }
+
+    public function dumpValue(): string
+    {
+        return $this->value ? 'TRUE' : 'FALSE';
     }
 }

@@ -2,6 +2,7 @@
 namespace PHell\Commands\TryCatch;
 
 use PHell\Exceptions\ShouldntHappenException;
+use PHell\Flow\Data\Datatypes\UnknownDatatype;
 use PHell\Flow\Functions\FunctionObject;
 use Phell\Flow\Main\Code;
 use Phell\Flow\Main\CodeExceptionTransmitter;
@@ -21,8 +22,9 @@ class TryConstruct extends EasyCommand implements CodeExceptionTransmitter
      * @param Code $code
      * @param CatchClause[] $catchClauses
      */
-    public function __construct(private readonly Code $code, private readonly array $catchClauses)
+    public function __construct(private readonly Code $code, private array $catchClauses = [], /*?Code $elseFinally = null*/)
     {
+//        $this->catchClauses[] = new CatchClause(new UnknownDatatype(), , $elseFinally); //TODO add an else Statement
     }
 
     protected function exec(FunctionObject $currentEnvironment): ExecutionResult
@@ -54,7 +56,8 @@ class TryConstruct extends EasyCommand implements CodeExceptionTransmitter
                 if ($this->currentEnvironment === null) {
                     throw new ShouldntHappenException();
                 }
-                foreach ($this->code->getStatements() as $statement) {
+                //TODO !!! add variable  which actually contains the exception
+                foreach ($catch->getCode()->getStatements() as $statement) {
 
                     $result = $statement->execute($this->currentEnvironment, $this->upper);
                     if ($result->isActionRequired()) {
@@ -69,6 +72,7 @@ class TryConstruct extends EasyCommand implements CodeExceptionTransmitter
                 return new ExceptionHandlingResultNoShove($this, new ExecutionResult());
             }
         }
+
         return $this->upper->transmit($exception);
     }
 }

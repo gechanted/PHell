@@ -8,7 +8,6 @@ use PHell\Flow\Data\Datatypes\DatatypeValidation;
 use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Main\CodeExceptionTransmitter;
 use PHell\Flow\Main\Returns\DataReturnLoad;
-use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
 
 class DatatypeData extends AbstractType implements DataInterface
@@ -18,11 +17,6 @@ class DatatypeData extends AbstractType implements DataInterface
 
     public function __construct(private readonly DatatypeInterface $datatype)
     {
-    }
-
-    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
-    {
-        return new ExecutionResult();
     }
 
     public function v()
@@ -48,5 +42,10 @@ class DatatypeData extends AbstractType implements DataInterface
     public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
     {
         return new DataReturnLoad($this);
+    }
+
+    public function dumpValue(): string
+    {
+        return self::TYPE_DATATYPE.'('.$this->datatype->dumpType().')';
     }
 }

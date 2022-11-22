@@ -2,7 +2,7 @@
 
 namespace PHell\Flow\Exceptions;
 
-class OverContinueException extends Exception
+class OverContinueException extends RuntimeException
 {
 
     public function __construct()

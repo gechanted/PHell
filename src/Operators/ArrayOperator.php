@@ -46,7 +46,7 @@ class ArrayOperator extends EasyStatement implements Assignable
 
 
         if ($this->index === null) {
-            $exceptionResult = $this->upper->transmit(new ArrayIndexNotGivenException($arrayValue)); //TODO add
+            $exceptionResult = $this->upper->transmit(new ArrayIndexNotGivenException($arrayValue));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
         }
 

@@ -40,7 +40,7 @@ class FunctionResolver
 //            }
 
             $oParams = $option->getParenthesis()->getParameters();
-            $gParams= $given->getParameters();
+            $gParams = $given->getParameters();
             $counter = 0;
             while (true) {
                 //loop

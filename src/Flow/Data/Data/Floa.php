@@ -20,11 +20,6 @@ class Floa extends FloatType implements DataInterface
         return $this->value;
     }
 
-    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
-    {
-        return new ExecutionResult();
-    }
-
     public function v()
     {
         return $this->value;
@@ -33,5 +28,10 @@ class Floa extends FloatType implements DataInterface
     public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
     {
         return new DataReturnLoad($this);
+    }
+
+    public function dumpValue(): string
+    {
+        return $this->value;
     }
 }

@@ -5,7 +5,8 @@ namespace PHell\Flow\Functions;
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Data\Voi;
-use PHell\Flow\Data\DatatypeValidators\DatatypeValidatorInterface;
+use PHell\Flow\Data\Datatypes\DatatypeInterface;
+use PHell\Flow\Exceptions\OverBreakException;
 use PHell\Flow\Exceptions\OverContinueException;
 use PHell\Flow\Exceptions\ReturnValueDoesntMatchType;
 use Phell\Flow\Main\Code;
@@ -26,8 +27,18 @@ class RunningFunction extends EasyStatement
 
     public function __construct(private readonly FunctionObject             $object,
                                 private readonly Code                       $code,
-                                private readonly DatatypeValidatorInterface $returnType)
+                                private readonly DatatypeInterface $returnType)
     {
+    }
+
+    public function getReturnType(): DatatypeInterface
+    {
+        return $this->returnType;
+    }
+
+    public function isActive(): bool
+    {
+        //TODO !!!!!!!! impotent
     }
 
     protected function value(FunctionObject $currentEnvironment): ReturnLoad
@@ -38,6 +49,9 @@ class RunningFunction extends EasyStatement
 
                 $action = $result->getAction();
                 if ($action instanceof ReturnAction) {
+                    if ($action->getFunction() !== null && $action->getFunction() !== $this) {
+                        return $result; //TODO new Returnload
+                    }
                     return $this->return($action->getValue());
 
                 } elseif ($action instanceof ContinueAction) {
@@ -51,7 +65,7 @@ class RunningFunction extends EasyStatement
                 } elseif ($action instanceof ReturningExceptionAction) {
                     return new ExceptionReturnLoad(new ExecutionResult($action));
 
-
+                    //TODO if shove action => throw exception
 
                 } else {
                     throw new ShouldntHappenException();

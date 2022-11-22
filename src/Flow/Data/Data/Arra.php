@@ -19,14 +19,13 @@ use PHell\Flow\Main\Returns\ReturnLoad;
 class Arra extends ArrayType implements DataInterface
 {
 
+    /**
+     * @param DataInterface[] $content
+     * @param DatatypeInterface|null $type
+     */
     public function __construct(private array $content, private readonly ?DatatypeInterface $type = null)
     {
         parent::__construct($type);
-    }
-
-    public function execute(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ExecutionResult
-    {
-        return new ExecutionResult();
     }
 
     public function v()
@@ -72,5 +71,14 @@ class Arra extends ArrayType implements DataInterface
     public function getValue(FunctionObject $currentEnvironment, CodeExceptionTransmitter $upper): ReturnLoad
     {
         return new DataReturnLoad($this);
+    }
+
+    public function dumpValue(): string
+    {
+        $dump = '';
+        foreach ($this->content as $key => $value) {
+            $dump .= (is_int($key) ? $key : '"'.$key.'"').' => '.$value->dumpValue(). PHP_EOL;
+        }
+        return 'array<'.$this->type->dumpType().'>['.$dump.']'; //TODO indents 'n stuff
     }
 }
