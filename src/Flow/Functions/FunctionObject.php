@@ -5,7 +5,7 @@ namespace PHell\Flow\Functions;
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Datatypes\PHellObjectDatatype;
-use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use PHell\Flow\Functions\Parenthesis\NamedDataFunctionParenthesis;
 use Phell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
@@ -32,10 +32,11 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
      */
     private ?FunctionObject $stack; //runningFunction
 
+    //TODO when can this be made to: "f/$name", so it doesnt collide with the other types?
     private string $name;
 
-    //TODO make name nullable cause some objects just arent named => (unnamedObject instanceof unnamedObject = false) for the validator
-    public function __construct(string $name, ?FunctionObject $stack, ?FunctionObject $origin, ?FunctionParenthesis $parenthesis)
+    //TODO maybe make name nullable cause some objects just arent named => (unnamedObject instanceof unnamedObject = false) for the validator
+    public function __construct(string $name, ?FunctionObject $stack, ?FunctionObject $origin, ?NamedDataFunctionParenthesis $parenthesis)
     {
         parent::__construct($name);
 
@@ -45,7 +46,8 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
 
         if ($parenthesis !== null) {
             foreach ($parenthesis->getParameters() as $parameter) {
-                $this->privateVars[$parameter->getName()] = $parameter->getData();  // TODO !! check parenthesis
+                $this->setNormalVar($parameter->getName(), $parameter->getData());
+                //this can actually overwrite stuff in th origin
             }
         }
     }
@@ -220,46 +222,63 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     }
 
     /**
-     * callable with $this->
+     * GETS the function(s) of normal function call: f(x)
+     * for example: getFile($name)
+     * goes up the origin and afterwards the stack
+     *
      * @return LambdaFunction[]
      */
-    public function getOriginFunction(string $index): array
+    public function getNormalFunction(string $index): array
+    {
+        $functions = array_merge(
+            $this->getPublicFunctions($index),
+            $this->getProtectedFunctions($index),
+            $this->getPrivateFunctions($index));
+
+        if ($this->origin !== null) {
+            array_merge($functions, $this->origin->getNormalFunction($index));
+        }
+
+        if ($this->stack !== null) {
+            array_merge($functions, $this->stack->getStackFunction($index));
+        }
+        //search for php functions if the stack is up
+        if (function_exists($index)) {
+            $reflection = new ReflectionFunction($index);
+            $functions[] = new PHPLambdaFunction(new PHPFunction($reflection));
+        }
+
+        return $functions;
+    }
+
+    /** @return LambdaFunction[] */
+    public function getStackFunction(string $index): array
+    {
+        $functions = $this->getPublicFunctions($index);
+        if ($this->stack !== null) {
+            array_merge($functions, $this->stack->getStackFunction($index));
+        }
+        return $functions;
+    }
+
+    /**
+     * call: $this->f(x)
+     * @return LambdaFunction[]
+     */
+    public function getInnerObjectFunction(string $index): array
     {
         $functions = array_merge(
             $this->getProtectedFunctions($index),
             $this->getPublicFunctions($index));
 
-        if ($this->origin !== null) {
-            $functions = array_merge($functions, $this->origin->getOriginFunction($index));
+        foreach ($this->parents as $parent) {
+            $functions = array_merge($functions, $parent->getInnerObjectFunction($index));
         }
         return $functions;
     }
 
     /**
-     * public function priorly declared in running function
-     * @return LambdaFunction[]
-     */
-    public function getStackFunction(string $index): array
-    {
-        $functions = $this->getPublicFunctions($index);
-
-        //allow private (and protected function access?)
-        //first impression: no   , why allow private & protected?
-        //private classes, only available for the following stack ... idk
-
-        if ($this->stack !== null) {
-            array_merge($functions, $this->stack->getStackFunction($index));
-        } else {//search for php functions if the stack is up
-            if (function_exists($index)) {
-                $reflection = new ReflectionFunction($index);
-                $functions[] = new PHPLambdaFunction(new PHPFunction($reflection));
-            }
-        }
-        return $functions;
-    }
-
-    /**
-     * public function priorly declared in running function
+     * $someObject->f(x)
      * @return LambdaFunction[]
      */
     public function getObjectPubliclyAvailableFunction(string $index): array
@@ -267,7 +286,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         $functions = array_merge(
             $this->getPublicFunctions($index));
 
-        if ($this->origin !== null) {
+        foreach ($this->parents as $parent) {
             $functions = array_merge($functions, $this->origin->getObjectPubliclyAvailableFunction($index));
         }
         return $functions;
@@ -325,7 +344,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     /** normal var call */
     public function checkAndSetOriginatorVar(string $index, ?DataInterface $value): bool
     {
-        // TODO check for special vars like $this and $runningfunction
+        // TODO check for special vars like $this, $origin and $runningfunction
 
         $isSet = $this->checkAndSet($this->publicVars, $index, $value) ||
             $this->checkAndSet($this->protectedVars, $index, $value) ||
@@ -345,6 +364,9 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     {
         if ($index === 'this') {
             return $this;
+        }
+        if ($index === 'origin') {
+            return $this->origin;
         }
         //TODO !! config this !!
         //TODO add name for going up the origin

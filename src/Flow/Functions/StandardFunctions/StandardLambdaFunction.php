@@ -4,7 +4,7 @@ namespace PHell\Flow\Functions\StandardFunctions;
 
 use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Functions\LambdaFunction;
-use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use PHell\Flow\Functions\Parenthesis\DataFunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
 use Phell\Flow\Main\Code;
 use Phell\Flow\Main\Statement;
@@ -17,7 +17,7 @@ class StandardLambdaFunction extends LambdaFunction
         parent::__construct($name, null, $parenthesis, new Code());
     }
 
-    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack): Statement
+    public function generateRunningFunction(DataFunctionParenthesis $parenthesis, FunctionObject $stack): Statement
     {
         return $this->function;
     }

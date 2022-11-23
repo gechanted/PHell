@@ -4,7 +4,7 @@ namespace PHell\Flow\Functions\Parenthesis;
 
 use PHell\Flow\Data\Data\DataInterface;
 
-class FunctionParenthesisParameter
+class DataFunctionParenthesisParameter
 {
 
     public function __construct(private readonly DataInterface $datatype)

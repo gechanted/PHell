@@ -66,6 +66,7 @@ class RunningFunction extends EasyStatement
                     $this->active = false;
                     return $this->return($action->getValue(), $exHandler);
 
+
                 } elseif ($action instanceof ContinueAction) {
                     $r = $exHandler->transmit(new OverContinueException());
                     $this->active = false;
@@ -81,6 +82,7 @@ class RunningFunction extends EasyStatement
                     return new ExceptionReturnLoad(new ExecutionResult($action));
 
                     //TODO if shove action => throw exception
+                    // can this be done with the other Action? in one Exception instead of this clusterf
 
                 } else {
                     $this->active = false;

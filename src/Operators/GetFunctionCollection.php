@@ -24,14 +24,14 @@ class GetFunctionCollection extends EasyStatement implements ScopeAffected
     {
         switch ($this->scope) {
             case ScopeAffected::SCOPE_INNER_OBJECT:
-                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getObject()->getStackFunction($this->name)));
+                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getObject()->getNormalFunction($this->name)));
             case ScopeAffected::SCOPE_THIS_OBJECT_CALL:
-                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getObject()->getOriginFunction($this->name)));
+                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getObject()->getInnerObjectFunction($this->name)));
             default :
                 if ($this->scope instanceof FunctionObject === false) {
                     throw new ShouldntHappenException();
                 }
-                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getObject()->getObjectPubliclyAvailableFunction($this->name)));
+                return new DataReturnLoad(new UnexecutedFunctionCollection($this->scope->getObjectPubliclyAvailableFunction($this->name)));
         }
     }
 

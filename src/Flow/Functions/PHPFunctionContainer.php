@@ -2,7 +2,7 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use PHell\Flow\Functions\Parenthesis\DataFunctionParenthesis;
 
 abstract class PHPFunctionContainer
 {
@@ -10,7 +10,7 @@ abstract class PHPFunctionContainer
     {
     }
 
-    abstract public function invoke(FunctionParenthesis $parenthesis): mixed;
+    abstract public function invoke(DataFunctionParenthesis $parenthesis): mixed;
 
     /** @return \ReflectionParameter[] */
     public function getParameters(): array

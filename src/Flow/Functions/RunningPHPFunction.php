@@ -14,7 +14,7 @@ use PHell\Flow\Data\Data\Resource;
 use PHell\Flow\Data\Data\Strin;
 use PHell\Flow\Data\Data\UnexecutedFunctionCollection;
 use PHell\Flow\Exceptions\PHPException;
-use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use PHell\Flow\Functions\Parenthesis\DataFunctionParenthesis;
 use PHell\Flow\Main\CodeExceptionHandler;
 use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
 use Phell\Flow\Main\EasyStatement;
@@ -27,8 +27,8 @@ use ReflectionFunction;
 class RunningPHPFunction extends EasyStatement
 {
 
-    public function __construct(private readonly PHPFunctionContainer $function,
-                                private readonly FunctionParenthesis $parenthesis)
+    public function __construct(private readonly PHPFunctionContainer    $function,
+                                private readonly DataFunctionParenthesis $parenthesis)
     {
     }
 

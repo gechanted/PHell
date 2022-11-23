@@ -2,7 +2,7 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use PHell\Flow\Functions\Parenthesis\NamedDataFunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
 use Phell\Flow\Main\Code;
 use Phell\Flow\Main\Statement;
@@ -45,7 +45,7 @@ class LambdaFunction //implements LambdaFunctionInterface TODO maybe implement a
         return $dump;
     }
 
-    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack): Statement //TODO !check if its ok
+    public function generateRunningFunction(NamedDataFunctionParenthesis $parenthesis, FunctionObject $stack): Statement
     {
        return new RunningFunction(new FunctionObject($this->name, $stack, $this->origin, $parenthesis), $this->code, $parenthesis->getReturnType());
     }

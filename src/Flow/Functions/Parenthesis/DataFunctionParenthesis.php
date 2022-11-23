@@ -4,7 +4,7 @@ namespace PHell\Flow\Functions\Parenthesis;
 
 use PHell\Flow\Data\Datatypes\DatatypeInterface;
 
-class FunctionParenthesis
+class DataFunctionParenthesis
 {
 
     /**
@@ -15,7 +15,7 @@ class FunctionParenthesis
      * //final could be implemented
      * //abstract ?
      * //static is implementable with the addition of the LambdaFunction
-     * @param FunctionParenthesisParameter[] $parameters
+     * @param DataFunctionParenthesisParameter[] $parameters
      * @param DatatypeInterface $returnType
      */
     public function __construct(
@@ -24,7 +24,7 @@ class FunctionParenthesis
     ) {}
 
     /**
-     * @return FunctionParenthesisParameter[]
+     * @return DataFunctionParenthesisParameter[]
      */
     public function getParameters(): array
     {
@@ -36,7 +36,7 @@ class FunctionParenthesis
         return $this->returnType;
     }
 
-    public function addParameter(FunctionParenthesisParameter $parameter): void
+    public function addParameter(DataFunctionParenthesisParameter $parameter): void
     {
         $this->parameters[] = $parameter;
     }

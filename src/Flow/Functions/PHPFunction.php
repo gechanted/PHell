@@ -2,7 +2,7 @@
 
 namespace PHell\Flow\Functions;
 
-use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use PHell\Flow\Functions\Parenthesis\DataFunctionParenthesis;
 use ReflectionFunction;
 
 class PHPFunction extends PHPFunctionContainer
@@ -16,7 +16,7 @@ class PHPFunction extends PHPFunctionContainer
         parent::__construct($function);
     }
 
-    public function invoke(FunctionParenthesis $parenthesis): mixed
+    public function invoke(DataFunctionParenthesis $parenthesis): mixed
     {
         $parameters = [];
         foreach ($parenthesis->getParameters() as $parameter) {

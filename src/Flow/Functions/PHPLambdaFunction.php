@@ -8,7 +8,7 @@ use PHell\Flow\Data\Datatypes\FloatType;
 use PHell\Flow\Data\Datatypes\IntegerType;
 use PHell\Flow\Data\Datatypes\StringType;
 use PHell\Flow\Data\Datatypes\UnknownDatatype;
-use PHell\Flow\Functions\Parenthesis\FunctionParenthesis;
+use PHell\Flow\Functions\Parenthesis\DataFunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesisParameter;
 use Phell\Flow\Main\Code;
@@ -47,7 +47,7 @@ class PHPLambdaFunction extends LambdaFunction
         parent::__construct($this->function->getName(), null, $parenthesis, new Code([]));
     }
 
-    public function generateRunningFunction(FunctionParenthesis $parenthesis, FunctionObject $stack): Statement
+    public function generateRunningFunction(DataFunctionParenthesis $parenthesis, FunctionObject $stack): Statement
     {
         return new RunningPHPFunction($this->function, $parenthesis);
     }

@@ -3,7 +3,7 @@
 namespace PHell\Operators;
 
 use PHell\Exceptions\ShouldntHappenException;
-use PHell\Flow\Functions\FunctionObject;
+use PHell\Exceptions\SyntaxErrorException;
 use PHell\Flow\Functions\RunningFunction;
 use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\EasyStatement;
@@ -27,9 +27,13 @@ class Assign extends EasyStatement implements VisibilityAffected
         return $this->variable->set($currentEnvironment, $exHandler, $returnLoad->getData());
     }
 
+    /** @throws SyntaxErrorException */
     public function changeVisibility(string $visibility): void
     {
-        //TODO if var is an OnOject this crashes: so if $var not VisibilityAffected throw an actual Exception => this is Syntax Error
+        if ($this->variable instanceof VisibilityAffected === false) {
+            throw new SyntaxErrorException('Adjustments of the Visibility cannot be done on object-related calls:' . PHP_EOL .
+                ' (public/protected $object->variable = "sth") is not allowed');
+        }
         $this->variable->changeVisibility($visibility);
     }
 }

@@ -32,6 +32,9 @@ class ArrayType extends AbstractType implements DatatypeInterface
                 if ($datatype instanceof ArrayType) { //is checkable
 
                     return $this->type->validate($datatype->getType());
+                    //TODO imagine: if return is array<> and returnType is array<sth>
+                    // Validation would fail because of UnknownDatatype
+                    // so I need to check elements and then strict up the return type
                 }
             }
         }
