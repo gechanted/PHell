@@ -2,12 +2,14 @@
 
 namespace PHell\Flow\Data\Datatypes;
 
+use PHell\Flow\Data\Data\Arra;
+
 class ArrayType extends AbstractType implements DatatypeInterface
 {
 
     const TYPE_ARRAY = 'array';
 
-    public function __construct(private readonly ?DatatypeInterface $type = null)
+    public function __construct(private ?DatatypeInterface $type = null)
     {
     }
 
@@ -31,20 +33,33 @@ class ArrayType extends AbstractType implements DatatypeInterface
             if ($this->type !== null) {  //requires check
                 if ($datatype instanceof ArrayType) { //is checkable
 
+                    if ($datatype->getType() instanceof UnknownDatatype
+                        && $datatype instanceof Arra)
+                    {
+                        foreach ($datatype->v() as $subDT) {
+                            $Vresult = $this->type->validate($subDT);
+                            if ($Vresult->isSuccess() === false) {
+                                return new DatatypeValidation(false, 0);
+                            }
+                        }
+                        $datatype->setType($this->type);
+                        return new DatatypeValidation(true, 0);
+                    }
+
                     return $this->type->validate($datatype->getType());
-                    //TODO imagine: if return is array<> and returnType is array<sth>
-                    // Validation would fail because of UnknownDatatype
-                    // so I need to check elements and then strict up the return type
                 }
             }
         }
         return new DatatypeValidation($result, $depth);
     }
 
-
-
     public function getType(): ?DatatypeInterface
     {
         return $this->type;
+    }
+
+    public function setType(?DatatypeInterface $type): void
+    {
+        $this->type = $type;
     }
 }

@@ -4,8 +4,10 @@ namespace PHell\Operators;
 
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\DataInterface;
+use PHell\Flow\Data\Data\RunningFunctionData;
 use PHell\Flow\Data\Data\Undefined;
 use PHell\Flow\Exceptions\CannotChangeForeignObjectException;
+use PHell\Flow\Exceptions\SpecialVariableOverwriteProtectionException;
 use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Functions\RunningFunction;
 use PHell\Flow\Main\CodeExceptionHandler;
@@ -18,6 +20,10 @@ use PHell\Flow\Main\Returns\ReturnLoad;
 
 class Variable extends EasyStatement implements ScopeAffected, VisibilityAffected, Assignable
 {
+
+    public const SPECIAL_VAR_THIS = 'this';
+    public const SPECIAL_VAR_ORIGIN = 'origin';
+    public const SPECIAL_VAR_RUNNINGFUNCTION = 'runningfunction';
 
     private string|FunctionObject $scope = self::SCOPE_INNER_OBJECT;
 
@@ -41,8 +47,20 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
 
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
+
+
         switch ($this->scope) {
             case self::SCOPE_INNER_OBJECT:
+
+                //special vars
+                switch ($this->name) {
+                    case self::SPECIAL_VAR_THIS:
+                        return new DataReturnLoad($currentEnvironment->getObject());
+                    case self::SPECIAL_VAR_RUNNINGFUNCTION:
+                        return new DataReturnLoad(new RunningFunctionData($currentEnvironment));
+//            case self::SPECIAL_VAR_ORIGIN: //dont have rly access to it here
+                }
+
                 $value = $currentEnvironment->getObject()->getNormalVar($this->name);
                 if ($value === null) {
                     $this->set($currentEnvironment, $exHandler, new Undefined());
@@ -67,6 +85,15 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
 
     public function set(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler, ?DataInterface $value): ReturnLoad
     {
+        //special vars
+        switch ($this->name) {
+            case self::SPECIAL_VAR_THIS:
+            case self::SPECIAL_VAR_RUNNINGFUNCTION:
+            case self::SPECIAL_VAR_ORIGIN:
+                $r = $exHandler->transmit(new SpecialVariableOverwriteProtectionException());
+                return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
+        }
+
         switch ($this->scope) {
 
             case self::SCOPE_INNER_OBJECT:

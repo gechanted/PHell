@@ -94,6 +94,9 @@ class FunctionResolver
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
         }
         elseif ($solutionCount !== 1) {
+            //TODO add option in config true: if solutionscore is not tied dont throw
+            //  ==> EVEN BETTER in Runtime just throw this back with a log entry
+
             $exceptionResult = $upper->transmit(new AmbiguousOverloadFunctionCallException($solutions, $solutionScores));
             if ($exceptionResult instanceof ExceptionHandlingResultNoShove) {
                 return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));

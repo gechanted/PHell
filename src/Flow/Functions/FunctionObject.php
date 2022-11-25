@@ -9,6 +9,7 @@ use PHell\Flow\Functions\Parenthesis\NamedDataFunctionParenthesis;
 use Phell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
+use PHell\Operators\Variable;
 use ReflectionFunction;
 
 class FunctionObject extends PHellObjectDatatype implements DataInterface
@@ -221,6 +222,8 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         return $result;
     }
 
+    //TODO !! after getting the functions from th parent: filter duplicate Parenthesis for overwrite
+
     /**
      * GETS the function(s) of normal function call: f(x)
      * for example: getFile($name)
@@ -236,11 +239,11 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
             $this->getPrivateFunctions($index));
 
         if ($this->origin !== null) {
-            array_merge($functions, $this->origin->getNormalFunction($index));
+            $functions = array_merge($functions, $this->origin->getNormalFunction($index));
         }
 
         if ($this->stack !== null) {
-            array_merge($functions, $this->stack->getStackFunction($index));
+            $functions = array_merge($functions, $this->stack->getStackFunction($index));
         }
         //search for php functions if the stack is up
         if (function_exists($index)) {
@@ -256,7 +259,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     {
         $functions = $this->getPublicFunctions($index);
         if ($this->stack !== null) {
-            array_merge($functions, $this->stack->getStackFunction($index));
+            $functions = array_merge($functions, $this->stack->getStackFunction($index));
         }
         return $functions;
     }
@@ -283,11 +286,10 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
      */
     public function getObjectPubliclyAvailableFunction(string $index): array
     {
-        $functions = array_merge(
-            $this->getPublicFunctions($index));
+        $functions = $this->getPublicFunctions($index);
 
         foreach ($this->parents as $parent) {
-            $functions = array_merge($functions, $this->origin->getObjectPubliclyAvailableFunction($index));
+            $functions = array_merge($functions, $parent->getObjectPubliclyAvailableFunction($index));
         }
         return $functions;
     }
@@ -362,15 +364,14 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     /** normal var call */
     public function getNormalVar(string $index): ?DataInterface
     {
-        if ($index === 'this') {
+        if ($index === Variable::SPECIAL_VAR_THIS) {
             return $this;
         }
-        if ($index === 'origin') {
+        if ($index === Variable::SPECIAL_VAR_ORIGIN) {
             return $this->origin;
         }
-        //TODO !! config this !!
-        //TODO add name for going up the origin
-        //TODO here add a param for runningfunction
+
+
         if (array_key_exists($index, $this->privateVars)) {
             return $this->privateVars[$index];
         }
