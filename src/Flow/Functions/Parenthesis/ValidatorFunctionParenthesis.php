@@ -36,4 +36,16 @@ class ValidatorFunctionParenthesis
         return $this->returnType;
     }
 
+    public function getHash(): string
+    {
+        $hash = '';
+        foreach ($this->parameters as $parameter) {
+            if ($hash !== '') {
+                $hash .= '+';
+            }
+            $hash .= $parameter->getDatatype()->dumpType();
+        }
+        return $hash;
+    }
+
 }

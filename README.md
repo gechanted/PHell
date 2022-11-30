@@ -2,6 +2,9 @@ title PHell
 
 
 todo  
+
+!! TEST !!
+
 description - this markdown  
  -> features of Hell  
    -> FunctionObjects, CatapultReturns, Exceptions + Handling(shove), TypeConstructs, DoWhile?
@@ -13,15 +16,11 @@ description - this markdown
 
 StdFunctions   
 Reflections??  
+dump  
 
 Operators (extendOp)
 
-CatapultReturns (skip?)
-
 try, catch + FINALLY (the else of the try catch, often just Exception)  
-
-strict
-
 
 
 ... 

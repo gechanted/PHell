@@ -33,7 +33,6 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
      */
     private ?FunctionObject $stack; //runningFunction
 
-    //TODO when can this be made to: "f/$name", so it doesnt collide with the other types?
     private string $name;
 
     //TODO maybe make name nullable cause some objects just arent named => (unnamedObject instanceof unnamedObject = false) for the validator
@@ -95,7 +94,6 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         return $function->getName().'('.$function->dumpParenthesis().'):'.$function->getParenthesis()->getReturnType()->dumpType().PHP_EOL;
     }
 
-    //TODO this currently doesn't allow Typechecks on Variables
     /** @var DataInterface[] */
     private array $publicVars = [];
     /** @var DataInterface[] */
@@ -116,8 +114,6 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
 
     public function extend(FunctionObject $newParent, CodeExceptionHandler $exceptionTransmitter): void
     {
-        //TODO !! what about complete overwrites?, not just overloads
-        // premark them here ? for later getF() so its there excluded?
         if ($this->checkExtensionRecursionParents($this) === false) {
             //TODO throw Exception
             return;
@@ -192,7 +188,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         $result = [];
         foreach ($this->privateFunctions as $function) {
             if ($function->getName() === $index) {
-                $result[] = $function;
+                $result[$function->getParenthesis()->getHash()] = $function;
             }
         }
         return $result;
@@ -204,7 +200,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         $result = [];
         foreach ($this->protectedFunctions as $function) {
             if ($function->getName() === $index) {
-                $result[] = $function;
+                $result[$function->getParenthesis()->getHash()] = $function;
             }
         }
         return $result;
@@ -216,13 +212,11 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         $result = [];
         foreach ($this->publicFunctions as $function) {
             if ($function->getName() === $index) {
-                $result[] = $function;
+                $result[$function->getParenthesis()->getHash()] = $function;
             }
         }
         return $result;
     }
-
-    //TODO !! after getting the functions from th parent: filter duplicate Parenthesis for overwrite
 
     /**
      * GETS the function(s) of normal function call: f(x)
@@ -233,10 +227,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
      */
     public function getNormalFunction(string $index): array
     {
-        $functions = array_merge(
-            $this->getPublicFunctions($index),
-            $this->getProtectedFunctions($index),
-            $this->getPrivateFunctions($index));
+        $functions = [];
 
         if ($this->origin !== null) {
             $functions = array_merge($functions, $this->origin->getNormalFunction($index));
@@ -251,16 +242,23 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
             $functions[] = new PHPLambdaFunction(new PHPFunction($reflection));
         }
 
+        $functions = array_merge($functions,
+            $this->getPublicFunctions($index),
+            $this->getProtectedFunctions($index),
+            $this->getPrivateFunctions($index));
+
         return $functions;
     }
 
     /** @return LambdaFunction[] */
     public function getStackFunction(string $index): array
     {
-        $functions = $this->getPublicFunctions($index);
+        $functions = [];
         if ($this->stack !== null) {
             $functions = array_merge($functions, $this->stack->getStackFunction($index));
         }
+
+        $functions = array_merge($functions, $this->getPublicFunctions($index));
         return $functions;
     }
 
@@ -270,13 +268,15 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
      */
     public function getInnerObjectFunction(string $index): array
     {
-        $functions = array_merge(
-            $this->getProtectedFunctions($index),
-            $this->getPublicFunctions($index));
-
+        $functions = [];
         foreach ($this->parents as $parent) {
             $functions = array_merge($functions, $parent->getInnerObjectFunction($index));
         }
+
+        $functions = array_merge($functions,
+            $this->getProtectedFunctions($index),
+            $this->getPublicFunctions($index));
+
         return $functions;
     }
 
@@ -286,11 +286,12 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
      */
     public function getObjectPubliclyAvailableFunction(string $index): array
     {
-        $functions = $this->getPublicFunctions($index);
-
+        $functions = [];
         foreach ($this->parents as $parent) {
             $functions = array_merge($functions, $parent->getObjectPubliclyAvailableFunction($index));
         }
+
+        $functions = array_merge($functions, $this->getPublicFunctions($index));
         return $functions;
     }
 
@@ -346,8 +347,6 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     /** normal var call */
     public function checkAndSetOriginatorVar(string $index, ?DataInterface $value): bool
     {
-        // TODO check for special vars like $this, $origin and $runningfunction
-
         $isSet = $this->checkAndSet($this->publicVars, $index, $value) ||
             $this->checkAndSet($this->protectedVars, $index, $value) ||
             $this->checkAndSet($this->privateVars, $index, $value);
@@ -388,7 +387,6 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
 
 
     // call to object
-
     //call from outside to this object
     public function getObjectPubliclyAvailableVar(string $index): ?DataInterface
     {
@@ -457,41 +455,5 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         }
         return false;
     }
-
-//    //call from inside to this object
-//    //call to $this->etc
-//    //TODO keep? $this->getPublicAndProtectedVariable does that without looking for privates? good or not?
-//    public function getObjectInnerVar(string $index)
-//    {
-//        $var = $this->privateVars[$index];
-//        if ($var !== null) {
-//            return $var;
-//        }
-//
-//        $var = $this->getPublicAndProtectedVariable($index);
-//        if ($var !== null) {
-//            return $var;
-//        }
-//
-//        return null;
-//    }
-//
-//    public function setObjectInnerVar(string $index, $value): bool
-//    {
-//        if ($this->checkAndSet($this->privateVars, $index, $value)) {
-//            return true;
-//        }
-//        if ($this->setPublicAndProtectedVariable($index, $value)) {
-//            return true;
-//        }
-//
-//        //TODO maybe throw sth here?
-//        $this->privateVars[$index] = $value;
-//        if ($value === null) {
-//            unset($this->privateVars[$index]);
-//        }
-//        return true;
-//    }
-
 
 }

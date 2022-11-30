@@ -5,8 +5,9 @@ namespace PHell\Flow\Data\Datatypes;
 class PHellObjectDatatype extends AbstractType implements DatatypeInterface
 {
 
-    public function __construct(private readonly string $name)
+    public function __construct(private string $name)
     {
+        $this->name = 'f/'.$this->name;
     }
 
     public function realValidate(DatatypeInterface $datatype): DatatypeValidation
@@ -28,7 +29,7 @@ class PHellObjectDatatype extends AbstractType implements DatatypeInterface
 
     public function dumpType(): string
     {
-        return 'obj';
+        return 'Object<'.$this->name.'>';
     }
 
 }

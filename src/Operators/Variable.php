@@ -73,6 +73,8 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
                 if ($this->scope instanceof FunctionObject === false) {
                     throw new ShouldntHappenException();
                 }
+                //TODO !!! if var is an extended Object, use this call ...
+
                 $value = $this->scope->getObjectPubliclyAvailableVar($this->name);
         }
         if ($value === null) {

@@ -2,6 +2,12 @@
 
 namespace PHell\Flow\Functions;
 
+use PHell\Flow\Data\Datatypes\PHPObjectDatatype;
+
+/**
+ * @see PHPObjectDatatype
+ * !!! EVERYTHING IN HERE SHOULD BE DUPLICATED AND MATCHING WITH PHPObjectDatatype !!!
+ */
 class PHPObject extends FunctionObject
 {
 
@@ -27,5 +33,11 @@ class PHPObject extends FunctionObject
 
             $this->setNormalVar($property->getName(), RunningPHPFunction::convertPHPValue($property->getValue()), $visibility);
         }
+    }
+
+    /** @return string[] */
+    public function getNames(): array
+    {
+
     }
 }
