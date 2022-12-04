@@ -35,9 +35,9 @@ class PHPObject extends FunctionObject
         }
     }
 
-    /** @return string[] */
-    public function getNames(): array
-    {
-
-    }
+//    /** @return string[] */
+//    public function getNames(): array
+//    {
+//
+//    }
 }

@@ -26,10 +26,12 @@ class OnObject extends EasyStatement implements Assignable
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         $returnLoad = $this->object->getValue($currentEnvironment, $exHandler);
-        if ($returnLoad instanceof ExceptionReturnLoad) { return $returnLoad; }
-        if ($returnLoad instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+        if ($returnLoad instanceof DataReturnLoad === false) { return $returnLoad; }
         $object = $returnLoad->getData();
-        //TODO !!! add check if this actually returns a FunctionObject, cause you cant "null->f(x)" / call a function on a basic datatype
+        if ($object instanceof FunctionObject === false) {
+//            $exHandler->transmit();
+              //TODO !!! add check if this actually returns a FunctionObject, cause you cant "null->f(x)" / call a function on a basic datatype
+        }
 
         if ($object === $currentEnvironment) {
             $this->furtherCall->changeScope(ScopeAffected::SCOPE_THIS_OBJECT_CALL);

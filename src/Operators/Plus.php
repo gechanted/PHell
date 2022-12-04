@@ -55,7 +55,9 @@ class Plus extends EasyStatement
         } else {
             $r = $exHandler->transmit(new PlusException([$v1, $v2]));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
-            //nothing (not a type) i can deal with currently
+            //nothing (not a type) I can deal with currently
+            //TODO maybe add certain custom functionality for this operator,
+            // so that certain Objects can be added
         }
 
         return new DataReturnLoad($return);

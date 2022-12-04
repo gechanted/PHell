@@ -22,8 +22,7 @@ class Assign extends EasyStatement implements VisibilityAffected
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         $returnLoad = $this->statement->getValue($currentEnvironment, $exHandler);
-        if ($returnLoad instanceof ExceptionReturnLoad) { return $returnLoad; }
-        if ($returnLoad instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+        if ($returnLoad instanceof DataReturnLoad === false) { return $returnLoad; }
         return $this->variable->set($currentEnvironment, $exHandler, $returnLoad->getData());
     }
 

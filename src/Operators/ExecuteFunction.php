@@ -34,8 +34,7 @@ class ExecuteFunction extends EasyStatement
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         $RL = $this->function->getValue($currentEnvironment, $exHandler);
-        if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
-        if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+        if ($RL instanceof DataReturnLoad === false) { return $RL; }
 
         $lambdaValidator = new UnexecutedFunctionCollection([]);
         $functionCollection = $RL->getData();

@@ -9,7 +9,7 @@ use PHell\Operators\Variable;
 class CatchClause
 {
 
-    public function __construct(private readonly PHellObjectDatatype $objectValidator, private readonly Variable $variable, private readonly Code $code)
+    public function __construct(private readonly PHellObjectDatatype $objectValidator, private readonly ?Variable $variable, private readonly Code $code)
     {
     }
 
@@ -23,7 +23,7 @@ class CatchClause
         return $this->code;
     }
 
-    public function getVariable(): Variable
+    public function getVariable(): ?Variable
     {
         return $this->variable;
     }

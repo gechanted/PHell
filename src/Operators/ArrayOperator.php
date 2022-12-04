@@ -33,8 +33,7 @@ class ArrayOperator extends EasyStatement implements Assignable
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         $RL = $this->array->getValue($currentEnvironment, $exHandler);
-        if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
-        if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+        if ($RL instanceof DataReturnLoad === false) { return $RL; }
 
         $arrValidator = new ArrayType();
         $arrayValue = $RL->getData();
@@ -51,8 +50,7 @@ class ArrayOperator extends EasyStatement implements Assignable
         }
 
         $RL = $this->index->getValue($currentEnvironment, $exHandler);
-        if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
-        if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+        if ($RL instanceof DataReturnLoad === false) { return $RL; }
 
         $stringValidator = new StringType();
         $intValidator = new IntegerType();
@@ -73,8 +71,7 @@ class ArrayOperator extends EasyStatement implements Assignable
     public function set(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler, ?DataInterface $value): ReturnLoad
     {
         $RL = $this->array->getValue($currentEnvironment, $exHandler);
-        if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
-        if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+        if ($RL instanceof DataReturnLoad === false) { return $RL; }
 
         $arrValidator = new ArrayType();
         $arrayValue = $RL->getData();
@@ -91,6 +88,9 @@ class ArrayOperator extends EasyStatement implements Assignable
         if ($this->index === null) {
             $indexValue = null;
         } else {
+            $RL = $this->index->getValue($currentEnvironment, $exHandler);
+            if ($RL instanceof DataReturnLoad === false) { return $RL; }
+
             $stringValidator = new StringType();
             $intValidator = new IntegerType();
             $indexValue = $RL->getData();

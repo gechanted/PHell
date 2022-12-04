@@ -18,7 +18,7 @@ StdFunctions
 Reflections??  
 dump  
 
-Operators (extendOp)
+Operators (extendOp) (check Actions for respective OPs)
 
 try, catch + FINALLY (the else of the try catch, often just Exception)  
 

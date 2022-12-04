@@ -1,4 +1,5 @@
 <?php
+
 namespace PHell\Commands\TryCatch;
 
 use PHell\Exceptions\ShouldntHappenException;
@@ -13,6 +14,7 @@ use PHell\Flow\Main\Returns\ExceptionHandlingResult;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultNoShove;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultShove;
 use PHell\Flow\Main\Returns\ExecutionResult;
+use PHell\Operators\Variable;
 
 class TryConstruct implements CodeExceptionHandler, Command
 {
@@ -20,12 +22,14 @@ class TryConstruct implements CodeExceptionHandler, Command
     private ?CodeExceptionHandler $exHandler;
 
     /**
-     * @param Code $code
      * @param CatchClause[] $catchClauses
      */
-    public function __construct(private readonly Code $code, private array $catchClauses = [], /*?Code $elseFinally = null*/)
+    public function __construct(
+        private readonly Code      $code,
+        private readonly array     $catchClauses = [],
+        private readonly ?Code     $elseClauseCode = null,
+        private readonly ?Variable $elseClauseVariable = null)
     {
-//        $this->catchClauses[] = new CatchClause(new UnknownDatatype(), , $elseFinally); //TODO add an else Statement
     }
 
     public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult
@@ -53,28 +57,34 @@ class TryConstruct implements CodeExceptionHandler, Command
         foreach ($this->catchClauses as $catch) {
             $validation = $catch->getObjectValidator()->validate($exception);
             if ($validation->isSuccess()) {
-
-
-                if ($this->currentEnvironment === null) {
-                    throw new ShouldntHappenException();
-                }
-                //TODO !!! add variable  which actually contains the exception
-                foreach ($catch->getCode()->getStatements() as $statement) {
-
-                    $result = $statement->execute($this->currentEnvironment, $this->exHandler);
-                    if ($result->isActionRequired()) {
-
-                        if ($result instanceof ShoveAction) { //TODO if Shove without data
-                            return new ExceptionHandlingResultShove($this, $result->getData());
-                        }
-
-                        return new ExceptionHandlingResultNoShove($this, new ExecutionResult(new ReturningExceptionAction($this, $result)));
-                    }
-                }
-                return new ExceptionHandlingResultNoShove($this, new ExecutionResult());
+                return $this->executeCatch($exception, $catch->getCode(), $catch->getVariable());
             }
+        }
+        if ($this->elseClauseCode !== null) {
+            return $this->executeCatch($exception, $this->elseClauseCode, $this->elseClauseVariable);
         }
 
         return $this->exHandler->transmit($exception);
+    }
+
+    private function executeCatch(FunctionObject $exception, Code $code, ?Variable $variable): ExceptionHandlingResult
+    {
+        if ($variable !== null) {
+            $variable->set($this->currentEnvironment, $this->exHandler, $exception);
+        }
+
+        foreach ($code->getStatements() as $statement) {
+
+            $result = $statement->execute($this->currentEnvironment, $this->exHandler);
+            if ($result->isActionRequired()) {
+
+                if ($result instanceof ShoveAction) { //TODO if Shove without data
+                    return new ExceptionHandlingResultShove($this, $result->getData());
+                }
+
+                return new ExceptionHandlingResultNoShove($this, new ExecutionResult(new ReturningExceptionAction($this, $result)));
+            }
+        }
+        return new ExceptionHandlingResultNoShove($this, new ExecutionResult());
     }
 }

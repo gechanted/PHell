@@ -26,7 +26,9 @@ class ThrowOperator extends EasyStatement
 
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
-        $exception = $this->statement->getValue($currentEnvironment, $exHandler);
+        $rl = $this->statement->getValue($currentEnvironment, $exHandler);
+        if ($rl instanceof DataReturnLoad === false) { return $rl; }
+        $exception = $rl->getData();
         if ($exception instanceof FunctionObject === false) {
             $r = $exHandler->transmit(new CanOnlyThrowObjectsException());
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
