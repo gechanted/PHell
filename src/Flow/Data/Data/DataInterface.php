@@ -3,7 +3,7 @@
 namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\DatatypeInterface;
-use Phell\Flow\Main\Statement;
+use PHell\Flow\Main\Statement;
 
 interface DataInterface extends Statement, DatatypeInterface
 {

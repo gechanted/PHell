@@ -2,14 +2,13 @@
 
 namespace PHell\Commands\TryCatch;
 
-use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Functions\RunningFunction;
-use Phell\Flow\Main\Code;
-use Phell\Flow\Main\CodeExceptionHandler;
+use PHell\Flow\Main\Code;
+use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Command;
-use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
-use Phell\Flow\Main\CommandActions\ShoveAction;
+use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
+use PHell\Flow\Main\CommandActions\ShoveAction;
 use PHell\Flow\Main\Returns\ExceptionHandlingResult;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultNoShove;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultShove;

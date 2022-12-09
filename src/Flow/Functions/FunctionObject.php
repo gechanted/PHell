@@ -6,7 +6,7 @@ use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Datatypes\PHellObjectDatatype;
 use PHell\Flow\Functions\Parenthesis\NamedDataFunctionParenthesis;
-use Phell\Flow\Main\CodeExceptionHandler;
+use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
 use PHell\Operators\Variable;
@@ -79,7 +79,9 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         foreach ($this->protectedFunctions as $function) { $dump .= 'protected '.$this->dumpLambda($function); }
         foreach ($this->privateFunctions as $function) { $dump .= 'private '.$this->dumpLambda($function); }
         $dump .= PHP_EOL.'origin: '. PHP_EOL;
-        $dump .= $this->origin->dumpValue().PHP_EOL;
+        if ($this->origin !== null) {
+            $dump .= $this->origin->dumpValue() . PHP_EOL;
+        }
         $dump .= PHP_EOL.'parents: ['. PHP_EOL;
         foreach ($this->parents as $parent) {
             $dump .= $parent->dumpValue().PHP_EOL;

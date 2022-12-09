@@ -6,16 +6,17 @@ use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Datatypes\BooleanType;
 use PHell\Flow\Exceptions\LoopStatementNotBoolException;
 use PHell\Flow\Functions\RunningFunction;
-use Phell\Flow\Main\Code;
+use PHell\Flow\Main\Code;
 use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Command;
-use Phell\Flow\Main\CommandActions\BreakAction;
-use Phell\Flow\Main\CommandActions\ContinueAction;
-use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
+use PHell\Flow\Main\CommandActions\BreakAction;
+use PHell\Flow\Main\CommandActions\ContinueAction;
+use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
+use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultNoShove;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultShove;
-use Phell\Flow\Main\Returns\ExceptionReturnLoad;
+use PHell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Statement;
 
@@ -57,8 +58,7 @@ class DoWhileLoop implements Command
             }
 
             $RL = $this->whileLoopParenthesis->getValue($currentEnvironment, $exHandler);
-            if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); } //TODO RLs are fucked
-            if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+            if ($RL instanceof DataReturnLoad === false) { return EasyStatement::returnLoadToExecutionResult($RL); }
 
             $value = $RL->getData();
             if ($validator->validate($value)->isSuccess() === false) {

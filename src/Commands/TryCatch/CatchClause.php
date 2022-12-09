@@ -3,7 +3,7 @@
 namespace PHell\Commands\TryCatch;
 
 use PHell\Flow\Data\Datatypes\PHellObjectDatatype;
-use Phell\Flow\Main\Code;
+use PHell\Flow\Main\Code;
 use PHell\Operators\Variable;
 
 class CatchClause

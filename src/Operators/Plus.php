@@ -11,13 +11,13 @@ use PHell\Flow\Data\Datatypes\StringType;
 use PHell\Flow\Exceptions\PlusException;
 use PHell\Flow\Functions\RunningFunction;
 use PHell\Flow\Main\CodeExceptionHandler;
-use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
-use Phell\Flow\Main\EasyStatement;
+use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
+use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
-use Phell\Flow\Main\Returns\ExceptionReturnLoad;
+use PHell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
-use Phell\Flow\Main\Statement;
+use PHell\Flow\Main\Statement;
 
 class Plus extends EasyStatement
 {

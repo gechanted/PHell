@@ -11,8 +11,8 @@ use PHell\Flow\Data\Datatypes\UnknownDatatype;
 use PHell\Flow\Functions\Parenthesis\DataFunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesisParameter;
-use Phell\Flow\Main\Code;
-use Phell\Flow\Main\Statement;
+use PHell\Flow\Main\Code;
+use PHell\Flow\Main\Statement;
 
 class PHPLambdaFunction extends LambdaFunction
 {

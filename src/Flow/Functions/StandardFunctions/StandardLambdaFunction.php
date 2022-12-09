@@ -6,8 +6,8 @@ use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Functions\LambdaFunction;
 use PHell\Flow\Functions\Parenthesis\DataFunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
-use Phell\Flow\Main\Code;
-use Phell\Flow\Main\Statement;
+use PHell\Flow\Main\Code;
+use PHell\Flow\Main\Statement;
 
 class StandardLambdaFunction extends LambdaFunction
 {

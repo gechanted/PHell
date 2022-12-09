@@ -7,15 +7,15 @@ use PHell\Flow\Exceptions\CanOnlyThrowObjectsException;
 use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Functions\RunningFunction;
 use PHell\Flow\Main\CodeExceptionHandler;
-use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
-use Phell\Flow\Main\EasyStatement;
+use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
+use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultNoShove;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultShove;
-use Phell\Flow\Main\Returns\ExceptionReturnLoad;
+use PHell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
-use Phell\Flow\Main\Statement;
+use PHell\Flow\Main\Statement;
 
 class ThrowOperator extends EasyStatement
 {

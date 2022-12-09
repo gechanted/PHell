@@ -15,10 +15,10 @@ use PHell\Flow\Functions\Parenthesis\NamedDataFunctionParenthesisParameter;
 use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
 use PHell\Flow\Functions\RunningFunction;
 use PHell\Flow\Main\CodeExceptionHandler;
-use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
+use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
 use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
-use Phell\Flow\Main\Returns\ExceptionReturnLoad;
+use PHell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
 use PHell\Flow\Main\Statement;
@@ -48,8 +48,7 @@ class ExecuteFunction extends EasyStatement
         foreach ($this->params as $statement) {
             if ($statement instanceof Statement === false) { throw new ShouldntHappenException(); }
             $RL = $statement->getValue($currentEnvironment, $exHandler);
-            if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
-            if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+            if ($RL instanceof DataReturnLoad === false) { return $RL; }
             $dataParenthesis->addParameter(new DataFunctionParenthesisParameter($RL->getData()));
         }
 

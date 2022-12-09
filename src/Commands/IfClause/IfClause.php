@@ -2,11 +2,11 @@
 namespace PHell\Commands\IfClause;
 
 use PHell\Flow\Functions\RunningFunction;
-use Phell\Flow\Main\Code;
+use PHell\Flow\Main\Code;
 use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Command;
 use PHell\Flow\Main\Returns\ExecutionResult;
-use Phell\Flow\Main\Statement;
+use PHell\Flow\Main\Statement;
 
 class IfClause implements Command
 {

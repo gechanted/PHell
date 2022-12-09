@@ -6,16 +6,17 @@ use PHell\Flow\Data\Datatypes\ArrayType;
 use PHell\Flow\Exceptions\ForeachStatementNotArrayException;
 use PHell\Flow\Functions\RunningFunction;
 use PHell\Flow\Functions\RunningPHPFunction;
-use Phell\Flow\Main\Code;
+use PHell\Flow\Main\Code;
 use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Command;
-use Phell\Flow\Main\CommandActions\BreakAction;
-use Phell\Flow\Main\CommandActions\ContinueAction;
-use Phell\Flow\Main\CommandActions\ReturningExceptionAction;
+use PHell\Flow\Main\CommandActions\BreakAction;
+use PHell\Flow\Main\CommandActions\ContinueAction;
+use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
+use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultNoShove;
 use PHell\Flow\Main\Returns\ExceptionHandlingResultShove;
-use Phell\Flow\Main\Returns\ExceptionReturnLoad;
+use PHell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Statement;
 use PHell\Operators\Variable;
@@ -30,11 +31,10 @@ class ForeachLoop implements Command
     {
     }
 
-    public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult#
+    public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult
     {
         $RL = $this->array->getValue($currentEnvironment, $exHandler);
-        if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
-        if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+        if ($RL instanceof DataReturnLoad === false) { return EasyStatement::returnLoadToExecutionResult($RL); }
 
         $validator = new ArrayType();
         $value = $RL->getData();

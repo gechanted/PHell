@@ -6,11 +6,12 @@ use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\Boolea;
 use PHell\Flow\Data\Datatypes\BooleanType;
 use PHell\Flow\Functions\RunningFunction;
-use Phell\Flow\Main\Code;
+use PHell\Flow\Main\Code;
 use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Command;
+use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
-use Phell\Flow\Main\Returns\ExceptionReturnLoad;
+use PHell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 
 class IfConstruct implements Command
@@ -30,8 +31,7 @@ class IfConstruct implements Command
         $validator = new BooleanType();
         foreach ($this->ifClauses as $clause) {
             $RL = $clause->getCondition()->getValue($currentEnvironment, $exHandler);
-            if ($RL instanceof ExceptionReturnLoad) { return $RL->getExecutionResult(); }
-            if ($RL instanceof DataReturnLoad === false) { throw new ShouldntHappenException(); }
+            if ($RL instanceof DataReturnLoad === false) { return EasyStatement::returnLoadToExecutionResult($RL); }
 
             $value = $RL->getData();
             $result = $validator->validate($value);
