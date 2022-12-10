@@ -23,9 +23,14 @@ class Boolea extends BooleanType implements DataInterface
         return new self($v);
     }
 
-    public function v()
+    public function v(): bool
     {
         return $this->value;
+    }
+
+    public function phpV(): bool
+    {
+        return $this->v();
     }
 
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad

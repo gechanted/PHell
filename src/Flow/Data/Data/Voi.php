@@ -15,6 +15,11 @@ class Voi extends VoidType implements DataInterface
         return null;
     }
 
+    public function phpV()
+    {
+        return $this->v();
+    }
+
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         return new DataReturnLoad($this);

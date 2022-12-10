@@ -28,9 +28,19 @@ class Arra extends ArrayType implements DataInterface
         parent::__construct($type);
     }
 
-    public function v()
+    /** @return DataInterface[] */
+    public function v(): array
     {
         return $this->content;
+    }
+
+    public function phpV(): array
+    {
+        $result = [];
+        foreach ($this->content as $key => $data) {
+            $result[$key] = $data->phpV();
+        }
+        return $result;
     }
 
     public function assign(CodeExceptionHandler $upper, DataInterface $data, ?DataInterface $index = null): ReturnLoad

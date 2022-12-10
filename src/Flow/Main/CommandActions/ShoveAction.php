@@ -1,13 +1,14 @@
 <?php
 
-namespace Phell\Flow\Main\CommandActions;
+namespace PHell\Flow\Main\CommandActions;
 
 use PHell\Flow\Data\Data\DataInterface;
+use PHell\Flow\Data\Data\Voi;
 
 class ShoveAction implements CommandAction
 {
 
-    public function __construct(private readonly DataInterface $data)
+    public function __construct(private readonly DataInterface $data = new Voi())
     {
     }
 

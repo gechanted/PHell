@@ -16,9 +16,14 @@ class DatatypeData extends DatatypeDataType implements DataInterface
     {
     }
 
-    public function v()
+    public function v(): DatatypeInterface
     {
        return $this->datatype;
+    }
+
+    public function phpV(): DatatypeInterface
+    {
+        return $this->v();
     }
 
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad

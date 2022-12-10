@@ -13,14 +13,14 @@ class Intege extends IntegerType implements DataInterface
     {
     }
 
-    public function getInt(): int
+    public function v(): int
     {
         return $this->value;
     }
 
-    public function v()
+    public function phpV(): int
     {
-        return $this->value;
+        return $this->v();
     }
 
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad

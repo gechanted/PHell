@@ -1,6 +1,6 @@
 <?php
 
-namespace Phell\Flow\Main\Returns;
+namespace PHell\Flow\Main\Returns;
 
 
 class ExceptionReturnLoad implements ReturnLoad

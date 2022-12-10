@@ -17,7 +17,7 @@ class PHPMethod extends PHPFunctionContainer
     {
         $parameters = [];
         foreach ($parenthesis->getParameters() as $parameter) {
-            $parameters[] = $parameter->getData()->v();
+            $parameters[] = $parameter->getData()->phpV();
         }
 
         return $this->function->invokeArgs($this->object, $parameters);

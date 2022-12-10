@@ -14,14 +14,14 @@ class Floa extends FloatType implements DataInterface
     {
     }
 
-    public function getFloat(): float
+    public function v(): float
     {
         return $this->value;
     }
 
-    public function v()
+    public function phpV(): float
     {
-        return $this->value;
+        return $this->v();
     }
 
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad

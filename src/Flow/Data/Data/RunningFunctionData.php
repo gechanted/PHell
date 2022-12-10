@@ -15,9 +15,14 @@ class RunningFunctionData extends RunningFunctionDatatype implements DataInterfa
         parent::__construct($this->function->getReturnType());
     }
 
-    public function v()
+    public function v(): RunningFunction
     {
         return $this->function;
+    }
+
+    public function phpV(): RunningFunction
+    {
+        return $this->v();
     }
 
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad

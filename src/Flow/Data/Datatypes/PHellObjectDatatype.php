@@ -5,13 +5,27 @@ namespace PHell\Flow\Data\Datatypes;
 class PHellObjectDatatype extends AbstractType implements DatatypeInterface
 {
 
-    public function __construct(private string $name)
+    const TYPE_OBJECT = 'object';
+
+    /**
+     * @param string|null $name
+     * if $name is null the actual names aren't checked, just if the other is an Object
+     */
+    public function __construct(private ?string $name)
     {
-        $this->name = 'f/'.$this->name;
+        if ($this->name !== null) {
+            $this->name = 'f/' . $this->name;
+        }
     }
 
     public function realValidate(DatatypeInterface $datatype): DatatypeValidation
     {
+        if ($this->name === null) {
+            if ($datatype instanceof PHellObjectDatatype) {
+                return new DatatypeValidation(true, 0);
+            }
+            return new DatatypeValidation(false, 0);
+        }
         $counter = 0;
         foreach ($datatype->getNames() as $name) {
             if ($name === $this->name) {
@@ -29,7 +43,7 @@ class PHellObjectDatatype extends AbstractType implements DatatypeInterface
 
     public function dumpType(): string
     {
-        return 'Object<'.$this->name.'>';
+        return self::TYPE_OBJECT.'<"'.$this->name.'">';
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace PHell\Flow\Functions\StandardFunctions;
 
+use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Data\Strin;
 use PHell\Flow\Functions\RunningFunction;
 use PHell\Flow\Main\CodeExceptionHandler;
@@ -22,7 +23,38 @@ class Dump extends EasyStatement
         $load = $this->statement->getValue($currentEnvironment, $exHandler);
         if ($load instanceof DataReturnLoad === false) { return $load; }
 
-        $unformattedStr = $load->getData()->dumpValue();
+        $dump = self::dump($load->getData());
+        return new DataReturnLoad(new Strin($dump));
+    }
+
+
+    /**
+     * @param (int|false)[] $contenders
+     * searches for the lowest number in the array
+     * disregards false
+     */
+    private static function first(array $contenders): int|false
+    {
+        $first = false;
+        foreach ($contenders as $contender) {
+            if ($contender === false) { continue; }
+            if ($first === false) { $first = $contender; }
+            if ($first > $contender) { //if first is bigger than the contender
+                $first = $contender;
+            }
+        }
+        return $first;
+    }
+
+    private static function isEscaped($formattedStr): bool
+    {
+        //if the 2nd last is a \   AND if the last was not escaped
+        return (substr($formattedStr, -2, 1) === '\'') && !self::isEscaped(substr($formattedStr, 0, strlen($formattedStr)-1));
+    }
+
+    public static function dump(DataInterface $data): string
+    {
+        $unformattedStr = $data->dumpValue();
         $unformattedStr = str_replace(PHP_EOL, "\n", $unformattedStr);
         $formattedStr = '';
         $string = false;
@@ -37,19 +69,21 @@ class Dump extends EasyStatement
             $endOfLine = strpos($unformattedStr, "\n");
 
             $contenders = [$squareBracketOpen, $squareBracketClose, $bracesOpen, $bracesClose, $stringOne, $stringTwo, $endOfLine];
-            $winner = $this->first($contenders);
+            $winner = self::first($contenders);
             //if next char is searched for e.g. []{}"' $winner = 0
             $formattedStr .= substr($unformattedStr, 0, $winner + 1);
             $unformattedStr = substr($unformattedStr, $winner + 1);
             if ($winner === false) { break; }
             if ($string === "'" && $winner === $stringOne) {
-               if ($this->isEscaped($formattedStr) === false) {
-                   $string = false;
-               }
+                if (self::isEscaped($formattedStr) === false) {
+                    $string = false;
+                    //TODO !! remove escaping: \\ and  \"
+                }
             }
             elseif ($string === '"' && $winner === $stringTwo) {
-                if ($this->isEscaped($formattedStr) === false) {
+                if (self::isEscaped($formattedStr) === false) {
                     $string = false;
+                    //TODO !! remove escaping: \\ and  \"
                 }
             } else {
                 if ($stringOne === $winner) { $string = "'"; }
@@ -67,32 +101,7 @@ class Dump extends EasyStatement
 
         }
         $formattedStr = str_replace("\n", PHP_EOL, $formattedStr);
-        //TODO test
-        return new DataReturnLoad(new Strin($formattedStr));
-    }
 
-
-    /**
-     * @param (int|false)[] $contenders
-     * searches for the lowest number in the array
-     * disregards false
-     */
-    private function first(array $contenders): int|false
-    {
-        $first = false;
-        foreach ($contenders as $contender) {
-            if ($contender === false) { continue; }
-            if ($first === false) { $first = $contender; }
-            if ($first > $contender) { //if first is bigger than the contender
-                $first = $contender;
-            }
-        }
-        return $first;
-    }
-
-    private function isEscaped($formattedStr): bool
-    {
-        //if the 2nd last is a \   AND if the last was not escaped
-        return (substr($formattedStr, -2, 1) === '\'') && !$this->isEscaped(substr($formattedStr, 0, strlen($formattedStr)-1));
+        return $formattedStr;
     }
 }

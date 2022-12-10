@@ -22,6 +22,12 @@ class UnexecutedFunctionCollection extends UnexecutedFunctionCollectionType impl
         return $this->lambdaFunctions;
     }
 
+    /** @return LambdaFunction[] */
+    public function phpV(): array
+    {
+        return $this->v();
+    }
+
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         return new DataReturnLoad($this);

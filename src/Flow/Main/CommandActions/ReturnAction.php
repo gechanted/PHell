@@ -1,6 +1,6 @@
 <?php
 
-namespace Phell\Flow\Main\CommandActions;
+namespace PHell\Flow\Main\CommandActions;
 
 use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Data\RunningFunctionData;

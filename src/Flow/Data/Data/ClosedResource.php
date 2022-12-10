@@ -20,6 +20,11 @@ class ClosedResource extends ClosedResourceType implements DataInterface
         return $this->resource;
     }
 
+    public function phpV()
+    {
+        return $this->v();
+    }
+
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         return new DataReturnLoad($this);

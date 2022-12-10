@@ -8,6 +8,7 @@ use PHell\Flow\Data\Datatypes\PHellObjectDatatype;
 use PHell\Flow\Functions\Parenthesis\NamedDataFunctionParenthesis;
 use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\DataReturnLoad;
+use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
 use PHell\Operators\Variable;
 use ReflectionFunction;
@@ -63,7 +64,9 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     }
 
 
-    public function v() { return $this; }
+    public function v(): FunctionObject { return $this; }
+
+    public function phpV() { return $this->v(); }
 
     //Theoretically should never be called, due to this being a VO and not Easily instantiable like an actual "string"
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad { return new DataReturnLoad($this); }
@@ -114,7 +117,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     // extend --------------------------------------------
     public bool $SAFETY_CHECK_ON_EXTEND = true; // TODO config
 
-    public function extend(FunctionObject $newParent, CodeExceptionHandler $exceptionTransmitter): void
+    public function extend(FunctionObject $newParent, CodeExceptionHandler $exceptionTransmitter): ExecutionResult
     {
         if ($this->checkExtensionRecursionParents($this) === false) {
             //TODO throw Exception
@@ -134,6 +137,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
             }
         }
         $this->parents[] = $newParent;
+        return new ExecutionResult();
     }
 
     /** pls use it rarely, in thought out contexts */

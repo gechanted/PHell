@@ -1,6 +1,6 @@
 <?php
 
-namespace Phell\Flow\Main\CommandActions;
+namespace PHell\Flow\Main\CommandActions;
 
 use PHell\Commands\TryCatch\TryConstruct;
 use PHell\Flow\Main\Returns\ExecutionResult;

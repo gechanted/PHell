@@ -36,7 +36,7 @@ class TryConstruct implements CodeExceptionHandler, Command
         $this->currentEnvironment = $currentEnvironment;
         $this->exHandler = $exHandler;
         foreach ($this->code->getStatements() as $statement) {
-            $result = $statement->execute($currentEnvironment, $this); //here is the new CodeExceptionTransmitter injected
+            $result = $statement->execute($currentEnvironment, $this); //here is the new CodeExceptionHandler injected
             if ($result->isActionRequired()) {
 
                 if ($result instanceof ReturningExceptionAction) {
@@ -77,7 +77,7 @@ class TryConstruct implements CodeExceptionHandler, Command
             $result = $statement->execute($this->currentEnvironment, $this->exHandler);
             if ($result->isActionRequired()) {
 
-                if ($result instanceof ShoveAction) { //TODO if Shove without data
+                if ($result instanceof ShoveAction) { //if Shove without data: Void is used
                     return new ExceptionHandlingResultShove($this, $result->getData());
                 }
 

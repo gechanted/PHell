@@ -13,14 +13,14 @@ class Strin extends StringType implements DataInterface
     {
     }
 
-    public function getString(): string
+    public function v(): string
     {
         return $this->value;
     }
 
-    public function v()
+    public function phpV(): string
     {
-        return $this->value;
+        return $this->v();
     }
 
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
@@ -30,6 +30,7 @@ class Strin extends StringType implements DataInterface
 
     public function dumpValue(): string
     {
-        return '"'.$this->value.'"'; //TODO !! mask value
+        return '"'.$this->value.'"';
+        //TODO !! mask value with \" and \\  . In the Dump indentor reverse this. also all dump value calls have to be directed towards dump!
     }
 }

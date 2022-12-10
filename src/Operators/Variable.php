@@ -73,7 +73,7 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
                 if ($this->scope instanceof FunctionObject === false) {
                     throw new ShouldntHappenException();
                 }
-                //TODO !!! if var is an extended Object, use this call ...
+                //TODO !!! if var is an extended Object, use this_object_call ...
                 //TODO if I have technology to recognize which objects are extended:
                 // add a certain $ this variable, which is the object the function is called on.
                 // when a parent call: dont change the $ this variable.
