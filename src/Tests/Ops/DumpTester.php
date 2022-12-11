@@ -33,7 +33,7 @@ class DumpTester implements Statement
     {
         return new DataReturnLoad(
 //            new Strin('Heyho')
-        new FunctionObject('HeraldTheOdd', null, null, new NamedDataFunctionParenthesis(new UnknownDatatype, [new NamedDataFunctionParenthesisParameter('param1', new Strin('Egon The Squip')), new NamedDataFunctionParenthesisParameter('param2', new Intege(42))]))
+        new FunctionObject('HeraldTheOdd', null, null, new NamedDataFunctionParenthesis(new UnknownDatatype, [new NamedDataFunctionParenthesisParameter('param1', new Strin('Egon "The Squip" Smithson')), new NamedDataFunctionParenthesisParameter('param2', new Intege(42)), new NamedDataFunctionParenthesisParameter('param3', new Strin('{[]}/()="\'!$'))]))
         );
     }
 }

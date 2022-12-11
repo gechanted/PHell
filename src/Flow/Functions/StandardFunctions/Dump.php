@@ -49,13 +49,13 @@ class Dump extends EasyStatement
     private static function isEscaped($formattedStr): bool
     {
         //if the 2nd last is a \   AND if the last was not escaped
-        return (substr($formattedStr, -2, 1) === '\'') && !self::isEscaped(substr($formattedStr, 0, strlen($formattedStr)-1));
+        return (substr($formattedStr, -2, 1) === '\\') && !self::isEscaped(substr($formattedStr, 0, strlen($formattedStr)-1));
     }
 
     public static function dump(DataInterface $data): string
     {
         $unformattedStr = $data->dumpValue();
-        $unformattedStr = str_replace(PHP_EOL, "\n", $unformattedStr);
+        $unformattedStr = str_replace(PHP_EOL, "\n", $unformattedStr); //\r\n counts as two chars, messes stuff up
         $formattedStr = '';
         $string = false;
         $indent = 0;
@@ -64,30 +64,25 @@ class Dump extends EasyStatement
             $squareBracketClose = strpos($unformattedStr, ']');
             $bracesOpen = strpos($unformattedStr, '{');
             $bracesClose = strpos($unformattedStr, '}');
-            $stringOne = strpos($unformattedStr, "'");
-            $stringTwo = strpos($unformattedStr, '"');
+            $quotation = strpos($unformattedStr, '"');
             $endOfLine = strpos($unformattedStr, "\n");
 
-            $contenders = [$squareBracketOpen, $squareBracketClose, $bracesOpen, $bracesClose, $stringOne, $stringTwo, $endOfLine];
+            $contenders = [$squareBracketOpen, $squareBracketClose, $bracesOpen, $bracesClose, $quotation, $endOfLine];
             $winner = self::first($contenders);
             //if next char is searched for e.g. []{}"' $winner = 0
-            $formattedStr .= substr($unformattedStr, 0, $winner + 1);
+
+            $toAddFormattedStr = substr($unformattedStr, 0, $winner + 1);
             $unformattedStr = substr($unformattedStr, $winner + 1);
-            if ($winner === false) { break; }
-            if ($string === "'" && $winner === $stringOne) {
-                if (self::isEscaped($formattedStr) === false) {
+            if ($string) {
+                //if last char is "     and  if that char is NOT escaped / has backslashes before it
+                if ($winner === $quotation && (self::isEscaped($toAddFormattedStr) === false)) {
                     $string = false;
-                    //TODO !! remove escaping: \\ and  \"
                 }
-            }
-            elseif ($string === '"' && $winner === $stringTwo) {
-                if (self::isEscaped($formattedStr) === false) {
-                    $string = false;
-                    //TODO !! remove escaping: \\ and  \"
-                }
+                $toAddFormattedStr = self::stringUnescape($toAddFormattedStr);
+                $formattedStr .= $toAddFormattedStr;
             } else {
-                if ($stringOne === $winner) { $string = "'"; }
-                elseif ($stringTwo === $winner) { $string = '"'; }
+                $formattedStr .= $toAddFormattedStr;
+                if ($quotation === $winner) { $string = true; }
                 elseif ($squareBracketOpen === $winner) { $indent++; }
                 elseif ($squareBracketClose === $winner) { $indent--; }
                 elseif ($bracesOpen === $winner) { $indent++; }
@@ -98,10 +93,23 @@ class Dump extends EasyStatement
                     }
                 }
             }
+            if ($winner === false) { break; }
 
         }
-        $formattedStr = str_replace("\n", PHP_EOL, $formattedStr);
+        $formattedStr = str_replace("\n", PHP_EOL, $formattedStr); // REVERTING the top: \r\n counts as two chars, messes stuff up
 
         return $formattedStr;
+    }
+
+    public static function stringEscape(string $toEscape): string
+    {
+        $toEscape = str_replace('\\', '\\\\', $toEscape);
+        return str_replace('"', '\\"', $toEscape);
+    }
+
+    public static function stringUnescape(string $toEscape): string
+    {
+        $toEscape = str_replace('\\\\', '\\', $toEscape);
+        return str_replace('\\"', '"', $toEscape);
     }
 }

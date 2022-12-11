@@ -5,7 +5,6 @@ namespace PHell\Flow\Functions;
 use PHell\Flow\Data\Data\UnexecutedFunctionCollection;
 use PHell\Flow\Data\Datatypes\IntegerType;
 use PHell\Flow\Exceptions\AmbiguousOverloadFunctionCallException;
-use PHell\Flow\Exceptions\Exception;
 use PHell\Flow\Exceptions\NoOverloadFunctionException;
 use PHell\Flow\Functions\Parenthesis\DataFunctionParenthesis;
 use PHell\Flow\Main\CodeExceptionHandler;

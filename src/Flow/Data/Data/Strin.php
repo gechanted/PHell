@@ -3,6 +3,7 @@ namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\StringType;
 use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Functions\StandardFunctions\Dump;
 use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
@@ -30,7 +31,6 @@ class Strin extends StringType implements DataInterface
 
     public function dumpValue(): string
     {
-        return '"'.$this->value.'"';
-        //TODO !! mask value with \" and \\  . In the Dump indentor reverse this. also all dump value calls have to be directed towards dump!
+        return '"'.Dump::stringEscape($this->value).'"';
     }
 }

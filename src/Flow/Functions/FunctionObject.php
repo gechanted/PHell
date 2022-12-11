@@ -5,8 +5,11 @@ namespace PHell\Flow\Functions;
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Datatypes\PHellObjectDatatype;
+use PHell\Flow\Exceptions\ParentRecursionException;
+use PHell\Flow\Exceptions\UnsolvedDiamondProblemsException;
 use PHell\Flow\Functions\Parenthesis\NamedDataFunctionParenthesis;
 use PHell\Flow\Main\CodeExceptionHandler;
+use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
@@ -74,9 +77,9 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     public function dumpValue(): string
     {
         $dump = 'Object<'.$this->name.'> {'.PHP_EOL;
-        foreach ($this->publicVars as $var) { $dump .= 'public '.$var->dumpValue().PHP_EOL; }
-        foreach ($this->protectedVars as $var) { $dump .= 'protected '.$var->dumpValue().PHP_EOL; }
-        foreach ($this->privateVars as $var) { $dump .= 'private '.$var->dumpValue().PHP_EOL; }
+        foreach ($this->publicVars as $name => $var) { $dump .= 'public '.$name.'  '.$var->dumpValue().PHP_EOL; }
+        foreach ($this->protectedVars as $name => $var) { $dump .= 'protected '.$name.'  '.$var->dumpValue().PHP_EOL; }
+        foreach ($this->privateVars as $name => $var) { $dump .= 'private '.$name.'  '.$var->dumpValue().PHP_EOL; }
         $dump .= PHP_EOL;
         foreach ($this->publicFunctions as $function) { $dump .= 'public '.$this->dumpLambda($function); }
         foreach ($this->protectedFunctions as $function) { $dump .= 'protected '.$this->dumpLambda($function); }
@@ -115,26 +118,23 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
 
 
     // extend --------------------------------------------
-    public bool $SAFETY_CHECK_ON_EXTEND = true; // TODO config
 
-    public function extend(FunctionObject $newParent, CodeExceptionHandler $exceptionTransmitter): ExecutionResult
+    public function extend(FunctionObject $newParent, CodeExceptionHandler $exHandler): ExecutionResult
     {
         if ($this->checkExtensionRecursionParents($this) === false) {
-            //TODO throw Exception
-            return;
+            $exResult = $exHandler->transmit(new ParentRecursionException());
+            return new ExecutionResult(new ReturningExceptionAction($exResult->getHandler(), new ExecutionResult()));
         }
-        if ($this->SAFETY_CHECK_ON_EXTEND) {
-            $thisVars = $this->getAccessibleVars();
-            $parentVars = $this->getAccessibleVarsParents();
-            $newParentVars = array_merge($newParent->getAccessibleVars(), $newParent->getAccessibleVarsParents());
+        $thisVars = $this->getAccessibleVars();
+        $parentVars = $this->getAccessibleVarsParents();
+        $newParentVars = array_merge($newParent->getAccessibleVars(), $newParent->getAccessibleVarsParents());
 
-            $diamondProblems = array_intersect($newParentVars, $parentVars);
-            $notSolvedDiamondProblems = array_diff($diamondProblems, $thisVars);
+        $diamondProblems = array_intersect($newParentVars, $parentVars);
+        $notSolvedDiamondProblems = array_diff($diamondProblems, $thisVars);
 
-            if (count($notSolvedDiamondProblems) !== 0) {
-                // TODO throw Exception
-                return;
-            }
+        if (count($notSolvedDiamondProblems) !== 0) {
+            $exResult = $exHandler->transmit(new UnsolvedDiamondProblemsException());
+            return new ExecutionResult(new ReturningExceptionAction($exResult->getHandler(), new ExecutionResult()));
         }
         $this->parents[] = $newParent;
         return new ExecutionResult();
