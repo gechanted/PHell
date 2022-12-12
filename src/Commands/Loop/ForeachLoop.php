@@ -25,7 +25,7 @@ class ForeachLoop implements Command
 {
     public function __construct(
         private readonly Statement $array,
-        private readonly Variable  $keyVariable,
+        private readonly ?Variable  $keyVariable,
         private readonly Variable  $valueVariable,
         private readonly Code      $code)
     {
@@ -60,10 +60,10 @@ class ForeachLoop implements Command
 
         foreach ($value->v() as $key => $item) {
             $this->valueVariable->set($currentEnvironment, $exHandler, $item);
-            $this->keyVariable->set($currentEnvironment, $exHandler, RunningPHPFunction::convertPHPValue($key));
+            $this->keyVariable?->set($currentEnvironment, $exHandler, RunningPHPFunction::convertPHPValue($key));
 
             //execute
-            foreach ($this->code->getStatements() as $statement) {
+            foreach ($this->code->getCommands() as $statement) {
                 $executionResult = $statement->execute($currentEnvironment, $exHandler);
                 if ($executionResult->isActionRequired()) {
                     $action = $executionResult->getAction();

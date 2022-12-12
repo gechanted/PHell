@@ -4,27 +4,33 @@ namespace PHell\Flow\Functions\StandardFunctions;
 
 use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Data\Strin;
-use PHell\Flow\Functions\RunningFunction;
-use PHell\Flow\Main\CodeExceptionHandler;
-use PHell\Flow\Main\EasyStatement;
-use PHell\Flow\Main\Returns\DataReturnLoad;
-use PHell\Flow\Main\Returns\ReturnLoad;
+use PHell\Flow\Data\Datatypes\StringType;
+use PHell\Flow\Data\Datatypes\UnknownDatatype;
+use PHell\Flow\Functions\FunctionObject;
+use PHell\Flow\Functions\Parenthesis\DataFunctionParenthesis;
+use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
+use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesisParameter;
 use PHell\Flow\Main\Statement;
 
-class Dump extends EasyStatement
+class Dump extends StandardLambdaFunction
 {
 
-    public function __construct(private readonly Statement $statement)
+    public function __construct()
     {
+        parent::__construct('dump',
+            new ValidatorFunctionParenthesis(
+                [new ValidatorFunctionParenthesisParameter('anything', new UnknownDatatype())],
+                new StringType()));
     }
 
-    public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
+    public function getStatement(DataFunctionParenthesis $parenthesis, FunctionObject $stack): Statement
     {
-        $load = $this->statement->getValue($currentEnvironment, $exHandler);
-        if ($load instanceof DataReturnLoad === false) { return $load; }
+        $dump = '';
+        foreach ($parenthesis->getParameters() as $parameter) {
+            $dump .= self::dump($parameter->getData());
+        }
 
-        $dump = self::dump($load->getData());
-        return new DataReturnLoad(new Strin($dump));
+        return new Strin($dump);
     }
 
 
@@ -112,4 +118,6 @@ class Dump extends EasyStatement
         $toEscape = str_replace('\\\\', '\\', $toEscape);
         return str_replace('\\"', '"', $toEscape);
     }
+
+
 }

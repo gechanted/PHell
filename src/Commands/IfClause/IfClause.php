@@ -17,7 +17,7 @@ class IfClause implements Command
 
     public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult
     {
-        foreach ($this->code->getStatements() as $statement) {
+        foreach ($this->code->getCommands() as $statement) {
             $result = $statement->execute($currentEnvironment, $exHandler);
             if ($result->isActionRequired()) {
                 return $result;

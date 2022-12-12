@@ -15,12 +15,12 @@ class Code
     }
 
     /** @return Command[] */
-    public function getStatements(): array
+    public function getCommands(): array
     {
         return $this->statements;
     }
 
-    public function addStatement(Command $statement): void
+    public function addCommand(Command $statement): void
     {
         $this->statements[] = $statement;
     }

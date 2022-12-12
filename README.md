@@ -14,13 +14,6 @@ description - this markdown
  -> a ppp?   
  -> future TODOS (Parser, IDE Linter, namespacing, autoloading)
 
-StdFunctions   
-Reflections??  
-dump  
-
-times * loop
-fix for loop
-
 Runtime (starter)
 
 Operators 

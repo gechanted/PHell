@@ -19,15 +19,19 @@ class ForLoop implements Command
 
     public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult
     {
-        //TODO ! isnt implemented right: you forgot about increment !!!
-        foreach ($this->setupCode->getStatements() as $statement) {
+        foreach ($this->setupCode->getCommands() as $statement) {
             $result = $statement->execute($currentEnvironment, $exHandler);
             if ($result->isActionRequired()) {
                 return $result;
             }
         }
 
-        $loop = new DoWhileLoop(new Code(), $this->forLoopParenthesis, $this->executionCode);
+        $code = new Code($this->executionCode->getCommands());
+        foreach ($this->incrementCode as $increment) {
+            $code->addCommand($increment);
+        }
+
+        $loop = new DoWhileLoop(new Code(), $this->forLoopParenthesis, $code);
 
         return $loop->execute($currentEnvironment, $exHandler);
     }

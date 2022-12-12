@@ -242,6 +242,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         if ($this->stack !== null) {
             $functions = array_merge($functions, $this->stack->getStackFunction($index));
         }
+
         //search for php functions if the stack is up
         if (function_exists($index)) {
             $reflection = new ReflectionFunction($index);

@@ -35,7 +35,7 @@ class TryConstruct implements CodeExceptionHandler, Command
     {
         $this->currentEnvironment = $currentEnvironment;
         $this->exHandler = $exHandler;
-        foreach ($this->code->getStatements() as $statement) {
+        foreach ($this->code->getCommands() as $statement) {
             $result = $statement->execute($currentEnvironment, $this); //here is the new CodeExceptionHandler injected
             if ($result->isActionRequired()) {
 
@@ -72,7 +72,7 @@ class TryConstruct implements CodeExceptionHandler, Command
             $variable->set($this->currentEnvironment, $this->exHandler, $exception);
         }
 
-        foreach ($code->getStatements() as $statement) {
+        foreach ($code->getCommands() as $statement) {
 
             $result = $statement->execute($this->currentEnvironment, $this->exHandler);
             if ($result->isActionRequired()) {

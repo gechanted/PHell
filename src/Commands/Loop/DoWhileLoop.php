@@ -34,7 +34,7 @@ class DoWhileLoop implements Command
         while (true) {
 
             //execute do code
-            foreach ($this->doCode->getStatements() as $statement) {
+            foreach ($this->doCode->getCommands() as $statement) {
                 $result = $statement->execute($currentEnvironment, $exHandler);
                 if ($result->isActionRequired()) {
                     $action = $result->getAction();
@@ -80,7 +80,7 @@ class DoWhileLoop implements Command
                 return new ExecutionResult();
             }
 
-            foreach ($this->whileCode->getStatements() as $statement) {
+            foreach ($this->whileCode->getCommands() as $statement) {
                 $result = $statement->execute($currentEnvironment, $exHandler);
                 if ($result->isActionRequired()) {
                     $action = $result->getAction();

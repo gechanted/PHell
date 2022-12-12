@@ -53,7 +53,7 @@ class RunningFunction extends EasyStatement
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {
         $this->active = true;
-        foreach ($this->code->getStatements() as $statement) {
+        foreach ($this->code->getCommands() as $statement) {
             $result = $statement->execute($this, $exHandler);
             if ($result->isActionRequired()) {
 

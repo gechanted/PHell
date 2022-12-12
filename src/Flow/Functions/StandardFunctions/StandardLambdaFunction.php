@@ -9,16 +9,18 @@ use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
 use PHell\Flow\Main\Code;
 use PHell\Flow\Main\Statement;
 
-class StandardLambdaFunction extends LambdaFunction
+abstract class StandardLambdaFunction extends LambdaFunction
 {
 
-    public function __construct(string $name, ValidatorFunctionParenthesis $parenthesis, private readonly Statement $function)
+    public function __construct(string $name, ValidatorFunctionParenthesis $parenthesis)
     {
         parent::__construct($name, null, $parenthesis, new Code());
     }
 
     public function generateRunningFunction(DataFunctionParenthesis $parenthesis, FunctionObject $stack): Statement
     {
-        return $this->function;
+        return $this->getStatement($parenthesis, $stack);
     }
+
+    abstract public function getStatement(DataFunctionParenthesis $parenthesis, FunctionObject $stack): Statement;
 }
