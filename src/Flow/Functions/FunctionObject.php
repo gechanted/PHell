@@ -122,7 +122,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     public function extend(FunctionObject $newParent, CodeExceptionHandler $exHandler): ExecutionResult
     {
         if ($this->checkExtensionRecursionParents($this) === false) {
-            $exResult = $exHandler->transmit(new ParentRecursionException());
+            $exResult = $exHandler->handle(new ParentRecursionException());
             return new ExecutionResult(new ReturningExceptionAction($exResult->getHandler(), new ExecutionResult()));
         }
         $thisVars = $this->getAccessibleVars();
@@ -133,7 +133,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         $notSolvedDiamondProblems = array_diff($diamondProblems, $thisVars);
 
         if (count($notSolvedDiamondProblems) !== 0) {
-            $exResult = $exHandler->transmit(new UnsolvedDiamondProblemsException());
+            $exResult = $exHandler->handle(new UnsolvedDiamondProblemsException());
             return new ExecutionResult(new ReturningExceptionAction($exResult->getHandler(), new ExecutionResult()));
         }
         $this->parents[] = $newParent;

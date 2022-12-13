@@ -31,7 +31,7 @@ class TimesLoop implements Command
 
         $validator = new IntegerType();
         if ($validator->validate($value)->isSuccess() === false) {
-            $exResult = $exHandler->transmit(new TimesLoopException($value));
+            $exResult = $exHandler->handle(new TimesLoopException($value));
             return new ExecutionResult(new ReturningExceptionAction($exResult->getHandler(), new ExecutionResult()));
         }
 

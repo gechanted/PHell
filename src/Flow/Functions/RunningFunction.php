@@ -68,12 +68,12 @@ class RunningFunction extends EasyStatement
 
 
                 } elseif ($action instanceof ContinueAction) {
-                    $r = $exHandler->transmit(new OverContinueException());
+                    $r = $exHandler->handle(new OverContinueException());
                     $this->active = false;
                     return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
 
                 } elseif ($action instanceof BreakAction) {
-                    $r = $exHandler->transmit(new OverBreakException());
+                    $r = $exHandler->handle(new OverBreakException());
                     $this->active = false;
                     return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
 
@@ -100,7 +100,7 @@ class RunningFunction extends EasyStatement
         if ($this->returnType->validate($value)) {
             return new DataReturnLoad($value);
         }
-        $r = $exHandler->transmit(new ReturnValueDoesntMatchType());
+        $r = $exHandler->handle(new ReturnValueDoesntMatchType());
         return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
     }
 }

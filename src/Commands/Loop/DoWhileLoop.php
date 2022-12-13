@@ -63,7 +63,7 @@ class DoWhileLoop implements Command
             $value = $RL->getData();
             if ($validator->validate($value)->isSuccess() === false) {
 
-                $exceptionResult = $exHandler->transmit(new LoopStatementNotBoolException($value));
+                $exceptionResult = $exHandler->handle(new LoopStatementNotBoolException($value));
                 if ($exceptionResult instanceof ExceptionHandlingResultNoShove) {
                     return new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), $exceptionResult->getExecutionResult()));
                 }

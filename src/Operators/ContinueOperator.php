@@ -33,7 +33,7 @@ class ContinueOperator
 
             $validator = new IntegerType();
             if ($validator->validate($layerData)->isSuccess() === false) {
-                $exceptionResult = $exHandler->transmit(new ContinueException($layerData->dumpValue()));
+                $exceptionResult = $exHandler->handle(new ContinueException($layerData->dumpValue()));
                 return new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult()));
             }
 

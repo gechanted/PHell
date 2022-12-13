@@ -29,7 +29,7 @@ class ExtendOperator implements Command
         $data = $RL->getData();
         $validator = new PHellObjectDatatype(null);
         if ($validator->validate($data)->isSuccess() === false) {
-            $exceptionReturn = $exHandler->transmit(new ExtendOnNotObjectException($data));
+            $exceptionReturn = $exHandler->handle(new ExtendOnNotObjectException($data));
             return new ExecutionResult(new ReturningExceptionAction($exceptionReturn->getHandler(), new ExecutionResult()));
         }
 

@@ -27,7 +27,7 @@ class CatapultReturnOperator implements Command
         if ($runningFunctionRL instanceof DataReturnLoad === false) { EasyStatement::returnLoadToExecutionResult($runningFunctionRL); }
         $runningFunction = $runningFunctionRL->getData();
         if ($runningFunction instanceof RunningFunctionData === false) {
-            $exceptionResult = $exHandler->transmit(new CatapultReturnException($runningFunction->dumpValue()));
+            $exceptionResult = $exHandler->handle(new CatapultReturnException($runningFunction->dumpValue()));
             return new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult()));
         }
 

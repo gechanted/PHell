@@ -9,7 +9,7 @@ use PHell\Flow\Functions\StandardFunctions\Dump;
 use PHell\Flow\Functions\StandardFunctions\ReflectObject;
 use PHell\Flow\Main\Returns\ExceptionHandlingResult;
 
-class Runtime extends RunningFunction implements CodeExceptionHandler
+class Runtime extends RunningFunction
 {
 
     public function __construct(Code $code)
@@ -22,10 +22,5 @@ class Runtime extends RunningFunction implements CodeExceptionHandler
 
 
         parent::__construct($object, $code, new UnknownDatatype());
-    }
-
-    public function transmit(FunctionObject $exception): ExceptionHandlingResult
-    {
-        // TODO: Implement transmit() method.
     }
 }

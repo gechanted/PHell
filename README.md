@@ -16,6 +16,10 @@ description - this markdown
 
 Runtime (starter)
 
+PHPObject
+
+extend access !!!
+
 Operators 
 
 try, catch + FINALLY (the else of the try catch, often just Exception)  

@@ -39,7 +39,7 @@ class ForeachLoop implements Command
         $validator = new ArrayType();
         $value = $RL->getData();
         if ($validator->validate($value)->isSuccess() === false) {
-            $exceptionResult = $exHandler->transmit(new ForeachStatementNotArrayException($value));
+            $exceptionResult = $exHandler->handle(new ForeachStatementNotArrayException($value));
             if ($exceptionResult instanceof ExceptionHandlingResultNoShove) {
                 return new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), $exceptionResult->getExecutionResult()));
             }

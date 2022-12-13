@@ -53,7 +53,7 @@ class Plus extends EasyStatement
             $return = new Strin($v1->v() . $v2->v());
 
         } else {
-            $r = $exHandler->transmit(new PlusException([$v1, $v2]));
+            $r = $exHandler->handle(new PlusException([$v1, $v2]));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
             //nothing (not a type) I can deal with currently
             //TODO maybe add certain custom functionality for this operator,

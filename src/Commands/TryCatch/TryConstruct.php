@@ -51,7 +51,7 @@ class TryConstruct implements CodeExceptionHandler, Command
         return new ExecutionResult();
     }
 
-    public function transmit(FunctionObject $exception): ExceptionHandlingResult
+    public function handle(FunctionObject $exception): ExceptionHandlingResult
     {
         foreach ($this->catchClauses as $catch) {
             $validation = $catch->getObjectValidator()->validate($exception);
@@ -63,7 +63,7 @@ class TryConstruct implements CodeExceptionHandler, Command
             return $this->executeCatch($exception, $this->elseClauseCode, $this->elseClauseVariable);
         }
 
-        return $this->exHandler->transmit($exception);
+        return $this->exHandler->handle($exception);
     }
 
     private function executeCatch(FunctionObject $exception, Code $code, ?Variable $variable): ExceptionHandlingResult

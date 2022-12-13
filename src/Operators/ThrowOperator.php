@@ -30,10 +30,10 @@ class ThrowOperator extends EasyStatement
         if ($rl instanceof DataReturnLoad === false) { return $rl; }
         $exception = $rl->getData();
         if ($exception instanceof FunctionObject === false) {
-            $r = $exHandler->transmit(new CanOnlyThrowObjectsException());
+            $r = $exHandler->handle(new CanOnlyThrowObjectsException());
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
         }
-        $result = $exHandler->transmit($exception);
+        $result = $exHandler->handle($exception);
         if ($result instanceof ExceptionHandlingResultShove) {
             return new DataReturnLoad($result->getShoveBackValue());
         }

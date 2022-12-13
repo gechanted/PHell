@@ -96,7 +96,7 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
             case self::SPECIAL_VAR_THIS:
             case self::SPECIAL_VAR_RUNNINGFUNCTION:
             case self::SPECIAL_VAR_ORIGIN:
-                $r = $exHandler->transmit(new SpecialVariableOverwriteProtectionException());
+                $r = $exHandler->handle(new SpecialVariableOverwriteProtectionException());
                 return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
         }
 
@@ -112,7 +112,7 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
                 //basicly only use visibility only when normally declaring
                 //otherwise computer says no
                 if ($this->visibility !== FunctionObject::VISIBILITY_PRIVATE) {
-                    $r = $exHandler->transmit(new CannotChangeForeignObjectException());
+                    $r = $exHandler->handle(new CannotChangeForeignObjectException());
                     return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
                 }
                 $currentEnvironment->getObject()->setPublicAndProtectedVariable($this->name, $value);
@@ -120,7 +120,7 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
 
             default: //case self::SCOPE_FOREIGN_OBJECT_CALL
                 if ($this->visibility !== FunctionObject::VISIBILITY_PRIVATE) {
-                    $r = $exHandler->transmit(new CannotChangeForeignObjectException());
+                    $r = $exHandler->handle(new CannotChangeForeignObjectException());
                     return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
                 }
 

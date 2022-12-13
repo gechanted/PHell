@@ -8,5 +8,5 @@ use PHell\Flow\Main\Returns\ExceptionHandlingResult;
 interface CodeExceptionHandler
 {
 
-    public function transmit(FunctionObject $exception): ExceptionHandlingResult;
+    public function handle(FunctionObject $exception): ExceptionHandlingResult;
 }

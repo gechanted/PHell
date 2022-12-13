@@ -7,6 +7,7 @@ use PHell\Flow\Data\Datatypes\BooleanType;
 use PHell\Flow\Data\Datatypes\FloatType;
 use PHell\Flow\Data\Datatypes\IntegerType;
 use PHell\Flow\Data\Datatypes\StringType;
+use PHell\Flow\Data\Datatypes\UnexecutedFunctionCollectionType;
 use PHell\Flow\Data\Datatypes\UnknownDatatype;
 use PHell\Flow\Functions\Parenthesis\DataFunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\ValidatorFunctionParenthesis;
@@ -34,7 +35,7 @@ class PHPLambdaFunction extends LambdaFunction
             } else if($parameter->getType()->getName() === 'bool') {
                 $datatype = new BooleanType();
             } else if($parameter->getType()->getName() === 'callable') {
-                $datatype = new UnknownDatatype(); //TODO maybe with invoke ? and UnexecutedFunctionCollection ?
+                $datatype = new UnexecutedFunctionCollectionType();
             } else if($parameter->getType()->getName() === 'object') {
                 $datatype = new UnknownDatatype(); //TODO maybe : have to work with PHPObjectDatatype
             } else {

@@ -39,7 +39,7 @@ class ExecuteFunction extends EasyStatement
         $lambdaValidator = new UnexecutedFunctionCollection([]);
         $functionCollection = $RL->getData();
         if ($lambdaValidator->validate($functionCollection)->isSuccess() === false) {
-            $exceptionResult = $exHandler->transmit(new ValueNotALambdaFunctionCollectionException($functionCollection));
+            $exceptionResult = $exHandler->handle(new ValueNotALambdaFunctionCollectionException($functionCollection));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
         }
 

@@ -38,14 +38,14 @@ class ArrayOperator extends EasyStatement implements Assignable
         $arrValidator = new ArrayType();
         $arrayValue = $RL->getData();
         if ($arrValidator->validate($arrayValue)->isSuccess() === false) {
-            $exceptionResult = $exHandler->transmit(new ValueNotAnArrayException($arrayValue));
+            $exceptionResult = $exHandler->handle(new ValueNotAnArrayException($arrayValue));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
         }
 
 
 
         if ($this->index === null) {
-            $exceptionResult = $exHandler->transmit(new ArrayIndexNotGivenException($arrayValue));
+            $exceptionResult = $exHandler->handle(new ArrayIndexNotGivenException($arrayValue));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
         }
 
@@ -56,12 +56,12 @@ class ArrayOperator extends EasyStatement implements Assignable
         $intValidator = new IntegerType();
         $indexValue = $RL->getData();
         if ($stringValidator->validate($indexValue)->isSuccess() === false || $intValidator->validate($indexValue)->isSuccess() === false) {
-            $exceptionResult = $exHandler->transmit(new ValueNotAnIndexException($indexValue));
+            $exceptionResult = $exHandler->handle(new ValueNotAnIndexException($indexValue));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
         }
 
         if (array_key_exists($indexValue->v(), $arrayValue->v()) === false) {
-            $exceptionResult = $exHandler->transmit(new IndexDoesNotExistException($indexValue));
+            $exceptionResult = $exHandler->handle(new IndexDoesNotExistException($indexValue));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
         }
 
@@ -76,7 +76,7 @@ class ArrayOperator extends EasyStatement implements Assignable
         $arrValidator = new ArrayType();
         $arrayValue = $RL->getData();
         if ($arrValidator->validate($arrayValue)->isSuccess() === false) {
-            $exceptionResult = $exHandler->transmit(new ValueNotAnArrayException($arrayValue));
+            $exceptionResult = $exHandler->handle(new ValueNotAnArrayException($arrayValue));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
         }
 
@@ -95,7 +95,7 @@ class ArrayOperator extends EasyStatement implements Assignable
             $intValidator = new IntegerType();
             $indexValue = $RL->getData();
             if ($stringValidator->validate($indexValue)->isSuccess() === false && $intValidator->validate($indexValue)->isSuccess() === false) {
-                $exceptionResult = $exHandler->transmit(new ValueNotAnIndexException($indexValue));
+                $exceptionResult = $exHandler->handle(new ValueNotAnIndexException($indexValue));
                 return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
             }
         }

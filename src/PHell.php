@@ -3,6 +3,7 @@
 namespace PHell;
 
 use PHell\Flow\Main\Code;
+use PHell\Flow\Main\ExceptionEndHandler;
 use PHell\Flow\Main\Runtime;
 
 class PHell
@@ -10,6 +11,6 @@ class PHell
     public function execute(Code $code): void
     {
         $runtime = new Runtime($code);
-        $runtime->execute($runtime, $runtime);
+        $runtime->execute($runtime, new ExceptionEndHandler());
     }
 }

@@ -48,7 +48,7 @@ class Arra extends ArrayType implements DataInterface
         if ($this->type !== null) {
             if ($this->type->validate($data)->isSuccess() === false) {
 
-                $exceptionResult = $upper->transmit(new ArrayTypeNotMatchedException($data, $this->type));
+                $exceptionResult = $upper->handle(new ArrayTypeNotMatchedException($data, $this->type));
                 if ($exceptionResult instanceof ExceptionHandlingResultNoShove) {
                     return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), $exceptionResult->getExecutionResult())));
                 }

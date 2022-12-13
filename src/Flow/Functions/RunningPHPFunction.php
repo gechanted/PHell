@@ -38,7 +38,7 @@ class RunningPHPFunction extends EasyStatement
         try {
             $result = $this->function->invoke($this->parenthesis);
         } catch (\Throwable $throwable) {
-            $r = $exHandler->transmit(new PHPException($throwable));
+            $r = $exHandler->handle(new PHPException($throwable));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
         }
 
