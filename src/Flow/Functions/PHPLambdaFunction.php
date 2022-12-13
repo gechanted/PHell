@@ -6,6 +6,7 @@ use PHell\Flow\Data\Datatypes\ArrayType;
 use PHell\Flow\Data\Datatypes\BooleanType;
 use PHell\Flow\Data\Datatypes\FloatType;
 use PHell\Flow\Data\Datatypes\IntegerType;
+use PHell\Flow\Data\Datatypes\PHellObjectDatatype;
 use PHell\Flow\Data\Datatypes\StringType;
 use PHell\Flow\Data\Datatypes\UnexecutedFunctionCollectionType;
 use PHell\Flow\Data\Datatypes\UnknownDatatype;
@@ -37,7 +38,7 @@ class PHPLambdaFunction extends LambdaFunction
             } else if($parameter->getType()->getName() === 'callable') {
                 $datatype = new UnexecutedFunctionCollectionType();
             } else if($parameter->getType()->getName() === 'object') {
-                $datatype = new UnknownDatatype(); //TODO maybe : have to work with PHPObjectDatatype
+                $datatype = new PHellObjectDatatype(null);
             } else {
                 $datatype = new UnknownDatatype();
             }

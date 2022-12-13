@@ -33,7 +33,7 @@ class BreakOperator implements Command
 
             $validator = new IntegerType();
             if ($validator->validate($layerData)->isSuccess() === false) {
-                $exceptionResult = $exHandler->handle(new BreakException($layerData->dumpValue()));
+                $exceptionResult = $exHandler->handle(new BreakException($layerData));
                 return new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult()));
             }
 

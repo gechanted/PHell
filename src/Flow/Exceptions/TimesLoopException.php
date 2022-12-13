@@ -10,6 +10,6 @@ class TimesLoopException extends OperatorInvalidInputException
 
     public function __construct(DataInterface $input)
     {
-        parent::__construct('TimesLoopException', 'TimesLoop', [IntegerType::TYPE_INTEGER], [$input]);
+        parent::__construct('TimesLoopException', 'TimesLoop', [new IntegerType()], [$input]);
     }
 }

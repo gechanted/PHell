@@ -10,7 +10,7 @@ use PHell\Flow\Main\Statement;
 /**
  * the simple, not executed function
  */
-class LambdaFunction //implements LambdaFunctionInterface TODO maybe implement an Interface instead of extending this
+class LambdaFunction
 {
 
     public function __construct(

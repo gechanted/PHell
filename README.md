@@ -18,12 +18,12 @@ Runtime (starter)
 
 PHPObject
 
-extend access !!!
-
-Operators 
+Operators (instanceof) unsetVar
+Stdf()s :   DatatypeDatatype validate and getType
 
 try, catch + FINALLY (the else of the try catch, often just Exception)  
 
+Exceptions? with the input value
 .
 
 .

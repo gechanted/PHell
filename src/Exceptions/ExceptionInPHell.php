@@ -9,7 +9,7 @@ class ExceptionInPHell extends \RuntimeException
 
     public function __construct(ExceptionReturnLoad $exceptionReturnLoad)
     {
-        //TODO use $exception Returnload to explain better
+        //TODO maybe use $exception Returnload to explain better
         parent::__construct('An Exception was thrown in the PHell called Code');
     }
 

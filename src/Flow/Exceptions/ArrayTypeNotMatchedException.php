@@ -10,7 +10,7 @@ class ArrayTypeNotMatchedException extends OperatorInvalidInputException
 
     public function __construct(private readonly DataInterface $input, private readonly DataTypeInterface $type)
     {
-        parent::__construct('ArrayTypeNotMatchedException', 'ArrayOperator', $this->type->getNames(), [$this->input->getNames()[0]]);
+        parent::__construct('ArrayTypeNotMatchedException', 'ArrayOperator', [$this->type], [$this->input]);
         $this->setObjectOuterVar('value', $this->input);
     }
 

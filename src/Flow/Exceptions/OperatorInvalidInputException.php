@@ -22,8 +22,12 @@ class OperatorInvalidInputException extends DataTypeMismatchException
         foreach ($input as $inputData) {
             $inputString[] = Dump::dump($inputData);
         }
+        $validTypeString = [];
+        foreach ($validTypes as $type) {
+            $inputString[] = $type->dumpType();
+        }
         $parentNames[] = 'OperatorInvalidInputException';
-        $msg = 'Operator "'.$operatorName.'" can only handle '.implode(',',$validTypes).'.'.PHP_EOL.
+        $msg = 'Operator "'.$operatorName.'" can only handle '.implode(',',$validTypeString).'.'.PHP_EOL.
             '['.implode(',', $inputString).'] given in.';
         parent::__construct($name, $msg, $parentNames);
     }

@@ -8,6 +8,7 @@ use PHell\Flow\Data\Data\Voi;
 use PHell\Flow\Data\Datatypes\DatatypeInterface;
 use PHell\Flow\Exceptions\OverBreakException;
 use PHell\Flow\Exceptions\OverContinueException;
+use PHell\Flow\Exceptions\OverShoveException;
 use PHell\Flow\Exceptions\ReturnValueDoesntMatchType;
 use PHell\Flow\Main\Code;
 use PHell\Flow\Main\CodeExceptionHandler;
@@ -15,6 +16,7 @@ use PHell\Flow\Main\CommandActions\BreakAction;
 use PHell\Flow\Main\CommandActions\ContinueAction;
 use PHell\Flow\Main\CommandActions\ReturnAction;
 use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
+use PHell\Flow\Main\CommandActions\ShoveAction;
 use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\CatapultReturnLoad;
 use PHell\Flow\Main\Returns\DataReturnLoad;
@@ -77,12 +79,15 @@ class RunningFunction extends EasyStatement
                     $this->active = false;
                     return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
 
+                  } elseif ($action instanceof ShoveAction) {
+                    $r = $exHandler->handle(new OverShoveException());
+                    $this->active = false;
+                    return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
+
+
                 } elseif ($action instanceof ReturningExceptionAction) {
                     $this->active = false;
                     return new ExceptionReturnLoad(new ExecutionResult($action));
-
-                    //TODO if shove action => throw exception
-                    // can this be done with the other Action? in one Exception instead of this clusterf
 
                 } else {
                     $this->active = false;

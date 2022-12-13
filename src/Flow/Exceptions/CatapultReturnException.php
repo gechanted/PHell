@@ -2,16 +2,18 @@
 
 namespace PHell\Flow\Exceptions;
 
+use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Datatypes\RunningFunctionDatatype;
+use PHell\Flow\Data\Datatypes\UnknownDatatype;
 
 class CatapultReturnException extends OperatorInvalidInputException
 {
 
-    public function __construct(string $input)
+    public function __construct(DataInterface $input)
     {
         parent::__construct('CatapultReturnException',
             'catapult-return',
-            [RunningFunctionDatatype::TYPE_RUNNINGFUNCTION],
+            [new RunningFunctionDatatype(new UnknownDatatype())],
             [$input]);
     }
 }

@@ -4,6 +4,9 @@ namespace PHell\Flow\Exceptions;
 
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\DataInterface;
+use PHell\Flow\Data\Datatypes\FloatType;
+use PHell\Flow\Data\Datatypes\IntegerType;
+use PHell\Flow\Data\Datatypes\StringType;
 
 class PlusException extends OperatorInvalidInputException
 {
@@ -13,14 +16,6 @@ class PlusException extends OperatorInvalidInputException
      */
     public function __construct(array $input)
     {
-        $inputTypeNames = [];
-        foreach ($input as $dataInterface) {
-            $typeNames = $dataInterface->getNames();
-            if (count($typeNames) === 0) {//if array empty => throw because everything should have a type
-                throw new ShouldntHappenException();
-            }
-            $inputTypeNames[] = $typeNames[0];
-        }
-        parent::__construct('PlusException', 'Plus (+)', ['string', 'float', 'int'], $inputTypeNames, []);
+        parent::__construct('PlusException', 'Plus (+)', [new StringType(), new FloatType(), new IntegerType()], $input);
     }
 }

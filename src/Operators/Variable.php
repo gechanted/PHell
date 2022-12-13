@@ -73,13 +73,17 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
                 if ($this->scope instanceof FunctionObject === false) {
                     throw new ShouldntHappenException();
                 }
-                //TODO !!! if var is an extended Object, use this_object_call ...
-                //TODO if I have technology to recognize which objects are extended:
-                // add a certain $ this variable, which is the object the function is called on.
-                // when a parent call: dont change the $ this variable.
-                // in getFunction record the object on call and in ExecuteFunction just pass this var into the new RunningFunction
+                // checks if this Object is a parent
+                if ($currentEnvironment->getObject()->checkExtensionRecursion($this->scope) === false) {
+                    $value = $this->scope->getPublicAndProtectedVariable($this->name);
+                } else {
+                    $value = $this->scope->getObjectPubliclyAvailableVar($this->name);
 
-                $value = $this->scope->getObjectPubliclyAvailableVar($this->name);
+                    //TODO maybe if I have technology to recognize which objects are extended:
+                    // add a certain $ this variable, which is the object the function is called on.
+                    // when a parent call: dont change the $ this variable.
+                    // in getFunction record the object on call and in ExecuteFunction just pass this var into the new RunningFunction
+                }
         }
         if ($value === null) {
             $value = new Undefined();

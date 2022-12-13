@@ -70,6 +70,8 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     public function v(): FunctionObject { return $this; }
 
     public function phpV() { return $this->v(); }
+    //TODO maybe : make the FunctionObject->phpV() maybe an actual generated object with the given properties -
+    // functions will be funny
 
     //Theoretically should never be called, due to this being a VO and not Easily instantiable like an actual "string"
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad { return new DataReturnLoad($this); }
@@ -327,13 +329,9 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     public const VISIBILITY_PUBLIC = 'public';
 
     /** check the origin of that object */
-    public function setNormalVar(string $index, ?DataInterface $value, string $visibility = self::VISIBILITY_PRIVATE): bool
+    public function setNormalVar(string $index, DataInterface $value, string $visibility = self::VISIBILITY_PRIVATE): bool
     {
         if ($this->checkAndSetOriginatorVar($index, $value) === false) {
-            if ($value === null) {
-                //TODO throw exception: cant unset a value that's not set
-                return true;
-            }
             switch ($visibility) {
                 case self::VISIBILITY_PRIVATE :
                     $this->privateVars[$index] = $value;
@@ -462,5 +460,6 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         }
         return false;
     }
+
 
 }

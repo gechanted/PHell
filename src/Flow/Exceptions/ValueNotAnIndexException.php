@@ -11,7 +11,7 @@ class ValueNotAnIndexException extends OperatorInvalidInputException
 
     public function __construct(private readonly DataInterface $input)
     {
-        parent::__construct('ValueNotAnIndexException', 'ArrayOperator', [StringType::TYPE_STRING, IntegerType::TYPE_INTEGER], [$this->input->getNames()[0]]);
+        parent::__construct('ValueNotAnIndexException', 'ArrayOperator', [new StringType(), new IntegerType()], [$this->input]);
         $this->setObjectOuterVar('value', $this->input);
     }
 

@@ -4,12 +4,15 @@ namespace PHell\Operators;
 
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\DataInterface;
+use PHell\Flow\Exceptions\CallOnNotObjectException;
 use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Functions\RunningFunction;
 use PHell\Flow\Main\CodeExceptionHandler;
+use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
 use PHell\Flow\Main\EasyStatement;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ExceptionReturnLoad;
+use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
 use PHell\Flow\Main\Statement;
 
@@ -29,8 +32,8 @@ class OnObject extends EasyStatement implements Assignable
         if ($returnLoad instanceof DataReturnLoad === false) { return $returnLoad; }
         $object = $returnLoad->getData();
         if ($object instanceof FunctionObject === false) {
-//            $exHandler->transmit();
-              //TODO !!! add check if this actually returns a FunctionObject, cause you cant "null->f(x)" / call a function on a basic datatype
+            $exResult = $exHandler->handle(new CallOnNotObjectException($object));
+            return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exResult->getHandler(), new ExecutionResult())));
         }
 
         if ($object === $currentEnvironment) {
