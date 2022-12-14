@@ -22,7 +22,7 @@ class FunctionResolver
      * @param DataFunctionParenthesis $given
      * @param UnexecutedFunctionCollection $possibleOptions
      */
-    public static function resolve(DataFunctionParenthesis $given, UnexecutedFunctionCollection $possibleOptions, CodeExceptionHandler $upper): ReturnLoad|LambdaFunction
+    public static function resolve(DataFunctionParenthesis $given, UnexecutedFunctionCollection $possibleOptions, CodeExceptionHandler $exHandler): ReturnLoad|LambdaFunction
     {
         $solutions = [];
         $solutionScores = [];
@@ -89,27 +89,35 @@ class FunctionResolver
 
         $solutionCount = count($solutions);
         if ($solutionCount === 0) {
-            $exceptionResult = $upper->handle(new NoOverloadFunctionException());
+            $exceptionResult = $exHandler->handle(new NoOverloadFunctionException());
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
         }
         elseif ($solutionCount !== 1) {
-            //TODO add option in config true: if solutionscore is not tied dont throw
-            //  ==> EVEN BETTER in Runtime just throw this back with a log entry
+            //if more than 2 possible solutions, check score to decide
+            $first = null;
+            $second = null;
+            foreach ($solutions as $solutionScore => $value) {
+                if ($first === null) { $first = $solutionScore; }
+                elseif ($second === null) { $second = $solutionScore; }
+                else { break; }
+            }
+            if ($first !== $second) {
+                return $solutions[0];
+            }
+            //when both solutions(or even more) have same score throw Exception
 
-            $exceptionResult = $upper->handle(new AmbiguousOverloadFunctionCallException($solutions, $solutionScores));
+            $exceptionResult = $exHandler->handle(new AmbiguousOverloadFunctionCallException($solutions, $solutionScores));
             if ($exceptionResult instanceof ExceptionHandlingResultNoShove) {
                 return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
             } if ($exceptionResult instanceof ExceptionHandlingResultShove) {
                 $shoveValue = $exceptionResult->getShoveBackValue();
                 $intValidator = new IntegerType();
-                if ($intValidator->validate($shoveValue)->isSuccess()) {
-                    if (array_key_exists($shoveValue->v(), $solutions)) {
-                        return $solutions[$shoveValue->v()];
-                    } else {
-                        return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
-                    }
+                if ($intValidator->validate($shoveValue)->isSuccess() &&
+                    array_key_exists($shoveValue->v(), $solutions)) {
+
+                    return $solutions[$shoveValue->v()];
                 } else {
-                    return $solutions[0];
+                    return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
                 }
             }
         }

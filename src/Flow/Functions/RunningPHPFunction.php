@@ -47,7 +47,10 @@ class RunningPHPFunction extends EasyStatement
 
     public static function convertPHPValue(mixed $value): DataInterface
     {
-        if (is_array($value)) {
+        if ($value instanceof DataInterface) {
+            //is something send from PHP for usage here
+            return $value;
+        } elseif (is_array($value)) {
             $array = new Arra([]);
             foreach ($value as $key => $item) {
                 $pHellItem = self::convertPHPValue($item);

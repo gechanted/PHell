@@ -4,7 +4,7 @@ namespace PHell\Exceptions;
 
 use PHell\Flow\Main\Returns\ExceptionReturnLoad;
 
-class ExceptionInPHell extends \RuntimeException
+class ExceptionInPHell extends PHellException
 {
 
     public function __construct(ExceptionReturnLoad $exceptionReturnLoad)

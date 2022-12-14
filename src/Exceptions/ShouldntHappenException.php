@@ -2,7 +2,10 @@
 
 namespace PHell\Exceptions;
 
-class ShouldntHappenException extends \RuntimeException
+/** something fucked up, which by dev thought is impossible
+ *  so either I fucked up, or u changed sth, so the code fucked up
+ */
+class ShouldntHappenException extends PHellException
 {
 
 }

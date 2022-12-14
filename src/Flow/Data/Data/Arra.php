@@ -7,6 +7,7 @@ use PHell\Flow\Data\Datatypes\ArrayType;
 use PHell\Flow\Data\Datatypes\DatatypeInterface;
 use PHell\Flow\Exceptions\ArrayTypeNotMatchedException;
 use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Functions\StandardFunctions\Dump;
 use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\CommandActions\ReturningExceptionAction;
 use PHell\Flow\Main\Returns\DataReturnLoad;
@@ -90,5 +91,10 @@ class Arra extends ArrayType implements DataInterface
             $dump .= (is_int($key) ? $key : '"'.$key.'"').' => '.$value->dumpValue(). PHP_EOL;
         }
         return 'array<'.$this->type->dumpType().'>['.$dump.']';
+    }
+
+    public function __toString(): string
+    {
+        return Dump::dump($this);
     }
 }

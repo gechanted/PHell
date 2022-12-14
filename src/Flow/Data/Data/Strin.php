@@ -33,4 +33,9 @@ class Strin extends StringType implements DataInterface
     {
         return '"'.Dump::stringEscape($this->value).'"';
     }
+
+    public function __toString(): string
+    {
+        return $this->v();
+    }
 }

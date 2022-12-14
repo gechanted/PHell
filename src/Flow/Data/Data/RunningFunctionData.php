@@ -4,6 +4,7 @@ namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\RunningFunctionDatatype;
 use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Functions\StandardFunctions\Dump;
 use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
@@ -33,5 +34,10 @@ class RunningFunctionData extends RunningFunctionDatatype implements DataInterfa
     public function dumpValue(): string
     {
         return self::TYPE_RUNNINGFUNCTION.'('.($this->function->isActive()?'ACTIVE':'INACTIVE').')<'.$this->function->getReturnType()->dumpType().'>';
+    }
+
+    public function __toString(): string
+    {
+        return Dump::dump($this);
     }
 }

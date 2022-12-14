@@ -49,4 +49,9 @@ class LambdaFunction
     {
        return new RunningFunction(new FunctionObject($this->name, $stack, $this->origin, $parenthesis), $this->code, $parenthesis->getReturnType());
     }
+
+    public function getCode(): Code
+    {
+        return $this->code;
+    }
 }

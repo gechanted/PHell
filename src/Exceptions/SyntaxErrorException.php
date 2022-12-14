@@ -2,6 +2,6 @@
 
 namespace PHell\Exceptions;
 
-class SyntaxErrorException extends \Exception
+class SyntaxErrorException extends PHellException
 {
 }

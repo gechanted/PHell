@@ -14,10 +14,6 @@ description - this markdown
  -> a ppp?   
  -> future TODOS (Parser, IDE Linter, namespacing, autoloading)
 
-Runtime (starter)
-
-PHPObject
-
 Operators (instanceof) unsetVar
 Stdf()s :   DatatypeDatatype validate and getType
 
@@ -62,6 +58,7 @@ class FloatStringMultiplicator imitates StringMultiplicator {
 
    __construct(private float $times)
    //the parent call is not needed to be unnecessarily done
+   //and with big enough objects/many enough objects, resources are saved
    
    //overwriting the function
    public function multiply(string $input)

@@ -6,11 +6,11 @@ use PHell\Commands\TryCatch\TryConstruct;
 
 class ExceptionHandlingResult
 {
-    public function __construct(private readonly TryConstruct $handler)
+    public function __construct(private readonly object $handler)
     {
     }
 
-    public function getHandler(): TryConstruct
+    public function getHandler(): object
     {
         return $this->handler;
     }

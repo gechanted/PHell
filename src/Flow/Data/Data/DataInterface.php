@@ -12,4 +12,6 @@ interface DataInterface extends Statement, DatatypeInterface
     public function phpV(); //the php value, if it should be used in PHP
 
     public function dumpValue(): string; //dumps the value and not the type (while actually giving type hints like "" , or [])
+
+    public function __toString(): string;
 }

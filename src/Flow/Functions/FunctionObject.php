@@ -104,6 +104,11 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         return $function->getName().'('.$function->dumpParenthesis().'):'.$function->getParenthesis()->getReturnType()->dumpType().PHP_EOL;
     }
 
+    public function __toString(): string
+    {
+        return $this->dumpValue();
+    }
+
     /** @var DataInterface[] */
     private array $publicVars = [];
     /** @var DataInterface[] */

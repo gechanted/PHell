@@ -8,7 +8,7 @@ use PHell\Flow\Data\Data\DataInterface;
 class ExceptionHandlingResultShove extends ExceptionHandlingResult
 {
 
-    public function __construct(TryConstruct $handler, private readonly DataInterface $shoveBackValue)
+    public function __construct(object $handler, private readonly DataInterface $shoveBackValue)
     {
         parent::__construct($handler);
     }

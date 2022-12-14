@@ -2,22 +2,25 @@
 
 namespace PHell\Flow\Functions;
 
+use PHell\Flow\Data\Datatypes\DatatypeInterface;
+use PHell\Flow\Data\Datatypes\DatatypeValidation;
 use PHell\Flow\Data\Datatypes\PHPObjectDatatype;
 
 /**
  * @see PHPObjectDatatype
- * !!! TODO EVERYTHING IN HERE SHOULD BE DUPLICATED AND MATCHING WITH PHPObjectDatatype !!!
  */
 class PHPObject extends FunctionObject
 {
 
+    private \ReflectionObject $reflection;
+
     public function __construct(private readonly object $object)
     {
-        $reflection = new \ReflectionObject($this->object);
+        $this->reflection = new \ReflectionObject($this->object);
 
-        parent::__construct($reflection->getName(), null, null, null);
+        parent::__construct($this->reflection->getName(), null, null, null);
 
-        foreach ($reflection->getMethods() as $method) {
+        foreach ($this->reflection->getMethods() as $method) {
             $phellFunction = new PHPLambdaFunction(new PHPMethod($method, $this->object));
 
             if ($method->isPrivate()){ $this->addPrivateFunction($phellFunction); }
@@ -25,7 +28,7 @@ class PHPObject extends FunctionObject
             if ($method->isPublic()){ $this->addPublicFunction($phellFunction); }
         }
 
-        foreach ($reflection->getProperties() as $property) {
+        foreach ($this->reflection->getProperties() as $property) {
 
             $visibility = self::VISIBILITY_PRIVATE;
             if ($property->isPublic()) { $visibility = self::VISIBILITY_PUBLIC; }
@@ -40,9 +43,22 @@ class PHPObject extends FunctionObject
         return $this->object;
     }
 
-//    /** @return string[] */
-//    public function getNames(): array
-//    {
-//
-//    }
+    public function getObject(): object
+    {
+        return $this->object;
+    }
+
+    public function dumpType(): string
+    {
+        return self::TYPE_OBJECT.'('.PHPObjectDatatype::PHP_OBJECT_TYPE.')<"'.$this->reflection->getName().'">';
+    }
+
+    public function realValidate(DatatypeInterface $datatype): DatatypeValidation
+    {
+        $validation = parent::realValidate($datatype);
+        if ($validation->isSuccess() && $datatype instanceof PHPObject && $datatype->getObject() instanceof $this->object) {
+            return $validation;
+        }
+        return new DatatypeValidation(false, 0);
+    }
 }

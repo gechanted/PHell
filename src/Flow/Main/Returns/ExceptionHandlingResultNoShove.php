@@ -7,7 +7,7 @@ use PHell\Commands\TryCatch\TryConstruct;
 class ExceptionHandlingResultNoShove extends ExceptionHandlingResult
 {
 
-    public function __construct(TryConstruct $handler, private readonly ExecutionResult $executionResult)
+    public function __construct(object $handler, private readonly ExecutionResult $executionResult)
     {
         parent::__construct($handler);
     }

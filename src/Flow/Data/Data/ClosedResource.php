@@ -4,7 +4,9 @@ namespace PHell\Flow\Data\Data;
 
 use PHell\Flow\Data\Datatypes\ClosedResourceType;
 use PHell\Flow\Functions\RunningFunction;
+use PHell\Flow\Functions\StandardFunctions\Dump;
 use PHell\Flow\Main\CodeExceptionHandler;
+use PHell\Flow\Main\Lib;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
 
@@ -32,9 +34,11 @@ class ClosedResource extends ClosedResourceType implements DataInterface
 
     public function dumpValue(): string
     {
-        ob_start();
-        var_dump($this->resource);
-        $result = ob_get_clean();
-        return self::TYPE_CLOSED_RESOURCE.'('. $result .')';
+        return self::TYPE_CLOSED_RESOURCE.'('. Lib::dumpAsString($this->resource) .')';
+    }
+
+    public function __toString(): string
+    {
+        return Dump::dump($this);
     }
 }

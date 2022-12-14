@@ -3,5 +3,8 @@
     "psr-4": {
       "PHell\\": "src/"
     }
+  },
+  "require": {
+    "monolog/monolog": "3.2.0"
   }
 }
