@@ -2,13 +2,12 @@
 
 namespace PHell\Flow\Exceptions;
 
-use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\DataInterface;
 use PHell\Flow\Data\Datatypes\FloatType;
 use PHell\Flow\Data\Datatypes\IntegerType;
 use PHell\Flow\Data\Datatypes\StringType;
 
-class PlusException extends OperatorInvalidInputException
+class MultiplyException extends OperatorInvalidInputException
 {
 
     /**
@@ -16,7 +15,7 @@ class PlusException extends OperatorInvalidInputException
      */
     public function __construct(array $input)
     {
-        parent::__construct('PlusException', 'Plus (+)',
+        parent::__construct('MultiplyException', 'Times (*)',
             [new StringType(), new FloatType(), new IntegerType()], $input);
     }
 }

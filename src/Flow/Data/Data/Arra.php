@@ -70,6 +70,7 @@ class Arra extends ArrayType implements DataInterface
 
     public function set(DataInterface $data, ?DataInterface $index = null): ReturnLoad
     {
+        //TODO maybe if Data is Undefined delete entry?
         if ($index === null) {
             $this->content[] = $data;
         } else {

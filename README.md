@@ -15,6 +15,12 @@ description - this markdown
  -> future TODOS (Parser, IDE Linter, namespacing, autoloading)
 
 Operators 
++,-,*,/, %(mod)
+, > , < , >= , =< , AND, OR , !
+== / === , != / !==
+
+() doesnt need to be implemented here cause thats already given due to being classes, in the Parser though
+
 
 .
 

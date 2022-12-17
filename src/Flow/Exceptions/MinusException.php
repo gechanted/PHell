@@ -8,7 +8,7 @@ use PHell\Flow\Data\Datatypes\FloatType;
 use PHell\Flow\Data\Datatypes\IntegerType;
 use PHell\Flow\Data\Datatypes\StringType;
 
-class PlusException extends OperatorInvalidInputException
+class MinusException extends OperatorInvalidInputException
 {
 
     /**
@@ -16,7 +16,7 @@ class PlusException extends OperatorInvalidInputException
      */
     public function __construct(array $input)
     {
-        parent::__construct('PlusException', 'Plus (+)',
-            [new StringType(), new FloatType(), new IntegerType()], $input);
+        parent::__construct('MinusException', 'Minus (-)',
+            [new FloatType(), new IntegerType()], $input);
     }
 }
