@@ -48,9 +48,9 @@ class Multiply extends EasyStatement
             $return = new Strin($string);
 
         } elseif ($intValidator->validate($times)->isSuccess() && $intValidator->validate($baseline)->isSuccess()) {
-            $return = new Intege($times->v() - $baseline->v());
+            $return = new Intege($times->v() * $baseline->v());
         } elseif ($floatValidator->validate($times)->isSuccess() && $floatValidator->validate($baseline)->isSuccess()) {
-            $return = new Floa($times->v() - $baseline->v());
+            $return = new Floa($times->v() * $baseline->v());
         } else {
             $exResult = $exHandler->handle(new MultiplyException([$times, $baseline]));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exResult->getHandler(), new ExecutionResult())));
