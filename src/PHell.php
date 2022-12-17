@@ -50,7 +50,7 @@ class PHell
             $rl = $runtime->getValue($runtime, new ExceptionEndHandler($this->getLogger()));
         } catch (ShouldntHappenException $shouldntHappenException) {
             //log with 450 Error to Critical
-            $this->logger->log(450, $shouldntHappenException);
+            $this->logger->log(500, $shouldntHappenException);
             throw $shouldntHappenException;
         } catch (SyntaxErrorException $syntaxErrorException) {
             //thrown when public/protected is used unwisely //TODO maybe change this exception
@@ -78,6 +78,7 @@ class PHell
         }
 
         $this->logger->log(0, 'Program successfully executed without return');
+        echo 'done';
         return 'Program successfully executed';
     }
 

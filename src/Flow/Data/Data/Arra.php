@@ -91,7 +91,7 @@ class Arra extends ArrayType implements DataInterface
         foreach ($this->content as $key => $value) {
             $dump .= (is_int($key) ? $key : '"'.$key.'"').' => '.$value->dumpValue(). PHP_EOL;
         }
-        return 'array<'.$this->type->dumpType().'>['.$dump.']';
+        return 'array<'.$this->type?->dumpType().'>['.$dump.']';
     }
 
     public function __toString(): string

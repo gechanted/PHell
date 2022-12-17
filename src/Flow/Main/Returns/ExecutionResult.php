@@ -13,7 +13,7 @@ class ExecutionResult
 
     public function isActionRequired(): bool
     {
-        return $this->action === null;
+        return $this->action !== null;
     }
 
     public function getAction(): ?CommandAction

@@ -84,7 +84,7 @@ class ExecuteFunction extends EasyStatement
 
         $parameters = [];
         $count = count($names);
-        for ($i = 0; $i > $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             if (array_key_exists($i, $datas)) {
                 $data = $datas[$i]->getData();
             } elseif ($names[$i]->isOptional()) {

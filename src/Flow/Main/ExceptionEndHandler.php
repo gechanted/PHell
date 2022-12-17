@@ -22,10 +22,9 @@ class ExceptionEndHandler implements CodeExceptionHandler
     {
         $msg = Dump::dump($exception);
         $this->logger->alert($msg);
-        if ($exception->getNormalVar('crash')->v() === false) {
+        if ($exception->getNormalVar('crash')?->v() === false) {
             //exception has crash var, which is bool and false
             return new ExceptionHandlingResultShove($this, new Voi());
-            //TODO ! test
         }
         return new ExceptionHandlingResultNoShove($this, new ExecutionResult());
     }

@@ -63,11 +63,12 @@ class FunctionResolver
                     continue 2; //continue with next option, because this doesn't fit
                 }
                 $depth += $validation->getDepth();
+                $counter++;
             }
 
             //fits
             $solutions[] = $option;
-            $solutionScores[] = $option;
+            $solutionScores[] = $depth;
 
         }
 
@@ -83,7 +84,7 @@ class FunctionResolver
 
         $newSolution = [];
         foreach ($stringyfiedScores as $key => $value) {
-            $newSolution = $solutions[(int) $key];
+            $newSolution[] = $solutions[(int) $key];
         }
         $solutions = $newSolution;
 
