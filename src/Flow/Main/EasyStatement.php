@@ -11,7 +11,7 @@ use PHell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
 
-abstract class EasyStatement implements Command, Statement
+abstract class EasyStatement implements Statement
 {
     public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult
     {

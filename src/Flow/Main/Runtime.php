@@ -29,6 +29,7 @@ class Runtime extends RunningFunction
         $object = new FunctionObject('', null, null, null);
 
         //add standard functions here
+        //TODO maybe use a DI here for hacky modding?
         $object->addPublicFunction(new Dump());
         $object->addPublicFunction(new ReflectObject());
 

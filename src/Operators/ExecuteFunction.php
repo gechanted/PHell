@@ -72,7 +72,7 @@ class ExecuteFunction extends EasyStatement
         return $runningFunction->getValue($currentEnvironment, $exHandler);
     }
 
-    private function constructNamedDataFromValidatorAndDataFunctionParenthesis(
+    public static function constructNamedDataFromValidatorAndDataFunctionParenthesis(
         ValidatorFunctionParenthesis $namedParenthesis,
         DataFunctionParenthesis $dataParenthesis,
         RunningFunction $currentEnvironment,

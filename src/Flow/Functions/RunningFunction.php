@@ -91,6 +91,7 @@ class RunningFunction extends EasyStatement
 
                 } else {
                     $this->active = false;
+                    //TODO maybe just log this and return $action
                     throw new ShouldntHappenException();
                 }
             }

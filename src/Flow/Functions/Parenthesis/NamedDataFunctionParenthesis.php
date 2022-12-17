@@ -2,6 +2,7 @@
 
 namespace PHell\Flow\Functions\Parenthesis;
 
+use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Datatypes\DatatypeInterface;
 
 class NamedDataFunctionParenthesis extends DataFunctionParenthesis
@@ -22,6 +23,16 @@ class NamedDataFunctionParenthesis extends DataFunctionParenthesis
     public function getParameters(): array
     {
         return $this->parameters;
+    }
+
+    public function getParameter(string $name): NamedDataFunctionParenthesisParameter
+    {
+        foreach ($this->getParameters() as $parameter) {
+            if ($parameter->getName() === $name) {
+                return $parameter;
+            }
+        }
+        throw new ShouldntHappenException(); //TODO maybe : this is not the cleanest/user-friendliest way
     }
 
     public function addParameter(DataFunctionParenthesisParameter $parameter): void

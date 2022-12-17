@@ -14,12 +14,8 @@ description - this markdown
  -> a ppp?   
  -> future TODOS (Parser, IDE Linter, namespacing, autoloading)
 
-Operators (instanceof) unsetVar
-Stdf()s :   DatatypeDatatype validate and getType
+Operators 
 
-try, catch + FINALLY (the else of the try catch, often just Exception)  
-
-Exceptions? with the input value
 .
 
 .
@@ -29,11 +25,13 @@ Exceptions? with the input value
 ... 
 idea: 
 ```PHP  
-imitate class; 
+// imitate class; 
+//
 // as a PHP feature (not sure how I would do that in Hell)
 //uses a class, probably one which is not an abstract class, 
 // by covering the same functions / same Interface as the class before
 // example:
+// maybe not imitate class but rather implement <class, not an interface> 
 
 class StringMultiplicator {
    
