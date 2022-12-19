@@ -100,8 +100,6 @@ class ArrayOperator extends EasyStatement implements Assignable
             }
         }
 
-        //TODO! check if this works
-
         return $arrayValue->assign($exHandler, $value, $indexValue);
     }
 }

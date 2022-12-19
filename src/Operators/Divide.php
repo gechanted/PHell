@@ -39,7 +39,7 @@ class Divide extends EasyStatement
                 $exResult = $exHandler->handle(new DivideByZeroException());
                 return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exResult->getHandler(), new ExecutionResult())));
             }
-            $result = $baselineValue->v() / $by->v(); //TODO test
+            $result = $baselineValue->v() / $by->v();
             if (is_int($result)) {
                 $return = new Intege($result);
             } else {

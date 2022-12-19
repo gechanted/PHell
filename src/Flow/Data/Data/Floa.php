@@ -32,7 +32,22 @@ class Floa extends FloatType implements DataInterface
 
     public function dumpValue(): string
     {
-        return $this->value;
+        return self::removeTrailingZeros(number_format($this->value, 13));
+    }
+
+    private static function removeTrailingZeros(string $number): string
+    {
+        while (true) {
+            if (str_ends_with($number, '0')) {
+                $number = substr($number, 0, strlen($number)-1);
+            } else {
+                break;
+            }
+        }
+        if (str_ends_with($number, '.')) {
+            $number .= '0';
+        }
+        return $number;
     }
 
     public function __toString(): string

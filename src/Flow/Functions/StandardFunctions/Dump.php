@@ -63,6 +63,7 @@ class Dump extends StandardLambdaFunction
         return (substr($formattedStr, -2, 1) === '\\') && !self::isEscaped(substr($formattedStr, 0, strlen($formattedStr)-1));
     }
 
+    //TODO maybe this may not be bug free and could already need a rewrite
     public static function dump(DataInterface $data): string
     {
         $unformattedStr = $data->dumpValue();
@@ -82,8 +83,13 @@ class Dump extends StandardLambdaFunction
             $winner = self::first($contenders);
             //if next char is searched for e.g. []{}"' $winner = 0
 
-            $toAddFormattedStr = substr($unformattedStr, 0, $winner + 1);
-            $unformattedStr = substr($unformattedStr, $winner + 1);
+            if ($winner === false) {
+                $formattedStr .= $unformattedStr;
+                break;
+            } else {
+                $toAddFormattedStr = substr($unformattedStr, 0, $winner + 1);
+                $unformattedStr = substr($unformattedStr, $winner + 1);
+            }
             if ($string) {
                 //if last char is "     and  if that char is NOT escaped / has backslashes before it
                 if ($winner === $quotation && (self::isEscaped($toAddFormattedStr) === false)) {
@@ -104,12 +110,12 @@ class Dump extends StandardLambdaFunction
                     }
                 }
             }
-            if ($winner === false) { break; }
+
 
         }
         $formattedStr = str_replace("\n", PHP_EOL, $formattedStr); // REVERTING the top: \r\n counts as two chars, messes stuff up
 
-        return $formattedStr;
+        return $formattedStr . PHP_EOL;
     }
 
     public static function stringEscape(string $toEscape): string
