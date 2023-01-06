@@ -2,12 +2,9 @@
 
 namespace PHell\Tests\Ops;
 
-use PHell\Flow\Data\Data\Arra;
 use PHell\Flow\Data\Data\Floa;
 use PHell\Flow\Data\Data\Intege;
-use PHell\Flow\Data\Data\Strin;
 use PHell\Flow\Main\Code;
-use PHell\Operators\ArrayOperator;
 use PHell\Operators\Assign;
 use PHell\Operators\Divide;
 use PHell\Operators\ExecuteFunction;
