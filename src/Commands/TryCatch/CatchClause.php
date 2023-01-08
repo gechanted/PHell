@@ -9,7 +9,7 @@ use PHell\Operators\Variable;
 class CatchClause
 {
 
-    public function __construct(private readonly ?Variable $variable, private readonly PHellObjectDatatype $objectValidator = new PHellObjectDatatype(null), private readonly Code $code)
+    public function __construct(private readonly PHellObjectDatatype $objectValidator = new PHellObjectDatatype(null), private readonly ?Variable $variable, private readonly Code $code)
     {
     }
 

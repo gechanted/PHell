@@ -191,6 +191,15 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
     } catch ($exception) { //without specification catches every possible $exception
     }
     ````
+    Also its possible to just omit the `$exception` variable
+    ````PHP
+    //Hell
+    try { 
+        throw RuntimeException();
+    } catch (RuntimeException) { //catches the runtime exception
+        //handle code that doesnt need the `$exception` variable
+    }
+    ````
     And you might say: "thats total bs, wtf did u think when programming this"  
     My answer: "maybe, maybe that is an interesting concept willing to be further investigated and elaborated, before it is an actual problem for code quality"
   - ### DatatypeConstructs
