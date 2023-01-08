@@ -18,17 +18,42 @@ I actually need to implement the parser, and ~~I hate parsing currently~~ its sl
 - Code Documentation of the PHell Runtime //TODO separate .md
 - future todos I want to implement
 
-### Getting Started
-
-//TODO composer stuff
-//TODO bug warning and ticketsystem link
-
 ### PHell
-every coding language has a sort of 'binary' version of the code  
+The PHell Project is seperated into the Runtime and the Parser (which is not yet written)  
+
+Every coding language has a sort of 'binary' version of the code  
+The Runtime works with the binary  
 In PHell the binary language consists of PHP classes  
+//TODO picture of binary code  
 Also PHell is coded, so that standard PHP functions can be used from PHP in PHell   
 Also in PHell $variables are by default private, functions by default public  //TODO check if functions are default public
 
+### Getting Started
+
+//TODO composer stuff  
+//TODO bug warning and ticketsystem link
+
+### Todos
+ - **Parser**  
+    obviously have to program a parser  
+    probably build myself a parsing Framework first
+    maybe changes the Syntax I currently have there
+ - **IDE Linter**  
+    would be neat for developing and is an essential if this language should go viral  
+    no idea how hard that would be to program, literally never done this  
+ - **(Auto)loading**  
+    probably just little adjustments if I've implemented the Parser
+ - **Multi-Foreach**  
+   Iterates over multiple arrays
+ - **Operator specializations**  
+   Lets you: 
+   ````PHP  
+   $object operator $value;
+   $date + $dateInterval;
+   // with 
+   public function `operatorname`operatoring(`overloaded typeOfValue` $value) {}
+   public function plusoperatoring(DateInterval $interval) {}
+   ```` 
 
 todo
 
@@ -45,7 +70,7 @@ make describing pictures of the features
  -> future TODOS (Parser, IDE Linter, namespacing, autoloading, multi-foreach, simplifications for special types by common operator usage)
 
 
-!!NAMESPACING AND SUBFUNCTION OBJECT NAMES!!!
+!!Loading of further code, NAMESPACING AND SUBFUNCTION OBJECT NAMES!!!
 make a finally block?
 
 .
