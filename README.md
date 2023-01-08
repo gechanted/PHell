@@ -27,6 +27,7 @@ I actually need to implement the parser, and ~~I hate parsing currently~~ its sl
 every coding language has a sort of 'binary' version of the code  
 In PHell the binary language consists of PHP classes  
 Also PHell is coded, so that standard PHP functions can be used from PHP in PHell   
+Also in PHell $variables are by default private, functions by default public  //TODO check if functions are default public
 
 
 todo

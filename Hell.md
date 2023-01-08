@@ -1,7 +1,7 @@
 # Hell
 **Hell syntax is still in development.  
 As I didn't write the Parser yet, I didn't think about the actual syntax**  
-*sorry for using PHP syntax in the Code examples*
+*sorry for using washed up PHP syntax as common coding language in the Code examples*
 - ### Functions and Objects
   Fuck Classes - they can be functions too
   ````PHP
@@ -46,7 +46,7 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
   Functions are also saveable as callables/lambda(-function)s 
   ````PHP
   //common OOP Coding language
-  $f = function ()
+  $f = function (): string
   {
     return 'Hello World';
   }
@@ -60,26 +60,98 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
   $f = Foo;
   echo $f();
   ````
-  Datashare-ability
+  In Hell, similar to JS, a priorly set variable can be used in a function
   ````PHP
-  //common OOP Coding language
-  $var1 = 'Hello'
+  //common Coding language
   $var2 = 'World'
-  $f = function ($var1) use ($var2): string
+  $f = function ($var1): string
   {
     return $var1 + $var2;
-    //CODE
   }
+  echo $f('Hello')
    
   //Hell
-  $var1 = 'Hello'
   $var2 = 'World'
   function Foo(string $var1): string
   {
-      return $var1 + $var2; //can use $var2 just like that 
+      return $var1 + $var2; //can READ AND WRITE $var2 just like that 
   }
+  $f = Foo;
+  echo $f('Hello');
   ````
-  //strict 
+  Mostly this should be used in context with "classes"
+  ````PHP
+  //Hell
+  function Foo(string $bar): Foo
+  {
+      function getBar(): string
+      {
+          return $bar; //getBar has access to $bar like this a class
+      }
+      
+      function Bar(): Bar
+      {
+          function getString(): string
+          {
+              return $bar; //access is 'infinitely' deep
+          }
+  
+          return $this
+      }
+  
+      return $this; 
+  }
+  $foo = Foo('Hello World');
+  echo $foo->getBar(); 
+  echo $foo->Bar()->getString(); 
+  ````
+  I dont want access to go infinitely deep  
+  use the ``use ()`` option to restrict access
+  ````PHP
+  //Hell
+  function Foo(string $bar): Foo
+  {
+      function bar() use ($bar): string
+      {
+          //has access to $bar
+          return $bar;
+      }
+      
+      function defaultString() use (): string
+      {
+          //doesnt have access to bar
+          return 'default hello world'
+      }
+  
+      return $this; 
+  }
+  $foo = Foo('Hello World');
+  echo $foo->bar(); 
+  echo $foo->defaultString(); 
+  ````
+  overloading is possible
+  ````PHP
+  //Hell
+  $bar = 'Hello ';
+  function Foo() use ($bar): Foo
+  {
+      function fBar(): string
+      {
+          return $bar;
+      }
+      
+      function fBar(string $addition): string
+      {
+          return $bar + $addition;
+      }
+  
+      return $this; 
+  }
+  $bar = Foo()->fBar;
+  echo $bar(); //calls the first fBar function
+  echo $bar('World'); //calls the second fBar function
+  ````
+  
 
 - ### Polymorphism
   **or why did no one do this**
@@ -92,7 +164,7 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
   class Foo extends Bar
   {
       public function __construct() {
-          parent::__construct('comeVar');
+          parent::__construct('someVar');
       }
   }
    
@@ -102,7 +174,7 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
       extends $bar;
       extends $bam;
       extends $boom;
-      extends Kaboom(); // new Kaboom()
+      extends Kaboom('someVar'); // new Kaboom('someVar')
   
       return $this;
   }
