@@ -16,6 +16,7 @@ I actually need to implement the parser, and ~~I hate parsing currently~~ its sl
   - see [Hell.md](/Hell.md)
 - Getting Started and PHell
 - Code Documentation of the PHell Runtime //TODO separate .md
+  - see [Runtime.md](/Runtime.md)
 - future todos I want to implement
 
 ### PHell
@@ -72,6 +73,7 @@ make describing pictures of the features
 
 !!Loading of further code, NAMESPACING AND SUBFUNCTION OBJECT NAMES!!!
 make a finally block?
+rename folder commands to code constructs or other
 
 .
 

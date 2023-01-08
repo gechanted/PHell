@@ -1,0 +1,7 @@
+- Statement / Command  
+    - operator-writing
+    - std functions
+- FunctionObject  
+- Datatypevalidation  
+- algorithms i'm hateful/proud about
+- Exceptions
