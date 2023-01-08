@@ -26,9 +26,7 @@ class TryConstruct implements CodeExceptionHandler, Command
     public function __construct(
         private readonly Code      $code,
         private readonly array     $catchClauses = [],
-        private readonly ?Code     $elseClauseCode = null,
-        private readonly ?Variable $elseClauseVariable = null)
-    {
+    ) {
     }
 
     public function execute(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ExecutionResult
@@ -58,9 +56,6 @@ class TryConstruct implements CodeExceptionHandler, Command
             if ($validation->isSuccess()) {
                 return $this->executeCatch($exception, $catch->getCode(), $catch->getVariable());
             }
-        }
-        if ($this->elseClauseCode !== null) {
-            return $this->executeCatch($exception, $this->elseClauseCode, $this->elseClauseVariable);
         }
 
         return $this->exHandler->handle($exception);
