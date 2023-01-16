@@ -24,8 +24,9 @@ class TryConstruct implements CodeExceptionHandler, Command
      * @param CatchClause[] $catchClauses
      */
     public function __construct(
-        private readonly Code      $code,
-        private readonly array     $catchClauses = [],
+        private readonly Code  $code,
+        private readonly array $catchClauses = [],
+        private readonly Code $finally = new Code(),
     ) {
     }
 
@@ -46,11 +47,17 @@ class TryConstruct implements CodeExceptionHandler, Command
                 return $result;
             }
         }
+
+        // !! a word about finally !!
+        //usually finally would be executed here
+        //but not here, the definition of finally is so unclear that I completely hate it
+
         return new ExecutionResult();
     }
 
     public function handle(FunctionObject $exception): ExceptionHandlingResult
     {
+        //check clauses, for fit & execute fit
         foreach ($this->catchClauses as $catch) {
             $validation = $catch->getObjectValidator()->validate($exception);
             if ($validation->isSuccess()) {
@@ -58,7 +65,20 @@ class TryConstruct implements CodeExceptionHandler, Command
             }
         }
 
-        return $this->exHandler->handle($exception);
+        $handlingResult = $this->exHandler->handle($exception);
+        //finally
+        if ($handlingResult instanceof ExceptionHandlingResultNoShove) {
+            //no catch clause did work & no shove
+            foreach ($this->finally->getCommands() as $command) {
+                $command->execute($this->currentEnvironment, $this->exHandler);
+                //Command actions are just ignored
+                //because I hate that it can actually break the control flow of exceptions in php
+                //TODO maybe change this to an exception so people wont be confused to why their stuff isnt happening
+            }
+        }
+
+
+        return $handlingResult;
     }
 
     private function executeCatch(FunctionObject $exception, Code $code, ?Variable $variable): ExceptionHandlingResult

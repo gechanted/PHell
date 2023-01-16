@@ -297,7 +297,80 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
   }
   ````
   And you might say: "thats total bs, wtf did u think when programming this"  
-  My answer: "maybe, maybe that is an interesting concept willing to be further investigated and elaborated, before it is an actual problem for code quality"
+  My answer: "maybe, maybe that is an interesting concept willing to be further investigated and elaborated, maybe it is not an actual problem for code quality"  
+  .  
+  Also you'd be surprised to see that `trycatch` also has a `finally`.  
+  And now your brain is like: _yeah there was something_
+  ````PHP
+  //common OOP Coding language
+  try { 
+     throw new \Exception();    
+  } finally {
+     //do sth
+  }
+   
+  //Hell
+  try { 
+      throw exception();
+  } finally {
+    //do sth
+  }
+  ````
+  `finally` is used to do sth after a catch clause
+  ````PHP
+  //PHP
+  try {
+    try {
+        echo 'throw exception'.PHP_EOL;
+        throw new Exception();
+    } finally {
+        echo 'finally execution'.PHP_EOL;
+    }
+  } catch (Exception $exception) {
+    echo 'caught exception'.PHP_EOL;
+  }
+  //output:
+  //throw exception
+  //finally execution
+  //caught exception
+  
+  //a typical example of the usage
+  $handle = fopen('sth');
+  try {
+    fread($handle); //exception may occur
+  } finally {
+    fclose($handle) //finally runs, even if I can't take care of the Exception
+                    //or when it runs completely fine and no exception occurs 
+  }
+  ````
+  The problem with `finally`:  
+  `finally` is made for that one specific code that has to play when you catch an exception and after the general code is done  
+  `finally` can therefore be replaced by simple code duplication   
+  that is why didn't want to implement `finally`  
+  _except I found something not entirely different which needed addressing_  
+  Hells `finally` is getting executed after there is no shove
+  ````php
+  //Hell
+  try {
+    try {
+      echo 'executes first';
+      $maybeCarryOn = throw exception();
+    } finally {
+      //nope cant carry on
+      echo 'executes third';
+      doExitPreperations();
+    }
+  } catch () { 
+    echo 'executes second';
+    //no shove here !!!
+  }
+  echo 'executes fourth';
+  ````
+ 
+[//]: # (  The differences:)
+[//]: # (  - If a return or throw would be used in a `finally`, the maybe thrown exception would just be voided and be seen as dealt with, and the new action would continue  )
+    
+
 - ### DatatypeConstructs
   **maybe you know the insanely cool feature of PHP8, that you can write multiple Types as requirement**
     ````PHP

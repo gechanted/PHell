@@ -72,8 +72,9 @@ make describing pictures of the features
 
 
 !!Loading of further code, NAMESPACING AND SUBFUNCTION OBJECT NAMES!!!
-make a finally block?
+make a finally block?  
 rename folder commands to code constructs or other
+check that user can access protected somewhat easy
 
 .
 

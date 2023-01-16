@@ -4,7 +4,7 @@ namespace PHell\Flow\Main\Returns;
 
 use PHell\Commands\TryCatch\TryConstruct;
 
-class ExceptionHandlingResult
+abstract class ExceptionHandlingResult
 {
     public function __construct(private readonly object $handler)
     {
