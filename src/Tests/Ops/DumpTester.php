@@ -2,7 +2,7 @@
 
 namespace PHell\Tests\Ops;
 
-use PHell\Commands\TryCatch\TryConstruct;
+use PHell\Constructs\TryCatch\TryConstruct;
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\Intege;
 use PHell\Flow\Data\Data\Strin;

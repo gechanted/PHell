@@ -1,5 +1,5 @@
 <?php
-namespace PHell\Commands\IfClause;
+namespace PHell\Constructs\IfClause;
 
 use PHell\Flow\Functions\RunningFunction;
 use PHell\Flow\Main\Code;

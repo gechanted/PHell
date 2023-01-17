@@ -47,7 +47,8 @@ class LambdaFunction
 
     public function generateRunningFunction(NamedDataFunctionParenthesis $parenthesis, FunctionObject $stack): Statement
     {
-       return new RunningFunction(new FunctionObject($this->name, $stack, $this->origin, $parenthesis), $this->code, $parenthesis->getReturnType());
+        $name = ($this->origin === null ? '' : $this->origin->getName().':') . $this->name; //add the topfunction:subfunction
+        return new RunningFunction(new FunctionObject($name, $stack, $this->origin, $parenthesis), $this->code, $parenthesis->getReturnType());
     }
 
     public function getCode(): Code

@@ -358,7 +358,7 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
     } finally {
       //nope cant carry on
       echo 'executes third';
-      doExitPreperations();
+      //do exit code
     }
   } catch () { 
     echo 'executes second';
@@ -407,7 +407,9 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
       echo $var->getMessage() + $var->getEnding();
   }
   ````
-  **FYI: I defined => int extends float , float extends string**
+  **FYI: I defined => int extends float , float extends string**  
+  Also Subfunctions in Binary are named `topfunction:subfunction` as object-types  
+  I hope to simplify that with the parser and some import statements   
 - ### Other stuff I did
   **String multiplier**  
   ``int * string = string``

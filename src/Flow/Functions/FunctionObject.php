@@ -66,6 +66,8 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         return $resultArray;
     }
 
+    public function getName(): string { return $this->name; }
+
 
     public function v(): FunctionObject { return $this; }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace PHell\Commands\Loop;
+namespace PHell\Constructs\Loop;
 
 use PHell\Flow\Functions\RunningFunction;
 use PHell\Flow\Main\Code;

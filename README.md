@@ -39,6 +39,7 @@ Also in PHell $variables are by default private, functions by default public  //
     obviously have to program a parser  
     probably build myself a parsing Framework first
     maybe changes the Syntax I currently have there
+    and autoloading and namespacing
  - **IDE Linter**  
     would be neat for developing and is an essential if this language should go viral  
     no idea how hard that would be to program, literally never done this  
@@ -71,9 +72,6 @@ make describing pictures of the features
  -> future TODOS (Parser, IDE Linter, namespacing, autoloading, multi-foreach, simplifications for special types by common operator usage)
 
 
-!!Loading of further code, NAMESPACING AND SUBFUNCTION OBJECT NAMES!!!
-make a finally block?  
-rename folder commands to code constructs or other
 check that user can access protected somewhat easy
 
 .

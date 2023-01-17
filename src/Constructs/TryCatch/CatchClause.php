@@ -1,6 +1,6 @@
 <?php
 
-namespace PHell\Commands\TryCatch;
+namespace PHell\Constructs\TryCatch;
 
 use PHell\Flow\Data\Datatypes\PHellObjectDatatype;
 use PHell\Flow\Main\Code;

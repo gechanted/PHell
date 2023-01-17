@@ -1,6 +1,6 @@
 <?php
 
-namespace PHell\Commands\TryCatch;
+namespace PHell\Constructs\TryCatch;
 
 use PHell\Flow\Functions\FunctionObject;
 use PHell\Flow\Functions\RunningFunction;

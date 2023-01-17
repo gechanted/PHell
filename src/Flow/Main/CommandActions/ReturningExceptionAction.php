@@ -2,7 +2,6 @@
 
 namespace PHell\Flow\Main\CommandActions;
 
-use PHell\Commands\TryCatch\TryConstruct;
 use PHell\Flow\Main\Returns\ExecutionResult;
 
 class ReturningExceptionAction implements CommandAction

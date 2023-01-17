@@ -2,7 +2,7 @@
 
 namespace PHell\Flow\Main\Returns;
 
-use PHell\Commands\TryCatch\TryConstruct;
+use PHell\Constructs\TryCatch\TryConstruct;
 use PHell\Flow\Data\Data\DataInterface;
 
 class ExceptionHandlingResultShove extends ExceptionHandlingResult

@@ -1,5 +1,5 @@
 <?php
-namespace PHell\Commands\Loop;
+namespace PHell\Constructs\Loop;
 
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Datatypes\ArrayType;

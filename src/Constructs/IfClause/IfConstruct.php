@@ -1,6 +1,6 @@
 <?php
 
-namespace PHell\Commands\IfClause;
+namespace PHell\Constructs\IfClause;
 
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\Boolea;
