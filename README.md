@@ -15,7 +15,7 @@ I actually need to implement the parser, and ~~I hate parsing currently~~ its sl
 - Hell - Features and ~~Losses~~ Differences
   - see [Hell.md](/Hell.md)
 - Getting Started and PHell
-- Code Documentation of the PHell Runtime //TODO separate .md
+- Code Documentation of the PHell Runtime
   - see [Runtime.md](/Runtime.md)
 - future todos I want to implement
 
