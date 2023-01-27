@@ -36,6 +36,9 @@ class OnObject extends EasyStatement implements Assignable
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exResult->getHandler(), new ExecutionResult())));
         }
 
+        //TODO maybe rework the ScopeAffected Interface,
+        // since instead of the SCOPE_THIS_OBJECT_CALL check
+        // everyone can just check $object === $currentEnvironment
         if ($object === $currentEnvironment) {
             $this->furtherCall->changeScope(ScopeAffected::SCOPE_THIS_OBJECT_CALL);
         } else {

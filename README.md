@@ -71,9 +71,8 @@ make describing pictures of the features
  -> a ppp?   
  -> future TODOS (Parser, IDE Linter, namespacing, autoloading, multi-foreach, simplifications for special types by common operator usage)
 
-
-check that user can access protected somewhat easy
-
+Runtime.md
+$this shenanigans - document them down - picture
 .
 
 .

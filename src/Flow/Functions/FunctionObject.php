@@ -244,18 +244,19 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
     {
         $functions = [];
 
-        if ($this->origin !== null) {
-            $functions = array_merge($functions, $this->origin->getNormalFunction($index));
+        //search for php functions if the stack is up
+        if (function_exists($index)) {
+            $reflection = new ReflectionFunction($index);
+            $phpF = new PHPLambdaFunction(new PHPFunction($reflection));
+            $functions[$phpF->getParenthesis()->getHash()] = $phpF;
         }
 
         if ($this->stack !== null) {
             $functions = array_merge($functions, $this->stack->getStackFunction($index));
         }
 
-        //search for php functions if the stack is up
-        if (function_exists($index)) {
-            $reflection = new ReflectionFunction($index);
-            $functions[] = new PHPLambdaFunction(new PHPFunction($reflection));
+        if ($this->origin !== null) {
+            $functions = array_merge($functions, $this->origin->getNormalFunction($index));
         }
 
         $functions = array_merge($functions,

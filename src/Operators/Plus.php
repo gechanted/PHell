@@ -1,7 +1,6 @@
 <?php
 namespace PHell\Operators;
 
-use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\Floa;
 use PHell\Flow\Data\Data\Intege;
 use PHell\Flow\Data\Data\Strin;
@@ -21,14 +20,8 @@ use PHell\Flow\Main\Statement;
 
 class Plus extends EasyStatement
 {
-    private Statement $s1;
-    private Statement $s2;
-
-    public function __construct(Statement $s1, Statement $s2)
-    {
-        $this->s1 = $s1;
-        $this->s2 = $s2;
-    }
+    public function __construct(private readonly Statement $s1, private readonly Statement $s2)
+    {}
 
     public function getValue(RunningFunction $currentEnvironment, CodeExceptionHandler $exHandler): ReturnLoad
     {

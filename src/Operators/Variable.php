@@ -70,16 +70,19 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
                 $value = $currentEnvironment->getObject()->getPublicAndProtectedVariable($this->name);
                 break;
             default:
+                //scope is either a string or a FunctionObject
                 if ($this->scope instanceof FunctionObject === false) {
                     throw new ShouldntHappenException();
                 }
                 // checks if this Object is a parent
                 if ($currentEnvironment->getObject()->checkExtensionRecursion($this->scope) === false) {
                     $value = $this->scope->getPublicAndProtectedVariable($this->name);
+//                } else if($currentEnvironment->isDifferentOrigin() && $this->scope === $currentEnvironment->getObject()->getNormalVar(Variable::SPECIAL_VAR_ORIGIN)) {
+//                    $value = $currentEnvironment->getDifferentOrigin()->getPublicAndProtectedVariable($this->name);
                 } else {
                     $value = $this->scope->getObjectPubliclyAvailableVar($this->name);
 
-                    //TODO maybe if I have technology to recognize which objects are extended:
+                    //TODO !!! if I have technology to recognize which objects are extended:
                     // add a certain $ this variable, which is the object the function is called on.
                     // when a parent call: dont change the $ this variable.
                     // in getFunction record the object on call and in ExecuteFunction just pass this var into the new RunningFunction

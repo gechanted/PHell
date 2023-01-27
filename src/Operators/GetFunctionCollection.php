@@ -28,10 +28,19 @@ class GetFunctionCollection extends EasyStatement implements ScopeAffected
             case ScopeAffected::SCOPE_THIS_OBJECT_CALL:
                 return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getObject()->getInnerObjectFunction($this->name)));
             default :
+                //scope is either a string or a FunctionObject
                 if ($this->scope instanceof FunctionObject === false) {
                     throw new ShouldntHappenException();
                 }
-                return new DataReturnLoad(new UnexecutedFunctionCollection($this->scope->getObjectPubliclyAvailableFunction($this->name)));
+                // checks if this Object is a parent
+                if ($currentEnvironment->getObject()->checkExtensionRecursion($this->scope) === false) {
+                    return new DataReturnLoad(new UnexecutedFunctionCollection($this->scope->getInnerObjectFunction($this->name)));
+                }
+//                else if($currentEnvironment->isDifferentOrigin() && $this->scope === $currentEnvironment->getObject()->getNormalVar(Variable::SPECIAL_VAR_ORIGIN)) {
+//                    return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getDifferentOrigin()->getInnerObjectFunction($this->name)));
+//                }
+
+        return new DataReturnLoad(new UnexecutedFunctionCollection($this->scope->getObjectPubliclyAvailableFunction($this->name)));
         }
     }
 
