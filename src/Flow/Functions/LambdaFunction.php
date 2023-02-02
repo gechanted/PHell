@@ -45,10 +45,10 @@ class LambdaFunction
         return $dump;
     }
 
-    public function generateRunningFunction(NamedDataFunctionParenthesis $parenthesis, FunctionObject $stack): Statement
+    public function generateRunningFunction(NamedDataFunctionParenthesis $parenthesis, FunctionObject $stack, ?FunctionObject $differentOrigin = null): Statement
     {
         $name = ($this->origin === null ? '' : $this->origin->getName().':') . $this->name; //add the topfunction:subfunction
-        return new RunningFunction(new FunctionObject($name, $stack, $this->origin, $parenthesis), $this->code, $parenthesis->getReturnType());
+        return new RunningFunction(new FunctionObject($name, $stack, $this->origin, $parenthesis), $this->code, $parenthesis->getReturnType(), $differentOrigin);
     }
 
     public function getCode(): Code

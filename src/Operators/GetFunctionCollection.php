@@ -24,9 +24,11 @@ class GetFunctionCollection extends EasyStatement implements ScopeAffected
     {
         switch ($this->scope) {
             case ScopeAffected::SCOPE_INNER_OBJECT:
-                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getObject()->getNormalFunction($this->name)));
+                $functions = new UnexecutedFunctionCollection($currentEnvironment->getObject()->getNormalFunction($this->name));
+                break;
             case ScopeAffected::SCOPE_THIS_OBJECT_CALL:
-                return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getObject()->getInnerObjectFunction($this->name)));
+                $functions = new UnexecutedFunctionCollection($currentEnvironment->getObject()->getInnerObjectFunction($this->name), $currentEnvironment->getObject());
+                break;
             default :
                 //scope is either a string or a FunctionObject
                 if ($this->scope instanceof FunctionObject === false) {
@@ -34,14 +36,19 @@ class GetFunctionCollection extends EasyStatement implements ScopeAffected
                 }
                 // checks if this Object is a parent
                 if ($currentEnvironment->getObject()->checkExtensionRecursion($this->scope) === false) {
-                    return new DataReturnLoad(new UnexecutedFunctionCollection($this->scope->getInnerObjectFunction($this->name)));
-                }
-//                else if($currentEnvironment->isDifferentOrigin() && $this->scope === $currentEnvironment->getObject()->getNormalVar(Variable::SPECIAL_VAR_ORIGIN)) {
-//                    return new DataReturnLoad(new UnexecutedFunctionCollection($currentEnvironment->getDifferentOrigin()->getInnerObjectFunction($this->name)));
-//                }
+                    $functions = new UnexecutedFunctionCollection($this->scope->getInnerObjectFunction($this->name), $currentEnvironment->getObject()); //see phptest12
+                    break;
 
-        return new DataReturnLoad(new UnexecutedFunctionCollection($this->scope->getObjectPubliclyAvailableFunction($this->name)));
+                //different origin. has assumed a base object for this parent to use
+                } else if($currentEnvironment->isDifferentOrigin() && $this->scope === $currentEnvironment->getObject()->getNormalVar(Variable::SPECIAL_VAR_ORIGIN)) {
+                    $functions = new UnexecutedFunctionCollection($currentEnvironment->getDifferentOrigin()->getInnerObjectFunction($this->name), $currentEnvironment->getDifferentOrigin());
+                    break;
+                }
+
+                $functions = new UnexecutedFunctionCollection($this->scope->getObjectPubliclyAvailableFunction($this->name), $this->scope);
         }
+
+        return new DataReturnLoad($functions);
     }
 
     public function changeScope(string|FunctionObject $scope): void

@@ -42,7 +42,7 @@ abstract class StandardLambdaFunction extends LambdaFunction implements Statemen
         parent::__construct($name, null, $this->validatorParenthesis, new Code());
     }
 
-    public function generateRunningFunction(DataFunctionParenthesis $parenthesis, FunctionObject $stack): Statement
+    public function generateRunningFunction(DataFunctionParenthesis $parenthesis, FunctionObject $stack, ?FunctionObject $differentOrigin = null): Statement
     {
         $this->dataParenthesis = $parenthesis;
         $this->stack = $stack;

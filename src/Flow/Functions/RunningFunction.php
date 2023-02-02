@@ -31,7 +31,8 @@ class RunningFunction extends EasyStatement
 
     public function __construct(private readonly FunctionObject      $object,
                                 private readonly Code                $code,
-                                private readonly DatatypeInterface   $returnType)
+                                private readonly DatatypeInterface   $returnType,
+                                private readonly ?FunctionObject $differentOrigin = null)
     {
     }
 
@@ -108,5 +109,15 @@ class RunningFunction extends EasyStatement
         }
         $r = $exHandler->handle(new ReturnValueDoesntMatchType());
         return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($r->getHandler(), new ExecutionResult())));
+    }
+
+    public function isDifferentOrigin(): bool
+    {
+        return $this->differentOrigin === null;
+    }
+
+    public function getDifferentOrigin(): ?FunctionObject
+    {
+        return $this->differentOrigin;
     }
 }

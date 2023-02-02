@@ -4,6 +4,7 @@ namespace PHell\Operators;
 
 use PHell\Exceptions\ShouldntHappenException;
 use PHell\Flow\Data\Data\UnexecutedFunctionCollection;
+use PHell\Flow\Data\Datatypes\UnexecutedFunctionCollectionType;
 use PHell\Flow\Data\Datatypes\UnknownDatatype;
 use PHell\Flow\Exceptions\ValueNotALambdaFunctionCollectionException;
 use PHell\Flow\Functions\FunctionObject;
@@ -36,9 +37,9 @@ class ExecuteFunction extends EasyStatement
         $RL = $this->function->getValue($currentEnvironment, $exHandler);
         if ($RL instanceof DataReturnLoad === false) { return $RL; }
 
-        $lambdaValidator = new UnexecutedFunctionCollection([]);
+        $lambdaValidator = new UnexecutedFunctionCollectionType();
         $functionCollection = $RL->getData();
-        if ($lambdaValidator->validate($functionCollection)->isSuccess() === false) {
+        if ($lambdaValidator->validate($functionCollection)->isSuccess() === false && $functionCollection instanceof UnexecutedFunctionCollection === false) {
             $exceptionResult = $exHandler->handle(new ValueNotALambdaFunctionCollectionException($functionCollection));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exceptionResult->getHandler(), new ExecutionResult())));
         }
@@ -68,7 +69,7 @@ class ExecuteFunction extends EasyStatement
         $parenthesis = $parenthesisOrReturnload;
 
 
-        $runningFunction = $lambda->generateRunningFunction($parenthesis, $currentEnvironment->getObject());
+        $runningFunction = $lambda->generateRunningFunction($parenthesis, $currentEnvironment->getObject(), $functionCollection->getDifferentOrigin());
         return $runningFunction->getValue($currentEnvironment, $exHandler);
     }
 

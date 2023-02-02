@@ -73,6 +73,8 @@ make describing pictures of the features
 
 Runtime.md
 $this shenanigans - document them down - picture
+normal function call, non recursion call, to overwrite standardFs howto
+
 .
 
 .

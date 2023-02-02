@@ -2,7 +2,6 @@
 
 namespace PHell\Flow\Data\Data;
 
-use PHell\Exceptions\ExceptionInPHell;
 use PHell\Exceptions\PHellCallableResolveExceptionMultipleMatches;
 use PHell\Exceptions\PHellCallableResolveExceptionNoMatches;
 use PHell\Exceptions\ShouldntHappenException;
@@ -15,26 +14,19 @@ use PHell\Flow\Functions\FunctionResolver;
 use PHell\Flow\Functions\LambdaFunction;
 use PHell\Flow\Functions\Parenthesis\DataFunctionParenthesis;
 use PHell\Flow\Functions\Parenthesis\DataFunctionParenthesisParameter;
-use PHell\Flow\Functions\PHPLambdaFunction;
-use PHell\Flow\Functions\PHPObject;
 use PHell\Flow\Functions\RunningFunction;
 use PHell\Flow\Functions\RunningPHPFunction;
 use PHell\Flow\Functions\StandardFunctions\Dump;
 use PHell\Flow\Main\CodeExceptionHandler;
-use PHell\Flow\Main\ExceptionEndHandler;
-use PHell\Flow\Main\Returns\CatapultReturnLoad;
 use PHell\Flow\Main\Returns\DataReturnLoad;
 use PHell\Flow\Main\Returns\ExceptionHandlingResult;
-use PHell\Flow\Main\Returns\ExceptionReturnLoad;
 use PHell\Flow\Main\Returns\ReturnLoad;
-use PHell\Operators\ExecuteFunction;
 use PHell\PHell;
-use PHell\Tests\Ops\FakeRunningFunction;
 
 class UnexecutedFunctionCollection extends UnexecutedFunctionCollectionType implements DataInterface, CodeExceptionHandler
 {
     /** @param LambdaFunction[] $lambdaFunctions */
-    public function __construct(private readonly array $lambdaFunctions)
+    public function __construct(private readonly array $lambdaFunctions, private readonly ?FunctionObject $differentOrigin = null)
     {
     }
 
@@ -98,5 +90,10 @@ class UnexecutedFunctionCollection extends UnexecutedFunctionCollectionType impl
         } else {
             throw new ShouldntHappenException();
         }
+    }
+
+    public function getDifferentOrigin(): ?FunctionObject
+    {
+        return $this->differentOrigin;
     }
 }
