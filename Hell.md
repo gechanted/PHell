@@ -158,7 +158,7 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
     * due to unknown reasons, classes in common OOP languages can't extend more than 1 other class
     * due to unknown reasons, classes in common OOP languages can't extend an object of another (veryfied) class, and always create one
 
-  That ends with Hell, where you can:
+  That ends with Hell, where you can do that:
   ````PHP
   //common OOP Coding language
   class Foo extends Bar
@@ -179,9 +179,12 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
       return $this;
   }
   ````
-  //TODO !! definitely a picture to explain this  
-  Just want to mention here that extending already existing objects, is a thing that the "common" OOP languages should really implement  
-  I think it's good for abstraction and mitigating of resource reallocation  
+
+[//]: # (  //TODO !! definitely a picture to explain this  )
+
+[//]: # (  //TODO this shenanigans)
+[//]: # (  Just want to mention here that extending already existing objects, is a thing that the "common" OOP languages should really implement  )
+[//]: # (  I think it's good for abstraction and mitigating of resource reallocation  )
   **FYI: unless at declaration otherwise specified all ``$variables`` and ``functions`` are declared private**
 
 

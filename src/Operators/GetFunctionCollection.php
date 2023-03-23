@@ -38,11 +38,6 @@ class GetFunctionCollection extends EasyStatement implements ScopeAffected
                 if ($currentEnvironment->getObject()->checkExtensionRecursion($this->scope) === false) {
                     $functions = new UnexecutedFunctionCollection($this->scope->getInnerObjectFunction($this->name), $currentEnvironment->getObject()); //see phptest12
                     break;
-
-                //different origin. has assumed a base object for this parent to use
-                } else if($currentEnvironment->isDifferentOrigin() && $this->scope === $currentEnvironment->getObject()->getNormalVar(Variable::SPECIAL_VAR_ORIGIN)) {
-                    $functions = new UnexecutedFunctionCollection($currentEnvironment->getDifferentOrigin()->getInnerObjectFunction($this->name), $currentEnvironment->getDifferentOrigin());
-                    break;
                 }
 
                 $functions = new UnexecutedFunctionCollection($this->scope->getObjectPubliclyAvailableFunction($this->name), $this->scope);

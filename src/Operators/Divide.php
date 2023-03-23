@@ -45,6 +45,7 @@ class Divide extends EasyStatement
             } else {
                 $return = new Floa($result);
             }
+            //TODO new operator specialization : $object / $sth = $object->divideoperatoring
         } else {
             $exResult = $exHandler->handle(new DivideException([$baselineValue, $by]));
             return new ExceptionReturnLoad(new ExecutionResult(new ReturningExceptionAction($exResult->getHandler(), new ExecutionResult())));

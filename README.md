@@ -52,7 +52,7 @@ Also in PHell $variables are by default private, functions by default public  //
    ````PHP  
    $object operator $value;
    $date + $dateInterval;
-   // with 
+   // by 
    public function `operatorname`operatoring(`overloaded typeOfValue` $value) {}
    public function plusoperatoring(DateInterval $interval) {}
    ```` 

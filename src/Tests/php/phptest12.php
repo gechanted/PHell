@@ -11,6 +11,11 @@ class A {
     {
         echo 'A';
     }
+
+    public function m()
+    {
+        $this->message();
+    }
 }
 
 class B extends A {
@@ -24,6 +29,19 @@ class B extends A {
     {
         echo 'B';
     }
+
+    public function m() {
+        parent::m();
+    }
 }
 
-new B(); //output b : parent this calls reference back to original object
+class C extends B {
+
+    public function message(): void
+    {
+        echo 'C';
+    }
+}
+
+$c = new C(); //output b : parent this calls reference back to original object
+$c->m();

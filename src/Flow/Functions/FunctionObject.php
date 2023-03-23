@@ -251,6 +251,8 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
             $functions[$phpF->getParenthesis()->getHash()] = $phpF;
         }
 
+        //TODO on every origin object called, which is more than one, which is too much
+
         if ($this->stack !== null) {
             $functions = array_merge($functions, $this->stack->getStackFunction($index));
         }

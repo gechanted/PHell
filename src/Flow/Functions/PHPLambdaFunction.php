@@ -49,7 +49,7 @@ class PHPLambdaFunction extends LambdaFunction
         parent::__construct($this->function->getName(), null, $parenthesis, new Code([]));
     }
 
-    public function generateRunningFunction(DataFunctionParenthesis $parenthesis, FunctionObject $stack, ?FunctionObject $differentOrigin = null): Statement
+    public function generateRunningFunction(DataFunctionParenthesis $parenthesis, FunctionObject $stack, ?FunctionObject $calledOn = null): Statement
     {
         return new RunningPHPFunction($this->function, $parenthesis);
     }

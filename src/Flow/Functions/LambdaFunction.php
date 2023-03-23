@@ -45,10 +45,18 @@ class LambdaFunction
         return $dump;
     }
 
-    public function generateRunningFunction(NamedDataFunctionParenthesis $parenthesis, FunctionObject $stack, ?FunctionObject $differentOrigin = null): Statement
+    public function generateRunningFunction(NamedDataFunctionParenthesis $parenthesis, FunctionObject $stack, ?FunctionObject $calledOn = null): Statement
     {
         $name = ($this->origin === null ? '' : $this->origin->getName().':') . $this->name; //add the topfunction:subfunction
-        return new RunningFunction(new FunctionObject($name, $stack, $this->origin, $parenthesis), $this->code, $parenthesis->getReturnType(), $differentOrigin);
+        //add here the called on mechanic // a functionobject knows its child with this
+        $origin = $this->origin;
+        if ($calledOn !== $this->origin) {
+            if ($calledOn instanceof OriginCallProxyFunctionObject) {
+                $calledOn = $calledOn->getCalled();
+            }
+            $origin = new OriginCallProxyFunctionObject($this->origin, $calledOn);
+        }
+        return new RunningFunction(new FunctionObject($name, $stack, $origin, $parenthesis), $this->code, $parenthesis->getReturnType());
     }
 
     public function getCode(): Code

@@ -77,8 +77,6 @@ class Variable extends EasyStatement implements ScopeAffected, VisibilityAffecte
                 // checks if this Object is a parent
                 if ($currentEnvironment->getObject()->checkExtensionRecursion($this->scope) === false) {
                     $value = $this->scope->getPublicAndProtectedVariable($this->name);
-                } else if($currentEnvironment->isDifferentOrigin() && $this->scope === $currentEnvironment->getObject()->getNormalVar(Variable::SPECIAL_VAR_ORIGIN)) {
-                    $value = $currentEnvironment->getDifferentOrigin()->getPublicAndProtectedVariable($this->name);
                 } else {
                     $value = $this->scope->getObjectPubliclyAvailableVar($this->name);
                 }
