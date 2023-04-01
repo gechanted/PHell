@@ -61,7 +61,7 @@ class ExecuteFunction extends EasyStatement
         $lambda = $lambdaOrReturnload;
 
 
-        $parenthesisOrReturnload = $this->constructNamedDataFromValidatorAndDataFunctionParenthesis(
+        $parenthesisOrReturnload = ExecuteFunction::constructNamedDataFromValidatorAndDataFunctionParenthesis(
             $lambda->getParenthesis(), $dataParenthesis, $currentEnvironment, $exHandler );
         if ($parenthesisOrReturnload instanceof ReturnLoad) {
             return $parenthesisOrReturnload;

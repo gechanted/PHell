@@ -8,7 +8,6 @@ use PHell\Flow\Data\Datatypes\DatatypeValidation;
 use PHell\Flow\Main\CodeExceptionHandler;
 use PHell\Flow\Main\Returns\ExecutionResult;
 use PHell\Flow\Main\Returns\ReturnLoad;
-use PHell\Operators\Variable;
 
 /**
  * Imitates the $caller (which extends the $origin)
@@ -27,33 +26,31 @@ class OriginCallProxyFunctionObject extends FunctionObject
         return $this->actualCalled;
     }
 
-    //TODO !! TODAY I DECIDED: origin functionality also calls extended object functionality
+    // 23.3 GECHANTED DECIDED: origin functionality also calls extended object functionality
     // even child functionality (public and protected for both, it only calls privates in the "true" origin objects)
     // (actualCalled + everything upper)
 
     /**
      * @inheritDoc
      *
-     * here's the swap
+     * here's the swap of origin
      * everything else is just redirecting to caller
-     * //TODO
      */
     public function getNormalVar(string $index): ?DataInterface
     {
-        if ($index === Variable::SPECIAL_VAR_ORIGIN) {
-            return $this->origin;
-        }
-        return $this->origin->getNormalVar($index);
+        return $this->origin->getNormalVar($index) ??
+            $this->actualCalled->getPublicAndProtectedVariable($index); //yes this iterates over origin theoretically twice, but its a smooth solution ngl
     }
 
-    /** @inheritDoc */ //TODO
+    /** @inheritDoc */
     public function getNormalFunction(string $index): array
     {
-        return $this->origin->getNormalFunction($index);
+        return array_merge(
+            $this->actualCalled->getInnerObjectFunction($index),
+            $this->origin->getNormalFunction($index));
     }
 
-    //TODO !! origin functionalities need to be be directed towards origin
-//-------------------------------------------------------------------------------------------------------    
+//-------------------------------------------------------------------------------------------------------
     
     
     public function realValidate(DatatypeInterface $datatype): DatatypeValidation

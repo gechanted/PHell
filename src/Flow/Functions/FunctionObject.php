@@ -252,11 +252,11 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
         }
 
         //TODO on every origin object called, which is more than one, which is too much
-
         if ($this->stack !== null) {
             $functions = array_merge($functions, $this->stack->getStackFunction($index));
         }
 
+        //TODO !! has to check parents now too
         if ($this->origin !== null) {
             $functions = array_merge($functions, $this->origin->getNormalFunction($index));
         }
@@ -283,6 +283,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
 
     /**
      * call: $this->f(x)
+     * public + protected functionality
      * @return LambdaFunction[]
      */
     public function getInnerObjectFunction(string $index): array
@@ -396,6 +397,7 @@ class FunctionObject extends PHellObjectDatatype implements DataInterface
             return $this->publicVars[$index];
         }
 
+        //TODO !! has to check parents now too
         return $this->origin?->getNormalVar($index);
     }
 

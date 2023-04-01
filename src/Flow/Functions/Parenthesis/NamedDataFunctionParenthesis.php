@@ -37,6 +37,12 @@ class NamedDataFunctionParenthesis extends DataFunctionParenthesis
 
     public function addParameter(DataFunctionParenthesisParameter $parameter): void
     {
+        throw new ShouldntHappenException('for devs working on PHell: dont use this function, use addNamedParameter.'
+            .PHP_EOL.'for devs coding with PHell: sry this nothing saying exception flew, hopefully its not my fault');
+    }
+
+    public function addNamedParameter(NamedDataFunctionParenthesisParameter $parameter): void
+    {
         $this->parameters[] = $parameter;
     }
 }

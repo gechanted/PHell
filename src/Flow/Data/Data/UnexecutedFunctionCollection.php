@@ -77,6 +77,9 @@ class UnexecutedFunctionCollection extends UnexecutedFunctionCollectionType impl
             $parenthesis->addParameter(new DataFunctionParenthesisParameter(RunningPHPFunction::convertPHPValue($param)));
         }
         $lambda = FunctionResolver::resolve($parenthesis, $this, $this);
+//        ExecuteFunction::constructNamedDataFromValidatorAndDataFunctionParenthesis()
+//        $lambda->generateRunningFunction()
+        //TODO needs runningFunction + codeExhandler
         $phell = new PHell();
         return $phell->execute($lambda->getCode());
     }

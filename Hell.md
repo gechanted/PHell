@@ -4,19 +4,30 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
 *sorry for using washed up PHP syntax as common coding language in the Code examples*
 - ### Functions and Objects
   Fuck Classes - they can be functions too
+  <table><tr><td>
+
   ````PHP
   //common OOP Coding language
   class Foo 
   {
   }
-   
+  
+  ````
+  
+  </td><td>
+  
+  ````PHP
   //Hell
   function Foo()
   {
       return $this;
   }
   ````
-  There are no classes in Hell. Function can just return their respective ``$this`` variable and thus imitate a constructor
+  </td></tr> </table>
+
+  **There are no classes in Hell**. Function can just return their respective ``$this`` variable and thus imitate a constructor
+  <table><tr><td>
+
   ````PHP
   //common OOP Coding language
   class Foo 
@@ -32,18 +43,24 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
         $this->var2 = $var2;
       }
   }
-   
+    ````
+  
+  </td><td>
+
+  ````PHP
   //Hell
   function Foo(string $var1, Foo $var2)
   {
       return $this;
   }
   ```` 
+ </td></tr> </table>  
+
   but how can there be classes and **class datatypes** if there are no classes  
   ... well the objects have the name of the function, they sprout from.  
   Basically, due to that, everything can be a class now  
-  
-  Functions are also saveable as callables/lambda(-function)s 
+  .  
+  **Functions are also saveable as callables/lambda(-function)s** 
   ````PHP
   //common OOP Coding language
   $f = function (): string
@@ -60,7 +77,7 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
   $f = Foo;
   echo $f();
   ````
-  In Hell, similar to JS, a priorly set variable can be used in a function
+  In Hell, similar to JS, **a priorly set variable can be used in a function**
   ````PHP
   //common Coding language
   $var2 = 'World'
@@ -106,7 +123,7 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
   echo $foo->Bar()->getString(); 
   ````
   I dont want access to go infinitely deep  
-  use the ``use ()`` option to restrict access
+  **use the ``use ()`` option to restrict access**
   ````PHP
   //Hell
   function Foo(string $bar): Foo
@@ -129,7 +146,7 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
   echo $foo->bar(); 
   echo $foo->defaultString(); 
   ````
-  overloading is possible
+  ## **OVERLOADING IS POSSIBLE**
   ````PHP
   //Hell
   $bar = 'Hello ';
@@ -158,7 +175,8 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
     * due to unknown reasons, classes in common OOP languages can't extend more than 1 other class
     * due to unknown reasons, classes in common OOP languages can't extend an object of another (veryfied) class, and always create one
 
-  That ends with Hell, where you can do that:
+  That ends with Hell, where you can do that:  
+  ### **extend multiple objects**
   ````PHP
   //common OOP Coding language
   class Foo extends Bar
@@ -179,12 +197,8 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
       return $this;
   }
   ````
-
-[//]: # (  //TODO !! definitely a picture to explain this  )
-
-[//]: # (  //TODO this shenanigans)
-[//]: # (  Just want to mention here that extending already existing objects, is a thing that the "common" OOP languages should really implement  )
-[//]: # (  I think it's good for abstraction and mitigating of resource reallocation  )
+  Extending objects has the advantage of actually abstracting those compared to instantiating classes always anew   
+  *also hell currently has no interfaces*   
   **FYI: unless at declaration otherwise specified all ``$variables`` and ``functions`` are declared private**
 
 
@@ -221,16 +235,17 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
   ````
   This should maybe help on some ends with complicated redundant, but not codeawayable statements, like just showed  
   **BEWARE this skips code and maybe an Endhandler or a Logger**  
-  //TODO maybe make a sth like finally statement, which cant be skipped
+
+[//]: # (  //TODO maybe make a sth like finally statement, which cant be skipped)
 
 - ### Exceptions and Handling
   Exceptions are almost as usual.  
   Except they are not. (needed to do that pun)  
-  Exceptions don't have a Framework anymore
+  **Exceptions don't have a Framework anymore**  
   Meaning you can make something that suits way better for your Project  
   Or just use a lib  
-  The only restriction is the exception cant be a scalar (int, string, float, array)  
-  The exception has to be an object
+  The only restriction is **the exception cant be a scalar** (int, string, float, array)  
+  **The exception has to be an object**
    ````PHP
   //common OOP Coding language
   try { 
@@ -246,7 +261,24 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
       //Handling
   }
   ````
-  **shove**  
+  Also I added an else for try/catch: (since it doesnt have to be a general exception you can catch)
+  ````PHP
+  //Hell
+  try { 
+      throw RuntimeException();
+  } catch ($exception) { //without specification catches every possible $exception
+  }
+  ````
+  Also its possible to just omit the `$exception` variable
+  ````PHP
+  //Hell
+  try { 
+      throw RuntimeException();
+  } catch (RuntimeException) { //catches the runtime exception
+      //handle code that doesnt need the `$exception` variable
+  }
+  ````
+  ### **shove**  
   Another thing I implemented was the ``shove`` command  
   It returns a value back to the throw point
    ````PHP
@@ -282,28 +314,11 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
   }
   //execution resumes here after `shove`
   ````
-  Also I added an else for try/catch:
-  ````PHP
-  //Hell
-  try { 
-      throw RuntimeException();
-  } catch ($exception) { //without specification catches every possible $exception
-  }
-  ````
-  Also its possible to just omit the `$exception` variable
-  ````PHP
-  //Hell
-  try { 
-      throw RuntimeException();
-  } catch (RuntimeException) { //catches the runtime exception
-      //handle code that doesnt need the `$exception` variable
-  }
-  ````
   And you might say: "thats total bs, wtf did u think when programming this"  
   My answer: "maybe, maybe that is an interesting concept willing to be further investigated and elaborated, maybe it is not an actual problem for code quality"  
   .  
   Also you'd be surprised to see that `trycatch` also has a `finally`.  
-  And now your brain is like: _yeah there was something_
+  And now your brain is like: _yeah there was something ... totally forgot that existed_
   ````PHP
   //common OOP Coding language
   try { 
@@ -375,7 +390,7 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
     
 
 - ### DatatypeConstructs
-  **maybe you know the insanely cool feature of PHP8, that you can write multiple Types as requirement**
+  *maybe you know the insanely cool feature of PHP8, that you can write multiple Types as requirement*
     ````PHP
   //common OOP Coding language
   function foo(int|string $var): string|false
@@ -400,7 +415,7 @@ As I didn't write the Parser yet, I didn't think about the actual syntax**
   }
   ````
   The Typeconstruct is always an OR  
-  Hell allows ANDs
+  Hell allows **ANDs and ORs**
    ````PHP
   //Hell
   function foo(<(MessageClass1 or MessageClass2) and MessageEndingClass> $var): void 
